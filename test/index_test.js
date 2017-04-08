@@ -1,50 +1,7 @@
-// import VueApify from '../lib/index'
-import { normalizeRecord, addApiRecord } from '../lib/create-api-map'
+/* eslint no-console:0 */
+import VueApify from '../lib/index'
+import { normalizeRecord, addApiRecord, createApiMap } from '../lib/create-api-map'
 import { expect } from 'chai'
-// const apify = new VueApify(a)
-// const ap = apify.create()
-/*const a = [
-  {
-    name: 'user',
-    type: 'get',
-    exec: () => Promise.resolve({ data: 'data' }),
-    meta: { requireAuth: true },
-    children: [
-      {
-        name: 'settings',
-        meta: { settings: 'settings' },
-        beforeHook: (meta, next) => {
-          console.log('beforeHook UserSettings', meta)
-          next()
-        },
-        exec: (meta) => {
-          console.log('user settings', meta)
-          return Promise.resolve({ data: 'data' })
-        },
-        afterHook: (meta, next) => {
-          console.log('afterHook UserSettings', meta)
-          next()
-        }
-      },
-      {
-        name: 'logout',
-        meta: { logout: 'logout' },
-        beforeHook: (meta, next) => {
-          console.log('beforeHook UserLogout', meta)
-          next()
-        },
-        exec: (meta) => {
-          console.log('user logout', meta)
-          return Promise.resolve({ data: 'data' })
-        },
-        afterHook: (meta, next) => {
-          console.log('afterHook UserLogout', meta)
-          next()
-        }
-      }
-    ]
-  }
-]*/
 
 describe('create api map', () => {
   describe('normalizeRecord', () => {
@@ -115,32 +72,228 @@ describe('create api map', () => {
     })
   })
   describe('addApiRecord', () => {
-    it('')
+    it('simple exec', () => {
+      const apiMap = {}
+      const api = { name: 'name', exec: Promise.resolve('data') }
+      addApiRecord(apiMap, api, { beforeHooks: [], afterHooks: [] })
+      expect(apiMap).to.have.deep.property('name')
+      apiMap[api.name]()
+        .then(data => expect(data).to.equal('data'))
+        .catch(data => { console.error(Error( 'unexpected behavior', data )) })
+    })
+    it('exec with resolve beforeHook', () => {
+      const apiMap = {}
+      const api = {
+        name: 'name',
+        beforeHook: () => {},
+        exec: Promise.resolve('data')
+      }
+      addApiRecord(apiMap, api, { beforeHooks: [], afterHooks: [] })
+      expect(apiMap).to.have.deep.property('name')
+      apiMap[api.name]()
+        .then(data => expect(data).to.equal('data'))
+        .catch(data => { console.error(Error( 'unexpected behavior', data )) })
+    })
+    it('exec with reject beforeHook', () => {
+      const apiMap = {}
+      const api = {
+        name: 'name',
+        beforeHook: () => { throw 'reject' },
+        exec: Promise.resolve('data')
+      }
+      addApiRecord(apiMap, api, { beforeHooks: [], afterHooks: [] })
+      expect(apiMap).to.have.deep.property('name')
+      apiMap[api.name]()
+        .catch(data => expect(data).to.equal('reject'))
+    })
+    it('exec with meta and beforeHook', () => {
+      let apiMap = {}
+      const api = {
+        name: 'name',
+        meta: { requireAuth: true },
+        beforeHook: (meta) => {
+          const loggedIn = false
+          if ( !(meta.requireAuth && loggedIn) ) { throw 'not'}
+        },
+        exec: Promise.resolve('data')
+      }
+      addApiRecord(apiMap, api, { beforeHooks: [], afterHooks: [] })
+      apiMap[api.name]().catch(data => expect(data).to.equal('not'))
+      
+      apiMap = {}
+      const api2 = {
+        name: 'name',
+        meta: { requireAuth: true },
+        beforeHook: (meta) => {
+          const loggedIn = true
+          if ( !(meta.requireAuth && loggedIn) ) { throw 'not'}
+        },
+        exec: Promise.resolve('data')
+      }
+      addApiRecord(apiMap, api2, { beforeHooks: [], afterHooks: [] })
+      apiMap[api.name]()
+        .then(data => expect(data).to.equal('data'))
+        .catch(data => { console.error(Error( 'unexpected behavior', data )) })
+    })
+    it('exec with meta and afterHook', () => {
+      let apiMap = {}
+      const api = {
+        name: 'name',
+        meta: { reject: false },
+        exec: Promise.resolve('data'),
+        afterHook: (meta) => {
+          if ( meta.reject ) { throw 'not'}
+        }
+      }
+      addApiRecord(apiMap, api, { beforeHooks: [], afterHooks: [] })
+      apiMap[api.name]().catch(data => expect(data).to.equal('not'))
+      
+      api.meta.reject = false
+      apiMap = {}
+      addApiRecord(apiMap, api, { beforeHooks: [], afterHooks: [] })
+      apiMap[api.name]()
+        .then(data => expect(data).to.equal('data'))
+        .catch(data => { console.error(Error( 'unexpected behavior', data )) })
+    })
+    it('exec with children api', () => {
+      let apiMap = {}
+      const api = {
+        name: 'name',
+        exec: Promise.resolve('data'),
+        children: [
+          { name: 'aaa', exec: Promise.resolve('aaa') },
+          { name: 'bbb', exec: Promise.resolve('bbb') }
+        ]
+      }
+      addApiRecord(apiMap, api, { beforeHooks: [], afterHooks: [] })
+      
+      expect(apiMap).to.have.deep.property('name.aaa')
+      expect(apiMap).to.have.deep.property('name.bbb')
+      
+      apiMap.name.aaa()
+        .then(data => { expect(data).to.equal('aaa') })
+        .catch(data => { console.error(Error( 'unexpected behavior', data )) })
+      apiMap
+        .name.bbb().then(data => { expect(data).to.equal('bbb') })
+        .catch(data => { console.error(Error( 'unexpected behavior', data )) })
+    })
+    it('exec api with type', () => {
+      let apiMap = {}
+      const api = {
+        name: 'name',
+        type: 'get',
+        exec: Promise.resolve('data'),
+      }
+      addApiRecord(apiMap, api, { beforeHooks: [], afterHooks: [] })
+  
+      expect(apiMap).to.have.deep.property('name.get')
+      apiMap.name.get()
+        .then(data => { expect(data).to.equal('data') })
+        .catch(data => { console.error(Error( 'unexpected behavior', data )) })
+    })
+  })
+  describe('createApiMap', () => {
+    it('test createApiMap', () => {
+      const api = [
+        { name: 'aaa', exec: Promise.resolve('aaa') },
+        { name: 'bbb', exec: Promise.resolve('bbb') }
+      ]
+      const apiMap = createApiMap(api, { beforeHooks: [], afterHooks: [] })
+      
+      expect(apiMap).to.have.deep.property('aaa')
+      expect(apiMap).to.have.deep.property('bbb')
+  
+      apiMap.aaa()
+        .then(data => { expect(data).to.equal('aaa') })
+        .catch(data => { console.error(Error( 'unexpected behavior', data )) })
+      apiMap.bbb()
+        .then(data => { expect(data).to.equal('bbb') })
+        .catch(data => { console.error(Error( 'unexpected behavior', data )) })
+    })
+  })
+  it ('final test', () => {
+    const options = [
+      {
+        name: 'user',
+        type: 'get',
+        exec: Promise.resolve({ data: 'data' }),
+        meta: { reject: true },
+        children: [
+          {
+            name: 'settings',
+            beforeHook: (meta) => { if( meta.reject) { throw 'reject beforeHook'} },
+            exec: Promise.resolve({ data: 'data' })
+          },
+          {
+            name: 'logout',
+            exec: Promise.resolve({ data: 'data' }),
+            afterHook: (meta) => { if (meta.reject) { throw 'reject afterHook'} }
+          }
+        ]
+      }
+    ]
+    const api = createApiMap(options, { beforeHooks: [], afterHooks: [] })
+    
+    expect(api).to.have.deep.property('user')
+    expect(api).to.have.deep.property('user.get')
+    expect(api).to.have.deep.property('user.settings')
+    expect(api).to.have.deep.property('user.logout')
+    
+    api.user.get()
+      .then(data => expect(data).to.deep.equal({ data: 'data' }))
+      .catch(data => { console.error(Error( 'unexpected behavior', data )) })
+    api.user.settings().catch(data => expect(data).to.equal('reject beforeHook'))
+    api.user.logout().catch(data => expect(data).to.equal('reject afterHook'))
   })
 })
-//
-// describe('multiply', () => {
-//   it('returns 0 when either argument is 0', () => {
-//     strictEqual(multiply(0, 2), 0);
-//     strictEqual(multiply(4, 0), 0);
-//   });
-//
-//   it('returns the value of one number if the other is 1', () => {
-//     strictEqual(multiply(1, 8), 8);
-//     strictEqual(multiply(5, 1), 5);
-//   });
-//
-//   it('is commutative', () => {
-//     strictEqual(multiply(2, 4), multiply(4, 2));
-//   });
-//
-//   it('returns the product of the two numbers', () => {
-//     strictEqual(multiply(11, 9), 99);
-//   });
-//
-//   it('handles negative numbers', () => {
-//     strictEqual(multiply(-2, 2), -4);
-//     strictEqual(multiply(2, -2), -4);
-//     strictEqual(multiply(-2, -2), 4);
-//   });
-// });
+
+describe('class VueApify', () => {
+  it ('create api', () => {
+    const options = [
+      {
+        name: 'user',
+        type: 'get',
+        exec: Promise.resolve({ data: 'data' }),
+        meta: { reject: true },
+        children: [
+          {
+            name: 'settings',
+            beforeHook: (meta) => { if( meta.reject) { throw 'reject beforeHook'} },
+            exec: Promise.resolve({ data: 'data' })
+          },
+          {
+            name: 'logout',
+            exec: Promise.resolve({ data: 'data' }),
+            afterHook: (meta) => { if (meta.reject) { throw 'reject afterHook'} }
+          }
+        ]
+      }
+    ]
+    const apify = new VueApify(options)
+    const api = apify.create()
+  
+    api.user.get()
+      .then(data => expect(data).to.deep.equal({ data: 'data' }))
+      .catch(data => { console.error(Error( 'unexpected behavior', data )) })
+    api.user.settings().catch(data => expect(data).to.equal('reject beforeHook'))
+    api.user.logout().catch(data => expect(data).to.equal('reject afterHook'))
+  })
+  it('beforeEach hook', () => {
+    const options = [
+      { name: 'aaa', exec: Promise.resolve('aaa') }
+    ]
+    const apify = new VueApify(options)
+    apify.beforeEach(() => { throw 'reject'})
+    const api = apify.create()
+    api.aaa().catch(data => expect(data).to.equal('reject'))
+  })
+  it('afterEach hook', () => {
+    const options = [
+      { name: 'aaa', meta: { reject: true }, exec: Promise.resolve('aaa') }
+    ]
+    const apify = new VueApify(options)
+    apify.afterEach((meta) => { if(meta.reject) { throw 'reject' }})
+    const api = apify.create()
+    api.aaa().catch(data => expect(data).to.equal('reject'))
+  })
+})
