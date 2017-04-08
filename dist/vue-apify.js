@@ -1,7 +1,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
-  (global['vue-apify'] = factory());
+  (global.VueApify = factory());
 }(this, (function () { 'use strict';
 
 var __cov_RlZ9axv4MRpE$16_ASuQNQ = (Function('return this'))();
