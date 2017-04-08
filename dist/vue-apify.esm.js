@@ -20,10 +20,10 @@ var __cov_hgQvs7oKOZw9y2fAkRuLmA = (Function('return this'))();
 if (!__cov_hgQvs7oKOZw9y2fAkRuLmA.__coverage__) { __cov_hgQvs7oKOZw9y2fAkRuLmA.__coverage__ = {}; }
 __cov_hgQvs7oKOZw9y2fAkRuLmA = __cov_hgQvs7oKOZw9y2fAkRuLmA.__coverage__;
 if (!(__cov_hgQvs7oKOZw9y2fAkRuLmA['/home/fahreevr/Projects/rollup-starter-project/lib/install.js'])) {
-   __cov_hgQvs7oKOZw9y2fAkRuLmA['/home/fahreevr/Projects/rollup-starter-project/lib/install.js'] = {"path":"/home/fahreevr/Projects/rollup-starter-project/lib/install.js","s":{"1":1,"2":0,"3":0},"b":{},"f":{"1":0,"2":0},"fnMap":{"1":{"name":"install","line":1,"loc":{"start":{"line":1,"column":7},"end":{"line":1,"column":29}}},"2":{"name":"created","line":3,"loc":{"start":{"line":3,"column":13},"end":{"line":3,"column":32}}}},"statementMap":{"1":{"start":{"line":1,"column":7},"end":{"line":10,"column":1}},"2":{"start":{"line":2,"column":2},"end":{"line":6,"column":5}},"3":{"start":{"line":4,"column":6},"end":{"line":4,"column":36}}},"branchMap":{}};
+   __cov_hgQvs7oKOZw9y2fAkRuLmA['/home/fahreevr/Projects/rollup-starter-project/lib/install.js'] = {"path":"/home/fahreevr/Projects/rollup-starter-project/lib/install.js","s":{"1":1,"2":0,"3":0},"b":{},"f":{"1":0,"2":0},"fnMap":{"1":{"name":"install","line":1,"loc":{"start":{"line":1,"column":7},"end":{"line":1,"column":29}}},"2":{"name":"beforeCreate","line":3,"loc":{"start":{"line":3,"column":18},"end":{"line":3,"column":42}}}},"statementMap":{"1":{"start":{"line":1,"column":7},"end":{"line":10,"column":1}},"2":{"start":{"line":2,"column":2},"end":{"line":6,"column":5}},"3":{"start":{"line":4,"column":6},"end":{"line":4,"column":36}}},"branchMap":{}};
 }
 __cov_hgQvs7oKOZw9y2fAkRuLmA = __cov_hgQvs7oKOZw9y2fAkRuLmA['/home/fahreevr/Projects/rollup-starter-project/lib/install.js'];
-function install(Vue){__cov_hgQvs7oKOZw9y2fAkRuLmA.f['1']++;__cov_hgQvs7oKOZw9y2fAkRuLmA.s['2']++;Vue.mixin({created:function created(){__cov_hgQvs7oKOZw9y2fAkRuLmA.f['2']++;__cov_hgQvs7oKOZw9y2fAkRuLmA.s['3']++;this.$api=this.$options.api;}});}
+function install(Vue){__cov_hgQvs7oKOZw9y2fAkRuLmA.f['1']++;__cov_hgQvs7oKOZw9y2fAkRuLmA.s['2']++;Vue.mixin({beforeCreate:function beforeCreate(){__cov_hgQvs7oKOZw9y2fAkRuLmA.f['2']++;__cov_hgQvs7oKOZw9y2fAkRuLmA.s['3']++;this.$api=this.$options.api;}});}
 
 var classCallCheck = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
