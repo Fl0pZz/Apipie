@@ -18,7 +18,7 @@ export default {
     {
       dest: pkg.main,
       format: 'umd',
-      moduleName: 'vue-apify',
+      moduleName: 'VueApify',
       sourceMap: true
     },
     {
