@@ -1,6 +1,6 @@
 {
   "name": "vue-apify",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Transform api declaration to js object. Inspired by VueRouter path declaration.",
   "main": "dist/vue-apify.js",
   "module": "dist/vue-apify.esm.js",
