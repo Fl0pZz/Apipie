@@ -1,10 +1,10 @@
 {
   "name": "vue-apify",
-  "version": "0.1.0",
-  "description": "",
+  "version": "0.2.0",
+  "description": "Transform api declaration to js object. Inspired by VueRouter path declaration.",
   "main": "dist/vue-apify.js",
-  "module": "dist/vue-apify.mjs",
-  "jsnext:main": "dist/vue-apify.mjs",
+  "module": "dist/vue-apify.esm.js",
+  "unpkg": "dist/vue-apify.js",
   "scripts": {
     "prebuild": "eslint lib test",
     "build": "rollup -c",
@@ -13,24 +13,25 @@
     "test": "mocha",
     "prepublish": "npm test"
   },
-  "repository": "rollup/rollup-starter-project",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/Fl0pZz/vue-apify.git"
+  },
   "keywords": [
-    "es6",
-    "modules",
-    "rollup",
-    "bundle",
-    "browser"
+    "vue",
+    "api",
+    "apify"
   ],
-  "author": "Brian Donovan",
+  "author": "Rafael Fakhreev",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rollup/rollup-starter-project/issues"
+    "url": "https://github.com/Fl0pZz/vue-apify/issues"
   },
   "files": [
     "lib",
     "dist"
   ],
-  "homepage": "https://github.com/rollup/rollup-starter-project#readme",
+  "homepage": "https://github.com/Fl0pZz/vue-apify",
   "dependencies": {},
   "devDependencies": {
     "babel-eslint": "^7.1.1",

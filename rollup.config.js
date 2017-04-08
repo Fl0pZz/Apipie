@@ -18,7 +18,7 @@ export default {
     {
       dest: pkg.main,
       format: 'umd',
-      moduleName: 'rollupStarterProject',
+      moduleName: 'vue-apify',
       sourceMap: true
     },
     {
