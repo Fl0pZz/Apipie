@@ -1,13 +1,18 @@
 # Vue-apify
 
 Transform api declaration to js object. Inspired by VueRouter path declaration.
-[Try it here](https://jsfiddle.net/w6amy6az/1/)
+[Try it here](https://jsfiddle.net/w6amy6az/3/)
 ## Installation
 ```bash
-# yarn
+# Using yarn:
 yarn install vue-apify
-# npm
+# Using npm:
 npm install vue-apify
+```
+
+Using CDN:
+```html
+<script src="https://unpkg.com/vue-apify"></script>
 ```
 
 ```js
@@ -15,7 +20,7 @@ import Vue from 'vue'
 import VueApify from 'vue-apify'
 
 const api = [
-  { name: 'something', exec: axios.get(path, payload) }
+  { name: 'something', exec: () => axios.get(path, payload) }
 ]
 
 const apify = new VueApify(api)
@@ -29,7 +34,7 @@ new Vue({
   // ...
 })
 ```
-[or use unpkg](https://unpkg.com/vue-apify)
+
 ## Example
 ```js
 const api = [
@@ -53,7 +58,7 @@ const api = [
 api.user.get()
 api.user.settings()
 ```
-
+[Or try it (complex example)](https://jsfiddle.net/65bqw3hj/)
 ## How to use
 
 ### Options
