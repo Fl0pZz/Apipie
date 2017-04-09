@@ -43,7 +43,18 @@ user.settings() // получить настройки пользователя
 
 *   `beforeHook` - хук, выполняемый до `exec`
 *   `afterHook` - хук, выпоняемый после выполнения `exec`
-*   `exec` - исполняемая функция. Должна быть Promise
+*   `exec` - исполняемая функция. Должна возвращать Promise. Может принимать аргументы
+```js
+const options = [
+  {
+    name: 'user',
+    exec: (data) => Promise.resolve(data),
+    meta: { reject: true }
+  }
+]
+// tranform to
+api.user(data).then(...)
+```
 *   `children` - список потомков
 
 ### VueApify methods

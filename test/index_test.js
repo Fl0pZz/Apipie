@@ -74,7 +74,7 @@ describe('create api map', () => {
   describe('addApiRecord', () => {
     it('simple exec', () => {
       const apiMap = {}
-      const api = { name: 'name', exec: Promise.resolve('data') }
+      const api = { name: 'name', exec: () => Promise.resolve('data') }
       addApiRecord(apiMap, api, { beforeHooks: [], afterHooks: [] })
       expect(apiMap).to.have.deep.property('name')
       apiMap[api.name]()
@@ -86,7 +86,7 @@ describe('create api map', () => {
       const api = {
         name: 'name',
         beforeHook: () => {},
-        exec: Promise.resolve('data')
+        exec: () => Promise.resolve('data')
       }
       addApiRecord(apiMap, api, { beforeHooks: [], afterHooks: [] })
       expect(apiMap).to.have.deep.property('name')
@@ -99,7 +99,7 @@ describe('create api map', () => {
       const api = {
         name: 'name',
         beforeHook: () => { throw 'reject' },
-        exec: Promise.resolve('data')
+        exec: () => Promise.resolve('data')
       }
       addApiRecord(apiMap, api, { beforeHooks: [], afterHooks: [] })
       expect(apiMap).to.have.deep.property('name')
@@ -115,7 +115,7 @@ describe('create api map', () => {
           const loggedIn = false
           if ( !(meta.requireAuth && loggedIn) ) { throw 'not'}
         },
-        exec: Promise.resolve('data')
+        exec: () => Promise.resolve('data')
       }
       addApiRecord(apiMap, api, { beforeHooks: [], afterHooks: [] })
       apiMap[api.name]().catch(data => expect(data).to.equal('not'))
@@ -128,7 +128,7 @@ describe('create api map', () => {
           const loggedIn = true
           if ( !(meta.requireAuth && loggedIn) ) { throw 'not'}
         },
-        exec: Promise.resolve('data')
+        exec: () => Promise.resolve('data')
       }
       addApiRecord(apiMap, api2, { beforeHooks: [], afterHooks: [] })
       apiMap[api.name]()
@@ -140,7 +140,7 @@ describe('create api map', () => {
       const api = {
         name: 'name',
         meta: { reject: false },
-        exec: Promise.resolve('data'),
+        exec: () => Promise.resolve('data'),
         afterHook: (meta) => {
           if ( meta.reject ) { throw 'not'}
         }
@@ -159,10 +159,10 @@ describe('create api map', () => {
       let apiMap = {}
       const api = {
         name: 'name',
-        exec: Promise.resolve('data'),
+        exec: () => Promise.resolve('data'),
         children: [
-          { name: 'aaa', exec: Promise.resolve('aaa') },
-          { name: 'bbb', exec: Promise.resolve('bbb') }
+          { name: 'aaa', exec: () => Promise.resolve('aaa') },
+          { name: 'bbb', exec: () => Promise.resolve('bbb') }
         ]
       }
       addApiRecord(apiMap, api, { beforeHooks: [], afterHooks: [] })
@@ -182,7 +182,7 @@ describe('create api map', () => {
       const api = {
         name: 'name',
         type: 'get',
-        exec: Promise.resolve('data'),
+        exec: () => Promise.resolve('data'),
       }
       addApiRecord(apiMap, api, { beforeHooks: [], afterHooks: [] })
   
@@ -195,8 +195,8 @@ describe('create api map', () => {
   describe('createApiMap', () => {
     it('test createApiMap', () => {
       const api = [
-        { name: 'aaa', exec: Promise.resolve('aaa') },
-        { name: 'bbb', exec: Promise.resolve('bbb') }
+        { name: 'aaa', exec: () => Promise.resolve('aaa') },
+        { name: 'bbb', exec: () => Promise.resolve('bbb') }
       ]
       const apiMap = createApiMap(api, { beforeHooks: [], afterHooks: [] })
       
@@ -216,17 +216,17 @@ describe('create api map', () => {
       {
         name: 'user',
         type: 'get',
-        exec: Promise.resolve({ data: 'data' }),
+        exec: (data) => Promise.resolve(data),
         meta: { reject: true },
         children: [
           {
             name: 'settings',
             beforeHook: (meta) => { if( meta.reject) { throw 'reject beforeHook'} },
-            exec: Promise.resolve({ data: 'data' })
+            exec: () => Promise.resolve({ data: 'data' })
           },
           {
             name: 'logout',
-            exec: Promise.resolve({ data: 'data' }),
+            exec: () => Promise.resolve({ data: 'data' }),
             afterHook: (meta) => { if (meta.reject) { throw 'reject afterHook'} }
           }
         ]
@@ -239,7 +239,7 @@ describe('create api map', () => {
     expect(api).to.have.deep.property('user.settings')
     expect(api).to.have.deep.property('user.logout')
     
-    api.user.get()
+    api.user.get({ data: 'data' })
       .then(data => expect(data).to.deep.equal({ data: 'data' }))
       .catch(data => { console.error(Error( 'unexpected behavior', data )) })
     api.user.settings().catch(data => expect(data).to.equal('reject beforeHook'))
@@ -253,17 +253,17 @@ describe('class VueApify', () => {
       {
         name: 'user',
         type: 'get',
-        exec: Promise.resolve({ data: 'data' }),
+        exec: () => Promise.resolve({ data: 'data' }),
         meta: { reject: true },
         children: [
           {
             name: 'settings',
             beforeHook: (meta) => { if( meta.reject) { throw 'reject beforeHook'} },
-            exec: Promise.resolve({ data: 'data' })
+            exec: () => Promise.resolve({ data: 'data' })
           },
           {
             name: 'logout',
-            exec: Promise.resolve({ data: 'data' }),
+            exec: () => Promise.resolve({ data: 'data' }),
             afterHook: (meta) => { if (meta.reject) { throw 'reject afterHook'} }
           }
         ]
@@ -280,7 +280,7 @@ describe('class VueApify', () => {
   })
   it('beforeEach hook', () => {
     const options = [
-      { name: 'aaa', exec: Promise.resolve('aaa') }
+      { name: 'aaa', exec: () => Promise.resolve('aaa') }
     ]
     const apify = new VueApify(options)
     apify.beforeEach(() => { throw 'reject'})
@@ -289,7 +289,7 @@ describe('class VueApify', () => {
   })
   it('afterEach hook', () => {
     const options = [
-      { name: 'aaa', meta: { reject: true }, exec: Promise.resolve('aaa') }
+      { name: 'aaa', meta: { reject: true }, exec: () => Promise.resolve('aaa') }
     ]
     const apify = new VueApify(options)
     apify.afterEach((meta) => { if(meta.reject) { throw 'reject' }})
