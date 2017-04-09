@@ -1,7 +1,7 @@
 # Vue-apify
 
 Transform api declaration to js object. Inspired by VueRouter path declaration.
-[Try it here](https://jsfiddle.net/pt87oq4L/5/)
+[Try it here](https://jsfiddle.net/w6amy6az/1/)
 ## Installation
 ```bash
 # yarn
