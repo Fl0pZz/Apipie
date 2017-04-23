@@ -1,299 +1,174 @@
 /* eslint no-console:0 */
-import VueApify from '../lib/index'
-import { normalizeRecord, addApiRecord, createApiMap } from '../lib/create-api-map'
+import {
+  createExecFunc,
+  normalizeRecord,
+  createRequestFunc,
+  addApiRecord,
+  createApiMap
+} from '../lib/create-api-map'
+import h from '../lib/utils/helper'
+import parseExecArgs, { mergeArraysToObject } from '../lib/utils/args-parser'
 import { expect } from 'chai'
+// import axios from 'axios'
 
-describe('create api map', () => {
-  describe('normalizeRecord', () => {
-    it('simple api', () => {
-      const api = { name: 'api', exec: () => {} }
-      const out = {
-        name: api.name,
-        meta: {},
-        beforeHooks: [],
-        exec: api.exec,
-        afterHooks: [],
-        children: []
-      }
-      expect(normalizeRecord(api, { beforeHooks: [], afterHooks: [] }, {}))
-        .to.deep.equal(out)
-    })
-  
-    it('api with type', () => {
-      const api = { name: 'api', type: 'get', exec: () => {} }
-      const out = {
-        name: api.name,
-        meta: {},
-        beforeHooks: [],
-        exec: api.exec,
-        afterHooks: [],
-        children: [
-          { name: 'get', exec: api.exec }
-        ]
-      }
-      expect(normalizeRecord(api, { beforeHooks: [], afterHooks: [] }, {}))
-        .to.deep.equal(out)
-    })
-  
-    it('api with meta', () => {
-      const api = {
-        name: 'api',
-        meta: { requireAuth: true },
-        exec: meta => meta
-      }
-      const out = {
-        name: api.name,
-        meta: api.meta,
-        beforeHooks: [],
-        exec: api.exec,
-        afterHooks: [],
-        children: []
-      }
-      expect(normalizeRecord(api, { beforeHooks: [], afterHooks: [] }, {}))
-        .to.deep.equal(out)
-    })
-    it('api with hooks', () => {
-      const api = {
-        name: 'api',
-        beforeHook: () => {},
-        exec: meta => meta,
-        afterHook: () => {}
-      }
-      const out = {
-        name: api.name,
-        meta: {},
-        beforeHooks: [api.beforeHook],
-        exec: api.exec,
-        afterHooks: [api.afterHook],
-        children: []
-      }
-      expect(normalizeRecord(api, { beforeHooks: [], afterHooks: [] }, {}))
-        .to.deep.equal(out)
-    })
-  })
-  describe('addApiRecord', () => {
-    it('simple exec', () => {
-      const apiMap = {}
-      const api = { name: 'name', exec: () => Promise.resolve('data') }
-      addApiRecord(apiMap, api, { beforeHooks: [], afterHooks: [] })
-      expect(apiMap).to.have.deep.property('name')
-      apiMap[api.name]()
-        .then(data => expect(data).to.equal('data'))
-        .catch(data => { console.error(Error( 'unexpected behavior', data )) })
-    })
-    it('exec with resolve beforeHook', () => {
-      const apiMap = {}
-      const api = {
-        name: 'name',
-        beforeHook: () => {},
-        exec: () => Promise.resolve('data')
-      }
-      addApiRecord(apiMap, api, { beforeHooks: [], afterHooks: [] })
-      expect(apiMap).to.have.deep.property('name')
-      apiMap[api.name]()
-        .then(data => expect(data).to.equal('data'))
-        .catch(data => { console.error(Error( 'unexpected behavior', data )) })
-    })
-    it('exec with reject beforeHook', () => {
-      const apiMap = {}
-      const api = {
-        name: 'name',
-        beforeHook: () => { throw 'reject' },
-        exec: () => Promise.resolve('data')
-      }
-      addApiRecord(apiMap, api, { beforeHooks: [], afterHooks: [] })
-      expect(apiMap).to.have.deep.property('name')
-      apiMap[api.name]()
-        .catch(data => expect(data).to.equal('reject'))
-    })
-    it('exec with meta and beforeHook', () => {
-      let apiMap = {}
-      const api = {
-        name: 'name',
-        meta: { requireAuth: true },
-        beforeHook: (meta) => {
-          const loggedIn = false
-          if ( !(meta.requireAuth && loggedIn) ) { throw 'not'}
+describe('utils', () => {
+  it('helper', () => {
+    const fn = () => {}
+    const record = h('test', 'GET', '/test', fn, { meta: true }, [
+      h('test1', 'GET', '/test/1',),
+      h('test2', 'GET', '/test/2',)
+    ])
+    const out = {
+      name: 'test', url: '/test',
+      method: 'GET', meta: { meta: true },
+      hooks: [fn], children: [
+        {
+          name: 'test1', url: '/test/1', method: 'GET',
+          meta: {}, hooks: [], children: []
         },
-        exec: () => Promise.resolve('data')
-      }
-      addApiRecord(apiMap, api, { beforeHooks: [], afterHooks: [] })
-      apiMap[api.name]().catch(data => expect(data).to.equal('not'))
-      
-      apiMap = {}
-      const api2 = {
-        name: 'name',
-        meta: { requireAuth: true },
-        beforeHook: (meta) => {
-          const loggedIn = true
-          if ( !(meta.requireAuth && loggedIn) ) { throw 'not'}
-        },
-        exec: () => Promise.resolve('data')
-      }
-      addApiRecord(apiMap, api2, { beforeHooks: [], afterHooks: [] })
-      apiMap[api.name]()
-        .then(data => expect(data).to.equal('data'))
-        .catch(data => { console.error(Error( 'unexpected behavior', data )) })
-    })
-    it('exec with meta and afterHook', () => {
-      let apiMap = {}
-      const api = {
-        name: 'name',
-        meta: { reject: false },
-        exec: () => Promise.resolve('data'),
-        afterHook: (meta) => {
-          if ( meta.reject ) { throw 'not'}
+        {
+          name: 'test2', url: '/test/2', method: 'GET',
+          meta: {}, hooks: [], children: []
         }
-      }
-      addApiRecord(apiMap, api, { beforeHooks: [], afterHooks: [] })
-      apiMap[api.name]().catch(data => expect(data).to.equal('not'))
-      
-      api.meta.reject = false
-      apiMap = {}
-      addApiRecord(apiMap, api, { beforeHooks: [], afterHooks: [] })
-      apiMap[api.name]()
-        .then(data => expect(data).to.equal('data'))
-        .catch(data => { console.error(Error( 'unexpected behavior', data )) })
-    })
-    it('exec with children api', () => {
-      let apiMap = {}
-      const api = {
-        name: 'name',
-        exec: () => Promise.resolve('data'),
-        children: [
-          { name: 'aaa', exec: () => Promise.resolve('aaa') },
-          { name: 'bbb', exec: () => Promise.resolve('bbb') }
-        ]
-      }
-      addApiRecord(apiMap, api, { beforeHooks: [], afterHooks: [] })
-      
-      expect(apiMap).to.have.deep.property('name.aaa')
-      expect(apiMap).to.have.deep.property('name.bbb')
-      
-      apiMap.name.aaa()
-        .then(data => { expect(data).to.equal('aaa') })
-        .catch(data => { console.error(Error( 'unexpected behavior', data )) })
-      apiMap
-        .name.bbb().then(data => { expect(data).to.equal('bbb') })
-        .catch(data => { console.error(Error( 'unexpected behavior', data )) })
-    })
-    it('exec api with type', () => {
-      let apiMap = {}
-      const api = {
-        name: 'name',
-        type: 'get',
-        exec: () => Promise.resolve('data'),
-      }
-      addApiRecord(apiMap, api, { beforeHooks: [], afterHooks: [] })
-  
-      expect(apiMap).to.have.deep.property('name.get')
-      apiMap.name.get()
-        .then(data => { expect(data).to.equal('data') })
-        .catch(data => { console.error(Error( 'unexpected behavior', data )) })
-    })
-  })
-  describe('createApiMap', () => {
-    it('test createApiMap', () => {
-      const api = [
-        { name: 'aaa', exec: () => Promise.resolve('aaa') },
-        { name: 'bbb', exec: () => Promise.resolve('bbb') }
       ]
-      const apiMap = createApiMap(api, { beforeHooks: [], afterHooks: [] })
-      
-      expect(apiMap).to.have.deep.property('aaa')
-      expect(apiMap).to.have.deep.property('bbb')
-  
-      apiMap.aaa()
-        .then(data => { expect(data).to.equal('aaa') })
-        .catch(data => { console.error(Error( 'unexpected behavior', data )) })
-      apiMap.bbb()
-        .then(data => { expect(data).to.equal('bbb') })
-        .catch(data => { console.error(Error( 'unexpected behavior', data )) })
-    })
+    }
+    expect(record).to.deep.equal(out)
   })
-  it ('final test', () => {
-    const options = [
-      {
-        name: 'user',
-        type: 'get',
-        exec: (data) => Promise.resolve(data),
-        meta: { reject: true },
-        children: [
-          {
-            name: 'settings',
-            beforeHook: (meta) => { if( meta.reject) { throw 'reject beforeHook'} },
-            exec: () => Promise.resolve({ data: 'data' })
-          },
-          {
-            name: 'logout',
-            exec: () => Promise.resolve({ data: 'data' }),
-            afterHook: (meta) => { if (meta.reject) { throw 'reject afterHook'} }
-          }
-        ]
+  describe('args-parser', () => {
+    it('mergeArraysToObject', () => {
+      const names = ['1', '2', '3']
+      const values = [1, 2, 3]
+      const result = mergeArraysToObject(names, values)
+      const expected = {
+        '1': 1,
+        '2': 2,
+        '3': 3
       }
-    ]
-    const api = createApiMap(options, { beforeHooks: [], afterHooks: [] })
-    
-    expect(api).to.have.deep.property('user')
-    expect(api).to.have.deep.property('user.get')
-    expect(api).to.have.deep.property('user.settings')
-    expect(api).to.have.deep.property('user.logout')
-    
-    api.user.get({ data: 'data' })
-      .then(data => expect(data).to.deep.equal({ data: 'data' }))
-      .catch(data => { console.error(Error( 'unexpected behavior', data )) })
-    api.user.settings().catch(data => expect(data).to.equal('reject beforeHook'))
-    api.user.logout().catch(data => expect(data).to.equal('reject afterHook'))
+      expect(result).to.deep.equal(expected)
+    })
+    it('parseExecArgs', () => {
+      const url = '/test/:id'
+      const payload = { params: { id: 1 }, data: { test: 'test' } }
+      const result = parseExecArgs(url, [1], payload)
+      const expected = {
+        url: '/test/1',
+        params: { id: 1},
+        data: { test: 'test' }
+      }
+      expect(result).to.deep.equal(expected)
+    })
   })
 })
 
-describe('class VueApify', () => {
-  it ('create api', () => {
-    const options = [
-      {
-        name: 'user',
-        type: 'get',
-        exec: () => Promise.resolve({ data: 'data' }),
-        meta: { reject: true },
-        children: [
-          {
-            name: 'settings',
-            beforeHook: (meta) => { if( meta.reject) { throw 'reject beforeHook'} },
-            exec: () => Promise.resolve({ data: 'data' })
-          },
-          {
-            name: 'logout',
-            exec: () => Promise.resolve({ data: 'data' }),
-            afterHook: (meta) => { if (meta.reject) { throw 'reject afterHook'} }
-          }
-        ]
-      }
-    ]
-    const apify = new VueApify(options)
-    const api = apify.create()
-  
-    api.user.get()
-      .then(data => expect(data).to.deep.equal({ data: 'data' }))
-      .catch(data => { console.error(Error( 'unexpected behavior', data )) })
-    api.user.settings().catch(data => expect(data).to.equal('reject beforeHook'))
-    api.user.logout().catch(data => expect(data).to.equal('reject afterHook'))
+describe('create-api-map', () => {
+  const axiosInstanceMock = () => Promise.resolve({ success: true })
+  it('normalizeRecord', () => {
+    const record = h('test', 'GET', { path: '/test', options: { timeout: 1000 }})
+    const fn = () => {}
+    const payload = {
+      options: { headers: {'X-Custom-Header': 'foobar'} },
+      meta: { meta: true }, hooks: [fn]
+    }
+    const result = normalizeRecord(record, payload)
+    const expected = {
+      name: 'test', url: '/test',
+      options: {
+        timeout: 1000,
+        headers: {'X-Custom-Header': 'foobar'},
+        method: "GET"
+      },
+      meta: { meta: true }, hooks: [fn], children: []
+    }
+    expect(result).to.deep.equal(expected)
   })
-  it('beforeEach hook', () => {
-    const options = [
-      { name: 'aaa', exec: () => Promise.resolve('aaa') }
-    ]
-    const apify = new VueApify(options)
-    apify.beforeEach(() => { throw 'reject'})
-    const api = apify.create()
-    api.aaa().catch(data => expect(data).to.equal('reject'))
+  it('createRequestFunc', () => {
+    const record = {
+      name: 'test', url: '/test/:id',
+      options: {
+        timeout: 1000,
+        headers: {'X-Custom-Header': 'foobar'},
+        method: "GET"
+      },
+      meta: { meta: true }, hooks: [], children: []
+    }
+    const fn = createRequestFunc(record, axiosInstanceMock)
+    const context = {}
+    const expectedCtx = {
+      response: { success: true }
+    }
+    fn(context, () => {}).then(() => {
+      expect(context).to.deep.equal(expectedCtx)
+    })
   })
-  it('afterEach hook', () => {
-    const options = [
-      { name: 'aaa', meta: { reject: true }, exec: () => Promise.resolve('aaa') }
+  it('createExecFunc', () => {
+    const record = {
+      name: 'test', url: '/test/:id',
+      options: {
+        timeout: 1000,
+        headers: {'X-Custom-Header': 'foobar'},
+        method: "GET"
+      },
+      meta: { meta: true }, hooks: [], children: []
+    }
+    const fn = createExecFunc(record, axiosInstanceMock)
+    const expectedCtx = {
+      meta: { meta: true },
+      options: {
+        timeout: 1000,
+        headers: {'X-Custom-Header': 'foobar'},
+        method: "GET",
+        url: '/test/1'
+      },
+      response: { success: true }
+    }
+    fn([1]).then(ctx => { expect(ctx).to.deep.equal(expectedCtx) })
+  })
+  it('addApiRecord', () => {
+    const apiMap = {}
+    const record = h('test', 'GET', '/test', { meta: true }, [
+      h('test1', 'GET', '/test/1',),
+      h('test2', 'GET', '/test/2',)
+    ])
+    addApiRecord(apiMap, record, {}, axiosInstanceMock )
+    const expectCtx1 = {
+      meta: { meta: true },
+      options: {
+        method: 'GET',
+        url: '/test/1'
+      },
+      response: { success: true }
+    }
+    apiMap.test.test1().then(ctx => {
+      expect(ctx).to.deep.equal(expectCtx1)
+    }).catch(err => console.log(err))
+    const expectCtx2 = {
+      meta: { meta: true },
+      options: {
+        method: 'GET',
+        url: '/test/2'
+      },
+      response: { success: true }
+    }
+    apiMap.test.test2().then(ctx => {
+      expect(ctx).to.deep.equal(expectCtx2)
+    }).catch(err => console.log(err))
+  })
+  it('createApiMap', () => {
+    const records = [
+      h('test', 'GET', '/test', { meta: true }, [
+        h('test1', 'GET', '/test/1'),
+        h('test2', 'GET', '/test/2')
+      ]),
+      h('a', 'GET', '/test', { meta: true }, [
+        h('b', 'GET', '/test/1')
+      ])
     ]
-    const apify = new VueApify(options)
-    apify.afterEach((meta) => { if(meta.reject) { throw 'reject' }})
-    const api = apify.create()
-    api.aaa().catch(data => expect(data).to.equal('reject'))
+    const options = { axiosInstance: axiosInstanceMock }
+    const apiMap = createApiMap(records, options)
+    expect(apiMap).to.have.deep.property('test')
+    expect(apiMap).to.have.deep.property('test.test1')
+    expect(apiMap).to.have.deep.property('test.test2')
+    expect(apiMap).to.have.deep.property('a')
+    expect(apiMap).to.have.deep.property('a.b')
   })
 })

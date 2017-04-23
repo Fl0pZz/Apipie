@@ -1,6 +1,6 @@
 {
   "name": "vue-apify",
-  "version": "0.3.0",
+  "version": "0.5.0",
   "description": "Transform api declaration to js object. Inspired by VueRouter path declaration.",
   "main": "dist/vue-apify.js",
   "module": "dist/vue-apify.esm.js",
@@ -14,8 +14,8 @@
     "prepublish": "npm test"
   },
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/Fl0pZz/vue-apify.git"
+    "type": "git",
+    "url": "https://github.com/Fl0pZz/vue-apify.git"
   },
   "keywords": [
     "vue",
@@ -32,7 +32,11 @@
     "dist"
   ],
   "homepage": "https://github.com/Fl0pZz/vue-apify",
-  "dependencies": {},
+  "dependencies": {
+    "axios": "^0.16.1",
+    "koa-compose": "^4.0.0",
+    "path-to-regexp": "^1.7.0"
+  },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
     "babel-plugin-external-helpers": "^6.18.0",
