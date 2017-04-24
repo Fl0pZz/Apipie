@@ -9,7 +9,7 @@ import {
 import h from '../lib/utils/helper'
 import parseExecArgs, { mergeArraysToObject } from '../lib/utils/args-parser'
 import { expect } from 'chai'
-// import axios from 'axios'
+import axios from 'axios'
 
 describe('utils', () => {
   it('helper', () => {
@@ -172,3 +172,50 @@ describe('create-api-map', () => {
     expect(apiMap).to.have.deep.property('a.b')
   })
 })
+
+it('check stacking of meta and hooks', () => {
+  const axiosInstanceMock = () => Promise.resolve({ success: true })
+  const baseHook = (ctx, next) => {
+    if (ctx.meta.base) {
+      ctx.meta.baseHook = 'baseHook'
+      next()
+    } else {
+      throw 'reject baseHook'
+    }
+  }
+  const hook = (ctx, next) => {
+    if (ctx.meta.test) {
+      ctx.meta.hook = 'hook'
+      next()
+    } else {
+      throw 'reject hook'
+    }
+  }
+  const records = [
+    h('test', 'GET', '/test', { base: false }, baseHook, [
+      h('test1', 'GET', '/test/1', { base: true, test: true }, hook),
+      h('test2', 'GET', '/test/2', { test: false }, hook)
+    ])
+  ]
+  const options = { axiosInstance: axiosInstanceMock }
+  const apiMap = createApiMap(records, options)
+  
+  apiMap.test.test1().then(ctx => {
+    const expectedCtx = {
+      meta: {
+        base: true,
+        test: true,
+        baseHook: 'baseHook',
+        hook: 'hook'
+      },
+      options: { method: 'GET', url: '/test/1' },
+      response: { success: true }
+    }
+    expect(ctx).to.deep.equal(expectedCtx)
+  }).catch(e => console.error(e))
+  
+  apiMap.test.test2().catch(e => {
+    expect(e).to.equal('reject baseHook')
+  })
+})
+
