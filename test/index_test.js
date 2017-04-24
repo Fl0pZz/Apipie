@@ -6,10 +6,10 @@ import {
   addApiRecord,
   createApiMap
 } from '../lib/create-api-map'
-import h from '../lib/utils/helper'
+import { helper as h } from '../lib/utils/helper'
 import parseExecArgs, { mergeArraysToObject } from '../lib/utils/args-parser'
 import { expect } from 'chai'
-import axios from 'axios'
+// import axios from 'axios'
 
 describe('utils', () => {
   it('helper', () => {
