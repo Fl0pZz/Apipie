@@ -1,8 +1,8 @@
 # Vue-apify
 
-Constructor of api-wrapper. Inspired by VueRouter path declaration.
-[Try it here](https://jsfiddle.net/fl0pzz/fdLw70L0/) or
-[here](https://jsfiddle.net/fl0pzz/vndxbxww/)
+This is a tool for transforming the declaration of api call to js object.
+Inspired by VueRouter, Vue render function declaration, koa2.
+
 ## Installation
 ```bash
 # Using yarn:
@@ -18,14 +18,14 @@ Using CDN:
 
 ```js
 import Vue from 'vue'
-import VueApify from 'vue-apify'
+import VueApify, { h } from 'vue-apify'
+import axios from 'axios'
 
-const options = [
-  { name: 'something', exec: () => axios.get(path, payload) }
+const apiDecl = [
+  h('user', 'get', '/user/:id')
 ]
 
-const apify = new VueApify(options)
-const api = apify.create()
+const api = VueApify.create(apiDecl, { axiosInstance: axios.create() })
 
 Vue.use(apify)
 
@@ -33,6 +33,12 @@ new Vue({
   // ...
   api,
   // ...
+  mounted () {
+    api.user([1]) // GET: /user/1
+      .then(ctx => {
+        console.log(ctx.response)
+      })
+  }
 })
 ```
 ### Documentations
