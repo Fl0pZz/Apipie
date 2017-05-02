@@ -9,7 +9,8 @@ import {
 import { helper as h } from '../lib/utils/helper'
 import parseExecArgs, { mergeArraysToObject } from '../lib/utils/args-parser'
 import { expect } from 'chai'
-// import axios from 'axios'
+import axios from 'axios'
+import VueApify from '../lib/index'
 
 describe('utils', () => {
   it('helper', () => {
@@ -219,3 +220,15 @@ it('check stacking of meta and hooks', () => {
   })
 })
 
+describe('test with axios', () => {
+  it('test', () => {
+    const axiosInstance = axios.create()
+    const apiDecl = [
+      h('test', 'get', '/test')
+    ]
+    const api = VueApify.create(apiDecl, { axiosInstance })
+    api.test().catch(ctx => {
+      console.log(ctx)
+    })
+  })
+})
