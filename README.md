@@ -18,7 +18,7 @@ Using CDN:
 
 ```js
 import Vue from 'vue'
-import VueApify, { h } from 'vue-apify'
+import VueApify from 'vue-apify'
 import axios from 'axios'
 
 const apiDecl = [
@@ -68,7 +68,7 @@ new Vue({
       cur_pass: '123',
       new_pass: '321'
     }
-    api.settings.changePassowrd({ params: change_pass }) // GET: /change_pass?cur_pass='123'&new_pass='321'
+    api.settings.changePassword({ params: change_pass }) // GET: /change_pass?cur_pass='123'&new_pass='321'
       .then(ctx => { console.log(ctx.response) })
       
     const avatar = // ...
