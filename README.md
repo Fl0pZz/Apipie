@@ -22,7 +22,32 @@ import VueApify, { h } from 'vue-apify'
 import axios from 'axios'
 
 const apiDecl = [
-  h('user', 'get', '/user/:id')
+  { 
+    name: 'user', // Further you'll use it as `api.user()` for sending request
+    options: {    // All of the options you'll find https://github.com/mzabriskie/axios#request-config
+      url: '/user/:id',
+      method: 'get'
+    }
+  },
+  {
+    name: 'settings',
+    children: [
+      { 
+        name: 'changePassword', // api.settings.changePass(payload)
+        options: {
+          url: '/change_pass',
+          method: 'post'
+        }
+      },
+      {
+        name: 'changeAvatar',  // api.settings.changeAvatar(payload)
+        options: {
+          url: '/change_avatar',
+          method: 'post'
+        }
+      }
+    ]
+  }
 ]
 
 const api = VueApify.create(apiDecl, { axiosInstance: axios.create() })
@@ -34,10 +59,19 @@ new Vue({
   api,
   // ...
   mounted () {
-    api.user([1]) // GET: /user/1
+    api.user({ url_params: { id: 1 } }) // GET: /user/1
       .then(ctx => {
-        console.log(ctx.response)
+        console.log(ctx.response) // Responce schema as here: https://github.com/mzabriskie/axios#response-schema
       })
+    const change_pass = {
+      cur_pass: '123',
+      new_pass: '321'
+    }
+    api.settings.changePassowrd({ params: change_pass }) // GET: /change_pass?cur_pass='123'&new_pass='321'
+      .then(ctx => { console.log(ctx.response) })
+      
+    const avatar = // ...
+    api.settings.changeAvatar({ data: { avatar } })
   }
 })
 ```
