@@ -10,10 +10,14 @@ export default {
   plugins: [
     babel(babelrc()),
     istanbul({
-      exclude: ['test/**/*', 'node_modules/**/*']
+      exclude: ['node_modules/**/*']
     })
   ],
   external: external,
+  globals: {
+    'path-to-regexp': 'pathToRegexp',
+    deepmerge: 'merge'
+  },
   targets: [
     {
       dest: pkg.main,
