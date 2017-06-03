@@ -61,7 +61,8 @@ new Vue({
   mounted () {
     api.user({ url_params: { id: 1 } }) // GET: /user/1
       .then(ctx => {
-        console.log(ctx.response) // Responce schema as here: https://github.com/mzabriskie/axios#response-schema
+        console.log(ctx.response) // Responce schema as here:
+                                  // https://github.com/mzabriskie/axios#response-schema
       })
     const change_pass = {
       cur_pass: '123',
