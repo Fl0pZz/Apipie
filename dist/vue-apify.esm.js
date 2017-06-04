@@ -1,74 +1,150 @@
 import pathToRegexp from 'path-to-regexp';
 import merge from 'deepmerge';
 
-var __cov_euWH1657DIBmjpX9mXWsCA = (Function('return this'))();
-if (!__cov_euWH1657DIBmjpX9mXWsCA.__coverage__) { __cov_euWH1657DIBmjpX9mXWsCA.__coverage__ = {}; }
-__cov_euWH1657DIBmjpX9mXWsCA = __cov_euWH1657DIBmjpX9mXWsCA.__coverage__;
-if (!(__cov_euWH1657DIBmjpX9mXWsCA['/home/fahreevr/Projects/vue-apify/lib/utils/args-parser.js'])) {
-   __cov_euWH1657DIBmjpX9mXWsCA['/home/fahreevr/Projects/vue-apify/lib/utils/args-parser.js'] = {"path":"/home/fahreevr/Projects/vue-apify/lib/utils/args-parser.js","s":{"1":1,"2":0,"3":0,"4":0,"5":0,"6":0,"7":0,"8":0,"9":0,"10":0,"11":0,"12":0,"13":0},"b":{"1":[0,0],"2":[0,0],"3":[0,0],"4":[0,0]},"f":{"1":0},"fnMap":{"1":{"name":"parseExecArgs","line":3,"loc":{"start":{"line":3,"column":15},"end":{"line":3,"column":50}}}},"statementMap":{"1":{"start":{"line":3,"column":15},"end":{"line":30,"column":1}},"2":{"start":{"line":4,"column":2},"end":{"line":4,"column":28}},"3":{"start":{"line":5,"column":2},"end":{"line":7,"column":3}},"4":{"start":{"line":6,"column":4},"end":{"line":6,"column":18}},"5":{"start":{"line":8,"column":2},"end":{"line":10,"column":24}},"6":{"start":{"line":12,"column":2},"end":{"line":22,"column":3}},"7":{"start":{"line":20,"column":4},"end":{"line":20,"column":43}},"8":{"start":{"line":21,"column":4},"end":{"line":21,"column":36}},"9":{"start":{"line":23,"column":2},"end":{"line":25,"column":3}},"10":{"start":{"line":24,"column":4},"end":{"line":24,"column":27}},"11":{"start":{"line":26,"column":2},"end":{"line":28,"column":3}},"12":{"start":{"line":27,"column":4},"end":{"line":27,"column":23}},"13":{"start":{"line":29,"column":2},"end":{"line":29,"column":16}}},"branchMap":{"1":{"line":5,"type":"if","locations":[{"start":{"line":5,"column":2},"end":{"line":5,"column":2}},{"start":{"line":5,"column":2},"end":{"line":5,"column":2}}]},"2":{"line":12,"type":"if","locations":[{"start":{"line":12,"column":2},"end":{"line":12,"column":2}},{"start":{"line":12,"column":2},"end":{"line":12,"column":2}}]},"3":{"line":23,"type":"if","locations":[{"start":{"line":23,"column":2},"end":{"line":23,"column":2}},{"start":{"line":23,"column":2},"end":{"line":23,"column":2}}]},"4":{"line":26,"type":"if","locations":[{"start":{"line":26,"column":2},"end":{"line":26,"column":2}},{"start":{"line":26,"column":2},"end":{"line":26,"column":2}}]}}};
-}
-__cov_euWH1657DIBmjpX9mXWsCA = __cov_euWH1657DIBmjpX9mXWsCA['/home/fahreevr/Projects/vue-apify/lib/utils/args-parser.js'];
-function parseExecArgs(url,props){__cov_euWH1657DIBmjpX9mXWsCA.f['1']++;__cov_euWH1657DIBmjpX9mXWsCA.s['2']++;var result={url:url};__cov_euWH1657DIBmjpX9mXWsCA.s['3']++;if(!props){__cov_euWH1657DIBmjpX9mXWsCA.b['1'][0]++;__cov_euWH1657DIBmjpX9mXWsCA.s['4']++;return result;}else{__cov_euWH1657DIBmjpX9mXWsCA.b['1'][1]++;}__cov_euWH1657DIBmjpX9mXWsCA.s['5']++;var url_params=props.url_params,params=props.params,data=props.data;__cov_euWH1657DIBmjpX9mXWsCA.s['6']++;if(url_params){__cov_euWH1657DIBmjpX9mXWsCA.b['2'][0]++;__cov_euWH1657DIBmjpX9mXWsCA.s['7']++;var toPath=pathToRegexp.compile(url);__cov_euWH1657DIBmjpX9mXWsCA.s['8']++;result.url=toPath(url_params);}else{__cov_euWH1657DIBmjpX9mXWsCA.b['2'][1]++;}__cov_euWH1657DIBmjpX9mXWsCA.s['9']++;if(params){__cov_euWH1657DIBmjpX9mXWsCA.b['3'][0]++;__cov_euWH1657DIBmjpX9mXWsCA.s['10']++;result.params=params;}else{__cov_euWH1657DIBmjpX9mXWsCA.b['3'][1]++;}__cov_euWH1657DIBmjpX9mXWsCA.s['11']++;if(data){__cov_euWH1657DIBmjpX9mXWsCA.b['4'][0]++;__cov_euWH1657DIBmjpX9mXWsCA.s['12']++;result.data=data;}else{__cov_euWH1657DIBmjpX9mXWsCA.b['4'][1]++;}__cov_euWH1657DIBmjpX9mXWsCA.s['13']++;return result;}
-
-var __cov_iYcLxdkMHN2eIWPF3ACfxw = (Function('return this'))();
-if (!__cov_iYcLxdkMHN2eIWPF3ACfxw.__coverage__) { __cov_iYcLxdkMHN2eIWPF3ACfxw.__coverage__ = {}; }
-__cov_iYcLxdkMHN2eIWPF3ACfxw = __cov_iYcLxdkMHN2eIWPF3ACfxw.__coverage__;
-if (!(__cov_iYcLxdkMHN2eIWPF3ACfxw['/home/fahreevr/Projects/vue-apify/lib/utils/compose.js'])) {
-   __cov_iYcLxdkMHN2eIWPF3ACfxw['/home/fahreevr/Projects/vue-apify/lib/utils/compose.js'] = {"path":"/home/fahreevr/Projects/vue-apify/lib/utils/compose.js","s":{"1":1,"2":0,"3":0,"4":0,"5":0,"6":0,"7":0,"8":0,"9":0,"10":0,"11":0,"12":0,"13":0,"14":0,"15":0,"16":0,"17":0,"18":0,"19":0,"20":0,"21":0,"22":1,"23":0,"24":0,"25":0,"26":0,"27":0,"28":0,"29":0,"30":0,"31":0,"32":0,"33":0,"34":0},"b":{"1":[0,0],"2":[0,0],"3":[0,0],"4":[0,0],"5":[0,0],"6":[0,0],"7":[0,0],"8":[0,0]},"f":{"1":0,"2":0,"3":0,"4":0},"fnMap":{"1":{"name":"compose","line":1,"loc":{"start":{"line":1,"column":15},"end":{"line":1,"column":39}}},"2":{"name":"(anonymous_2)","line":28,"loc":{"start":{"line":28,"column":9},"end":{"line":28,"column":34}}},"3":{"name":"dispatch","line":32,"loc":{"start":{"line":32,"column":4},"end":{"line":32,"column":25}}},"4":{"name":"next","line":39,"loc":{"start":{"line":39,"column":43},"end":{"line":39,"column":59}}}},"statementMap":{"1":{"start":{"line":1,"column":15},"end":{"line":47,"column":1}},"2":{"start":{"line":2,"column":2},"end":{"line":2,"column":82}},"3":{"start":{"line":2,"column":29},"end":{"line":2,"column":82}},"4":{"start":{"line":3,"column":2},"end":{"line":3,"column":39}},"5":{"start":{"line":4,"column":2},"end":{"line":4,"column":32}},"6":{"start":{"line":5,"column":2},"end":{"line":5,"column":33}},"7":{"start":{"line":7,"column":2},"end":{"line":26,"column":3}},"8":{"start":{"line":8,"column":4},"end":{"line":12,"column":5}},"9":{"start":{"line":9,"column":6},"end":{"line":9,"column":27}},"10":{"start":{"line":11,"column":6},"end":{"line":11,"column":96}},"11":{"start":{"line":11,"column":36},"end":{"line":11,"column":96}},"12":{"start":{"line":14,"column":4},"end":{"line":14,"column":29}},"13":{"start":{"line":15,"column":4},"end":{"line":15,"column":25}},"14":{"start":{"line":17,"column":4},"end":{"line":25,"column":5}},"15":{"start":{"line":18,"column":6},"end":{"line":20,"column":7}},"16":{"start":{"line":19,"column":8},"end":{"line":19,"column":27}},"17":{"start":{"line":22,"column":6},"end":{"line":24,"column":7}},"18":{"start":{"line":23,"column":8},"end":{"line":23,"column":29}},"19":{"start":{"line":28,"column":2},"end":{"line":46,"column":4}},"20":{"start":{"line":30,"column":4},"end":{"line":30,"column":19}},"21":{"start":{"line":31,"column":4},"end":{"line":31,"column":23}},"22":{"start":{"line":32,"column":4},"end":{"line":45,"column":5}},"23":{"start":{"line":33,"column":6},"end":{"line":33,"column":87}},"24":{"start":{"line":33,"column":22},"end":{"line":33,"column":87}},"25":{"start":{"line":34,"column":6},"end":{"line":34,"column":16}},"26":{"start":{"line":35,"column":6},"end":{"line":35,"column":24}},"27":{"start":{"line":36,"column":6},"end":{"line":36,"column":40}},"28":{"start":{"line":36,"column":30},"end":{"line":36,"column":40}},"29":{"start":{"line":37,"column":6},"end":{"line":37,"column":40}},"30":{"start":{"line":37,"column":15},"end":{"line":37,"column":40}},"31":{"start":{"line":38,"column":6},"end":{"line":44,"column":7}},"32":{"start":{"line":39,"column":8},"end":{"line":41,"column":12}},"33":{"start":{"line":40,"column":10},"end":{"line":40,"column":33}},"34":{"start":{"line":43,"column":8},"end":{"line":43,"column":35}}},"branchMap":{"1":{"line":2,"type":"if","locations":[{"start":{"line":2,"column":2},"end":{"line":2,"column":2}},{"start":{"line":2,"column":2},"end":{"line":2,"column":2}}]},"2":{"line":11,"type":"if","locations":[{"start":{"line":11,"column":6},"end":{"line":11,"column":6}},{"start":{"line":11,"column":6},"end":{"line":11,"column":6}}]},"3":{"line":18,"type":"if","locations":[{"start":{"line":18,"column":6},"end":{"line":18,"column":6}},{"start":{"line":18,"column":6},"end":{"line":18,"column":6}}]},"4":{"line":18,"type":"binary-expr","locations":[{"start":{"line":18,"column":10},"end":{"line":18,"column":36}},{"start":{"line":18,"column":40},"end":{"line":18,"column":56}}]},"5":{"line":22,"type":"if","locations":[{"start":{"line":22,"column":6},"end":{"line":22,"column":6}},{"start":{"line":22,"column":6},"end":{"line":22,"column":6}}]},"6":{"line":33,"type":"if","locations":[{"start":{"line":33,"column":6},"end":{"line":33,"column":6}},{"start":{"line":33,"column":6},"end":{"line":33,"column":6}}]},"7":{"line":36,"type":"if","locations":[{"start":{"line":36,"column":6},"end":{"line":36,"column":6}},{"start":{"line":36,"column":6},"end":{"line":36,"column":6}}]},"8":{"line":37,"type":"if","locations":[{"start":{"line":37,"column":6},"end":{"line":37,"column":6}},{"start":{"line":37,"column":6},"end":{"line":37,"column":6}}]}}};
-}
-__cov_iYcLxdkMHN2eIWPF3ACfxw = __cov_iYcLxdkMHN2eIWPF3ACfxw['/home/fahreevr/Projects/vue-apify/lib/utils/compose.js'];
-function compose(hooks){__cov_iYcLxdkMHN2eIWPF3ACfxw.f['1']++;__cov_iYcLxdkMHN2eIWPF3ACfxw.s['2']++;if(!Array.isArray(hooks)){__cov_iYcLxdkMHN2eIWPF3ACfxw.b['1'][0]++;__cov_iYcLxdkMHN2eIWPF3ACfxw.s['3']++;throw new TypeError('Hooks stack must be an array!');}else{__cov_iYcLxdkMHN2eIWPF3ACfxw.b['1'][1]++;}__cov_iYcLxdkMHN2eIWPF3ACfxw.s['4']++;var _iteratorNormalCompletion=true;__cov_iYcLxdkMHN2eIWPF3ACfxw.s['5']++;var _didIteratorError=false;__cov_iYcLxdkMHN2eIWPF3ACfxw.s['6']++;var _iteratorError=undefined;__cov_iYcLxdkMHN2eIWPF3ACfxw.s['7']++;try{__cov_iYcLxdkMHN2eIWPF3ACfxw.s['8']++;for(var _iterator=hooks[Symbol.iterator](),_step;!(_iteratorNormalCompletion=(_step=_iterator.next()).done);_iteratorNormalCompletion=true){__cov_iYcLxdkMHN2eIWPF3ACfxw.s['9']++;var fn=_step.value;__cov_iYcLxdkMHN2eIWPF3ACfxw.s['10']++;if(typeof fn!=='function'){__cov_iYcLxdkMHN2eIWPF3ACfxw.b['2'][0]++;__cov_iYcLxdkMHN2eIWPF3ACfxw.s['11']++;throw new TypeError('Hooks must be composed of functions!');}else{__cov_iYcLxdkMHN2eIWPF3ACfxw.b['2'][1]++;}}}catch(err){__cov_iYcLxdkMHN2eIWPF3ACfxw.s['12']++;_didIteratorError=true;__cov_iYcLxdkMHN2eIWPF3ACfxw.s['13']++;_iteratorError=err;}finally{__cov_iYcLxdkMHN2eIWPF3ACfxw.s['14']++;try{__cov_iYcLxdkMHN2eIWPF3ACfxw.s['15']++;if((__cov_iYcLxdkMHN2eIWPF3ACfxw.b['4'][0]++,!_iteratorNormalCompletion)&&(__cov_iYcLxdkMHN2eIWPF3ACfxw.b['4'][1]++,_iterator.return)){__cov_iYcLxdkMHN2eIWPF3ACfxw.b['3'][0]++;__cov_iYcLxdkMHN2eIWPF3ACfxw.s['16']++;_iterator.return();}else{__cov_iYcLxdkMHN2eIWPF3ACfxw.b['3'][1]++;}}finally{__cov_iYcLxdkMHN2eIWPF3ACfxw.s['17']++;if(_didIteratorError){__cov_iYcLxdkMHN2eIWPF3ACfxw.b['5'][0]++;__cov_iYcLxdkMHN2eIWPF3ACfxw.s['18']++;throw _iteratorError;}else{__cov_iYcLxdkMHN2eIWPF3ACfxw.b['5'][1]++;}}}__cov_iYcLxdkMHN2eIWPF3ACfxw.s['19']++;return function(context,next){__cov_iYcLxdkMHN2eIWPF3ACfxw.f['2']++;__cov_iYcLxdkMHN2eIWPF3ACfxw.s['20']++;var index=-1;__cov_iYcLxdkMHN2eIWPF3ACfxw.s['21']++;return dispatch(0);function dispatch(i){__cov_iYcLxdkMHN2eIWPF3ACfxw.f['3']++;__cov_iYcLxdkMHN2eIWPF3ACfxw.s['23']++;if(i<=index){__cov_iYcLxdkMHN2eIWPF3ACfxw.b['6'][0]++;__cov_iYcLxdkMHN2eIWPF3ACfxw.s['24']++;return Promise.reject(new Error('next() called multiple times'));}else{__cov_iYcLxdkMHN2eIWPF3ACfxw.b['6'][1]++;}__cov_iYcLxdkMHN2eIWPF3ACfxw.s['25']++;index=i;__cov_iYcLxdkMHN2eIWPF3ACfxw.s['26']++;var fn=hooks[i];__cov_iYcLxdkMHN2eIWPF3ACfxw.s['27']++;if(i===hooks.length){__cov_iYcLxdkMHN2eIWPF3ACfxw.b['7'][0]++;__cov_iYcLxdkMHN2eIWPF3ACfxw.s['28']++;fn=next;}else{__cov_iYcLxdkMHN2eIWPF3ACfxw.b['7'][1]++;}__cov_iYcLxdkMHN2eIWPF3ACfxw.s['29']++;if(!fn){__cov_iYcLxdkMHN2eIWPF3ACfxw.b['8'][0]++;__cov_iYcLxdkMHN2eIWPF3ACfxw.s['30']++;return Promise.resolve();}else{__cov_iYcLxdkMHN2eIWPF3ACfxw.b['8'][1]++;}__cov_iYcLxdkMHN2eIWPF3ACfxw.s['31']++;try{__cov_iYcLxdkMHN2eIWPF3ACfxw.s['32']++;return Promise.resolve(fn(context,function next(){__cov_iYcLxdkMHN2eIWPF3ACfxw.f['4']++;__cov_iYcLxdkMHN2eIWPF3ACfxw.s['33']++;return dispatch(i+1);}));}catch(err){__cov_iYcLxdkMHN2eIWPF3ACfxw.s['34']++;return Promise.reject(err);}}};}
-
-var __cov_012PM$dPgbvU2TFXHPFYKg = (Function('return this'))();
-if (!__cov_012PM$dPgbvU2TFXHPFYKg.__coverage__) { __cov_012PM$dPgbvU2TFXHPFYKg.__coverage__ = {}; }
-__cov_012PM$dPgbvU2TFXHPFYKg = __cov_012PM$dPgbvU2TFXHPFYKg.__coverage__;
-if (!(__cov_012PM$dPgbvU2TFXHPFYKg['/home/fahreevr/Projects/vue-apify/lib/create-api-map.js'])) {
-   __cov_012PM$dPgbvU2TFXHPFYKg['/home/fahreevr/Projects/vue-apify/lib/create-api-map.js'] = {"path":"/home/fahreevr/Projects/vue-apify/lib/create-api-map.js","s":{"1":1,"2":0,"3":0,"4":0,"5":0,"6":0,"7":1,"8":0,"9":0,"10":0,"11":0,"12":0,"13":0,"14":0,"15":1,"16":0,"17":0,"18":0,"19":0,"20":0,"21":0,"22":0,"23":0,"24":0,"25":0,"26":0,"27":1,"28":1,"29":0,"30":0,"31":1,"32":0,"33":0,"34":0,"35":0,"36":0,"37":0,"38":0,"39":0,"40":0,"41":0,"42":0},"b":{"1":[0,0],"2":[0,0],"3":[0,0],"4":[0,0],"5":[0,0],"6":[0,0],"7":[0,0],"8":[0,0],"9":[0,0],"10":[0,0],"11":[0,0],"12":[0,0],"13":[0,0,0]},"f":{"1":0,"2":0,"3":0,"4":0,"5":0,"6":0,"7":0,"8":0,"9":0,"10":0,"11":0,"12":0,"13":0},"fnMap":{"1":{"name":"createApiMap","line":5,"loc":{"start":{"line":5,"column":7},"end":{"line":5,"column":44}}},"2":{"name":"(anonymous_2)","line":9,"loc":{"start":{"line":9,"column":18},"end":{"line":9,"column":33}}},"3":{"name":"addApiRecord","line":15,"loc":{"start":{"line":15,"column":7},"end":{"line":15,"column":65}}},"4":{"name":"(anonymous_4)","line":20,"loc":{"start":{"line":20,"column":28},"end":{"line":20,"column":45}}},"5":{"name":"normalizeRecord","line":28,"loc":{"start":{"line":28,"column":7},"end":{"line":28,"column":47}}},"6":{"name":"createSimpleChildRecord","line":36,"loc":{"start":{"line":36,"column":32},"end":{"line":36,"column":78}}},"7":{"name":"createExecFunc","line":57,"loc":{"start":{"line":57,"column":7},"end":{"line":57,"column":54}}},"8":{"name":"createContext","line":58,"loc":{"start":{"line":58,"column":2},"end":{"line":58,"column":32}}},"9":{"name":"createRequestFunc","line":68,"loc":{"start":{"line":68,"column":2},"end":{"line":68,"column":31}}},"10":{"name":"(anonymous_10)","line":69,"loc":{"start":{"line":69,"column":11},"end":{"line":69,"column":32}}},"11":{"name":"(anonymous_11)","line":70,"loc":{"start":{"line":70,"column":48},"end":{"line":70,"column":68}}},"12":{"name":"(anonymous_12)","line":76,"loc":{"start":{"line":76,"column":9},"end":{"line":76,"column":28}}},"13":{"name":"(anonymous_13)","line":83,"loc":{"start":{"line":83,"column":28},"end":{"line":83,"column":40}}}},"statementMap":{"1":{"start":{"line":5,"column":7},"end":{"line":13,"column":1}},"2":{"start":{"line":6,"column":2},"end":{"line":6,"column":41}},"3":{"start":{"line":8,"column":2},"end":{"line":8,"column":18}},"4":{"start":{"line":9,"column":2},"end":{"line":11,"column":5}},"5":{"start":{"line":10,"column":4},"end":{"line":10,"column":56}},"6":{"start":{"line":12,"column":2},"end":{"line":12,"column":16}},"7":{"start":{"line":15,"column":7},"end":{"line":26,"column":1}},"8":{"start":{"line":16,"column":2},"end":{"line":16,"column":40}},"9":{"start":{"line":17,"column":2},"end":{"line":17,"column":27}},"10":{"start":{"line":19,"column":2},"end":{"line":24,"column":3}},"11":{"start":{"line":20,"column":4},"end":{"line":22,"column":7}},"12":{"start":{"line":21,"column":6},"end":{"line":21,"column":70}},"13":{"start":{"line":23,"column":4},"end":{"line":23,"column":11}},"14":{"start":{"line":25,"column":2},"end":{"line":25,"column":62}},"15":{"start":{"line":28,"column":7},"end":{"line":55,"column":1}},"16":{"start":{"line":29,"column":2},"end":{"line":34,"column":61}},"17":{"start":{"line":36,"column":2},"end":{"line":38,"column":4}},"18":{"start":{"line":37,"column":4},"end":{"line":37,"column":81}},"19":{"start":{"line":39,"column":2},"end":{"line":45,"column":4}},"20":{"start":{"line":46,"column":2},"end":{"line":48,"column":3}},"21":{"start":{"line":47,"column":4},"end":{"line":47,"column":113}},"22":{"start":{"line":49,"column":2},"end":{"line":53,"column":3}},"23":{"start":{"line":50,"column":4},"end":{"line":50,"column":123}},"24":{"start":{"line":51,"column":4},"end":{"line":51,"column":40}},"25":{"start":{"line":52,"column":4},"end":{"line":52,"column":43}},"26":{"start":{"line":54,"column":2},"end":{"line":54,"column":26}},"27":{"start":{"line":57,"column":7},"end":{"line":87,"column":1}},"28":{"start":{"line":58,"column":2},"end":{"line":67,"column":3}},"29":{"start":{"line":59,"column":4},"end":{"line":60,"column":32}},"30":{"start":{"line":62,"column":4},"end":{"line":66,"column":6}},"31":{"start":{"line":68,"column":2},"end":{"line":75,"column":3}},"32":{"start":{"line":69,"column":4},"end":{"line":74,"column":6}},"33":{"start":{"line":70,"column":6},"end":{"line":73,"column":9}},"34":{"start":{"line":71,"column":8},"end":{"line":71,"column":32}},"35":{"start":{"line":72,"column":8},"end":{"line":72,"column":15}},"36":{"start":{"line":76,"column":2},"end":{"line":86,"column":4}},"37":{"start":{"line":77,"column":4},"end":{"line":77,"column":87}},"38":{"start":{"line":78,"column":4},"end":{"line":78,"column":43}},"39":{"start":{"line":80,"column":4},"end":{"line":80,"column":35}},"40":{"start":{"line":81,"column":4},"end":{"line":81,"column":40}},"41":{"start":{"line":83,"column":4},"end":{"line":85,"column":7}},"42":{"start":{"line":84,"column":6},"end":{"line":84,"column":21}}},"branchMap":{"1":{"line":19,"type":"if","locations":[{"start":{"line":19,"column":2},"end":{"line":19,"column":2}},{"start":{"line":19,"column":2},"end":{"line":19,"column":2}}]},"2":{"line":30,"type":"cond-expr","locations":[{"start":{"line":30,"column":47},"end":{"line":30,"column":49}},{"start":{"line":30,"column":52},"end":{"line":30,"column":66}}]},"3":{"line":32,"type":"cond-expr","locations":[{"start":{"line":32,"column":41},"end":{"line":32,"column":43}},{"start":{"line":32,"column":46},"end":{"line":32,"column":57}}]},"4":{"line":34,"type":"cond-expr","locations":[{"start":{"line":34,"column":43},"end":{"line":34,"column":45}},{"start":{"line":34,"column":48},"end":{"line":34,"column":60}}]},"5":{"line":41,"type":"binary-expr","locations":[{"start":{"line":41,"column":14},"end":{"line":41,"column":29}},{"start":{"line":41,"column":33},"end":{"line":41,"column":35}}]},"6":{"line":42,"type":"binary-expr","locations":[{"start":{"line":42,"column":33},"end":{"line":42,"column":47}},{"start":{"line":42,"column":51},"end":{"line":42,"column":53}}]},"7":{"line":43,"type":"binary-expr","locations":[{"start":{"line":43,"column":27},"end":{"line":43,"column":38}},{"start":{"line":43,"column":42},"end":{"line":43,"column":44}}]},"8":{"line":44,"type":"cond-expr","locations":[{"start":{"line":44,"column":49},"end":{"line":44,"column":75}},{"start":{"line":44,"column":78},"end":{"line":44,"column":91}}]},"9":{"line":44,"type":"binary-expr","locations":[{"start":{"line":44,"column":11},"end":{"line":44,"column":23}},{"start":{"line":44,"column":27},"end":{"line":44,"column":46}}]},"10":{"line":46,"type":"if","locations":[{"start":{"line":46,"column":2},"end":{"line":46,"column":2}},{"start":{"line":46,"column":2},"end":{"line":46,"column":2}}]},"11":{"line":46,"type":"binary-expr","locations":[{"start":{"line":46,"column":6},"end":{"line":46,"column":16}},{"start":{"line":46,"column":20},"end":{"line":46,"column":33}}]},"12":{"line":49,"type":"if","locations":[{"start":{"line":49,"column":2},"end":{"line":49,"column":2}},{"start":{"line":49,"column":2},"end":{"line":49,"column":2}}]},"13":{"line":49,"type":"binary-expr","locations":[{"start":{"line":49,"column":6},"end":{"line":49,"column":38}},{"start":{"line":49,"column":42},"end":{"line":49,"column":73}},{"start":{"line":49,"column":77},"end":{"line":49,"column":105}}]}}};
-}
-__cov_012PM$dPgbvU2TFXHPFYKg = __cov_012PM$dPgbvU2TFXHPFYKg['/home/fahreevr/Projects/vue-apify/lib/create-api-map.js'];
-function createApiMap(records,_ref){__cov_012PM$dPgbvU2TFXHPFYKg.f['1']++;__cov_012PM$dPgbvU2TFXHPFYKg.s['2']++;var axiosInstance=_ref.axiosInstance;__cov_012PM$dPgbvU2TFXHPFYKg.s['3']++;var apiMap={};__cov_012PM$dPgbvU2TFXHPFYKg.s['4']++;records.forEach(function(api){__cov_012PM$dPgbvU2TFXHPFYKg.f['2']++;__cov_012PM$dPgbvU2TFXHPFYKg.s['5']++;return addApiRecord(apiMap,api,{},axiosInstance);});__cov_012PM$dPgbvU2TFXHPFYKg.s['6']++;return apiMap;}function addApiRecord(apiMap,record,acc,axiosInstance){__cov_012PM$dPgbvU2TFXHPFYKg.f['3']++;__cov_012PM$dPgbvU2TFXHPFYKg.s['8']++;record=normalizeRecord(record,acc);__cov_012PM$dPgbvU2TFXHPFYKg.s['9']++;apiMap[record.name]={};__cov_012PM$dPgbvU2TFXHPFYKg.s['10']++;if(record.children.length){__cov_012PM$dPgbvU2TFXHPFYKg.b['1'][0]++;__cov_012PM$dPgbvU2TFXHPFYKg.s['11']++;record.children.forEach(function(child){__cov_012PM$dPgbvU2TFXHPFYKg.f['4']++;__cov_012PM$dPgbvU2TFXHPFYKg.s['12']++;addApiRecord(apiMap[record.name],child,record,axiosInstance);});__cov_012PM$dPgbvU2TFXHPFYKg.s['13']++;return;}else{__cov_012PM$dPgbvU2TFXHPFYKg.b['1'][1]++;}__cov_012PM$dPgbvU2TFXHPFYKg.s['14']++;apiMap[record.name]=createExecFunc(record,axiosInstance);}function normalizeRecord(record,props){__cov_012PM$dPgbvU2TFXHPFYKg.f['5']++;__cov_012PM$dPgbvU2TFXHPFYKg.s['16']++;var _props$options=props.options,options=_props$options===undefined?(__cov_012PM$dPgbvU2TFXHPFYKg.b['2'][0]++,{}):(__cov_012PM$dPgbvU2TFXHPFYKg.b['2'][1]++,_props$options),_props$meta=props.meta,meta=_props$meta===undefined?(__cov_012PM$dPgbvU2TFXHPFYKg.b['3'][0]++,{}):(__cov_012PM$dPgbvU2TFXHPFYKg.b['3'][1]++,_props$meta),_props$hooks=props.hooks,hooks=_props$hooks===undefined?(__cov_012PM$dPgbvU2TFXHPFYKg.b['4'][0]++,[]):(__cov_012PM$dPgbvU2TFXHPFYKg.b['4'][1]++,_props$hooks);__cov_012PM$dPgbvU2TFXHPFYKg.s['17']++;var createSimpleChildRecord=function createSimpleChildRecord(url,method){__cov_012PM$dPgbvU2TFXHPFYKg.f['6']++;__cov_012PM$dPgbvU2TFXHPFYKg.s['18']++;return{name:method.toLowerCase(),options:{url:url,method:method}};};__cov_012PM$dPgbvU2TFXHPFYKg.s['19']++;var normalizedRecord={name:record.name,children:(__cov_012PM$dPgbvU2TFXHPFYKg.b['5'][0]++,record.children)||(__cov_012PM$dPgbvU2TFXHPFYKg.b['5'][1]++,[]),options:merge.all([options,(__cov_012PM$dPgbvU2TFXHPFYKg.b['6'][0]++,record.options)||(__cov_012PM$dPgbvU2TFXHPFYKg.b['6'][1]++,{})]),meta:merge.all([meta,(__cov_012PM$dPgbvU2TFXHPFYKg.b['7'][0]++,record.meta)||(__cov_012PM$dPgbvU2TFXHPFYKg.b['7'][1]++,{})]),hooks:(__cov_012PM$dPgbvU2TFXHPFYKg.b['9'][0]++,record.hooks)&&(__cov_012PM$dPgbvU2TFXHPFYKg.b['9'][1]++,record.hooks.length)?(__cov_012PM$dPgbvU2TFXHPFYKg.b['8'][0]++,hooks.concat(record.hooks)):(__cov_012PM$dPgbvU2TFXHPFYKg.b['8'][1]++,hooks.slice())};__cov_012PM$dPgbvU2TFXHPFYKg.s['20']++;if((__cov_012PM$dPgbvU2TFXHPFYKg.b['11'][0]++,record.url)&&(__cov_012PM$dPgbvU2TFXHPFYKg.b['11'][1]++,record.method)){__cov_012PM$dPgbvU2TFXHPFYKg.b['10'][0]++;__cov_012PM$dPgbvU2TFXHPFYKg.s['21']++;normalizedRecord.options=merge.all([normalizedRecord.options,{url:record.url,method:record.method}]);}else{__cov_012PM$dPgbvU2TFXHPFYKg.b['10'][1]++;}__cov_012PM$dPgbvU2TFXHPFYKg.s['22']++;if((__cov_012PM$dPgbvU2TFXHPFYKg.b['13'][0]++,normalizedRecord.children.length)&&(__cov_012PM$dPgbvU2TFXHPFYKg.b['13'][1]++,normalizedRecord.options.method)&&(__cov_012PM$dPgbvU2TFXHPFYKg.b['13'][2]++,normalizedRecord.options.url)){__cov_012PM$dPgbvU2TFXHPFYKg.b['12'][0]++;__cov_012PM$dPgbvU2TFXHPFYKg.s['23']++;normalizedRecord.children.push(createSimpleChildRecord(normalizedRecord.options.url,normalizedRecord.options.method));__cov_012PM$dPgbvU2TFXHPFYKg.s['24']++;delete normalizedRecord.options.url;__cov_012PM$dPgbvU2TFXHPFYKg.s['25']++;delete normalizedRecord.options.method;}else{__cov_012PM$dPgbvU2TFXHPFYKg.b['12'][1]++;}__cov_012PM$dPgbvU2TFXHPFYKg.s['26']++;return normalizedRecord;}function createExecFunc(record,axiosInstance){__cov_012PM$dPgbvU2TFXHPFYKg.f['7']++;function createContext(_ref2){__cov_012PM$dPgbvU2TFXHPFYKg.f['8']++;__cov_012PM$dPgbvU2TFXHPFYKg.s['29']++;var meta=_ref2.meta,options=_ref2.options;__cov_012PM$dPgbvU2TFXHPFYKg.s['30']++;return{meta:meta,options:options,response:null};}function createRequestFunc(){__cov_012PM$dPgbvU2TFXHPFYKg.f['9']++;__cov_012PM$dPgbvU2TFXHPFYKg.s['32']++;return function(ctx,next){__cov_012PM$dPgbvU2TFXHPFYKg.f['10']++;__cov_012PM$dPgbvU2TFXHPFYKg.s['33']++;return axiosInstance(record.options).then(function(response){__cov_012PM$dPgbvU2TFXHPFYKg.f['11']++;__cov_012PM$dPgbvU2TFXHPFYKg.s['34']++;ctx.response=response;__cov_012PM$dPgbvU2TFXHPFYKg.s['35']++;next();});};}__cov_012PM$dPgbvU2TFXHPFYKg.s['36']++;return function(payload){__cov_012PM$dPgbvU2TFXHPFYKg.f['12']++;__cov_012PM$dPgbvU2TFXHPFYKg.s['37']++;record.options=merge(record.options,parseExecArgs(record.options.url,payload));__cov_012PM$dPgbvU2TFXHPFYKg.s['38']++;record.hooks.push(createRequestFunc());__cov_012PM$dPgbvU2TFXHPFYKg.s['39']++;var fn=compose(record.hooks);__cov_012PM$dPgbvU2TFXHPFYKg.s['40']++;var context=createContext(record);__cov_012PM$dPgbvU2TFXHPFYKg.s['41']++;return fn(context).then(function(){__cov_012PM$dPgbvU2TFXHPFYKg.f['13']++;__cov_012PM$dPgbvU2TFXHPFYKg.s['42']++;return context;});};}
-
-var __cov_vE97UqzqtCkkdwiFu2OL1g = (Function('return this'))();
-if (!__cov_vE97UqzqtCkkdwiFu2OL1g.__coverage__) { __cov_vE97UqzqtCkkdwiFu2OL1g.__coverage__ = {}; }
-__cov_vE97UqzqtCkkdwiFu2OL1g = __cov_vE97UqzqtCkkdwiFu2OL1g.__coverage__;
-if (!(__cov_vE97UqzqtCkkdwiFu2OL1g['/home/fahreevr/Projects/vue-apify/lib/install.js'])) {
-   __cov_vE97UqzqtCkkdwiFu2OL1g['/home/fahreevr/Projects/vue-apify/lib/install.js'] = {"path":"/home/fahreevr/Projects/vue-apify/lib/install.js","s":{"1":1,"2":0,"3":0},"b":{},"f":{"1":0,"2":0},"fnMap":{"1":{"name":"install","line":1,"loc":{"start":{"line":1,"column":7},"end":{"line":1,"column":29}}},"2":{"name":"get","line":3,"loc":{"start":{"line":3,"column":9},"end":{"line":3,"column":24}}}},"statementMap":{"1":{"start":{"line":1,"column":7},"end":{"line":7,"column":1}},"2":{"start":{"line":2,"column":2},"end":{"line":6,"column":5}},"3":{"start":{"line":4,"column":6},"end":{"line":4,"column":31}}},"branchMap":{}};
-}
-__cov_vE97UqzqtCkkdwiFu2OL1g = __cov_vE97UqzqtCkkdwiFu2OL1g['/home/fahreevr/Projects/vue-apify/lib/install.js'];
-function install(Vue){__cov_vE97UqzqtCkkdwiFu2OL1g.f['1']++;__cov_vE97UqzqtCkkdwiFu2OL1g.s['2']++;Object.defineProperty(Vue.prototype,'$api',{get:function get(){__cov_vE97UqzqtCkkdwiFu2OL1g.f['2']++;__cov_vE97UqzqtCkkdwiFu2OL1g.s['3']++;return this.$options.api;}});}
-
-var classCallCheck = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
+function parseExecArgs (url, props) {
+  var result = { url: url };
+  if (!props) {
+    return result
   }
-};
+  var url_params = props.url_params;
+  var params = props.params;
+  var data = props.data;
+  if (url_params) {
+    /*
+      TODO: add validations of url_params
+      let names = pathToRegexp.parse(url)
+        .filter(token => typeof token !== 'string' )
+        .map(({ name }) => name)
+      names === Object.keys(url_params)
+    */
+    var toPath = pathToRegexp.compile(url);
+    result.url = toPath(url_params);
+  }
+  if (params) {
+    result.params = params;
+  }
+  if (data) {
+    result.data = data;
+  }
+  return result
+}
 
-var createClass = function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
+function compose (hooks) {
+  if (!Array.isArray(hooks)) { throw new TypeError('Hooks stack must be an array!') }
+  hooks.forEach(function (fn) { if (typeof fn !== 'function') { throw new TypeError('Hooks must be composed of functions!') } });
+  // for (const fn of hooks) {
+  //   if (typeof fn !== 'function') throw new TypeError('Hooks must be composed of functions!')
+  // }
+  
+  return function (context, next) {
+    // last called middleware #
+    var index = -1;
+    return dispatch(0)
+    function dispatch (i) {
+      if (i <= index) { return Promise.reject(new Error('next() called multiple times')) }
+      index = i;
+      var fn = hooks[i];
+      if (i === hooks.length) { fn = next; }
+      if (!fn) { return Promise.resolve() }
+      try {
+        return Promise.resolve(fn(context, function next () {
+          return dispatch(i + 1)
+        }))
+      } catch (err) {
+        return Promise.reject(err)
+      }
     }
   }
-
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-}();
-
-var __cov_Odm2sUhbg38A$QkivCx1WQ = (Function('return this'))();
-if (!__cov_Odm2sUhbg38A$QkivCx1WQ.__coverage__) { __cov_Odm2sUhbg38A$QkivCx1WQ.__coverage__ = {}; }
-__cov_Odm2sUhbg38A$QkivCx1WQ = __cov_Odm2sUhbg38A$QkivCx1WQ.__coverage__;
-if (!(__cov_Odm2sUhbg38A$QkivCx1WQ['/home/fahreevr/Projects/vue-apify/lib/index.js'])) {
-   __cov_Odm2sUhbg38A$QkivCx1WQ['/home/fahreevr/Projects/vue-apify/lib/index.js'] = {"path":"/home/fahreevr/Projects/vue-apify/lib/index.js","s":{"1":0,"2":1,"3":0,"4":0,"5":0,"6":0,"7":0},"b":{},"f":{"1":0,"2":0,"3":0},"fnMap":{"1":{"name":"(anonymous_1)","line":4,"loc":{"start":{"line":4,"column":15},"end":{"line":4,"column":27}}},"2":{"name":"VueApify","line":5,"loc":{"start":{"line":5,"column":2},"end":{"line":5,"column":22}}},"3":{"name":"create","line":11,"loc":{"start":{"line":11,"column":11},"end":{"line":11,"column":51}}}},"statementMap":{"1":{"start":{"line":4,"column":0},"end":{"line":16,"column":4}},"2":{"start":{"line":5,"column":2},"end":{"line":7,"column":3}},"3":{"start":{"line":6,"column":4},"end":{"line":6,"column":48}},"4":{"start":{"line":9,"column":2},"end":{"line":14,"column":6}},"5":{"start":{"line":12,"column":6},"end":{"line":12,"column":50}},"6":{"start":{"line":15,"column":2},"end":{"line":15,"column":18}},"7":{"start":{"line":21,"column":0},"end":{"line":21,"column":27}}},"branchMap":{}};
 }
-__cov_Odm2sUhbg38A$QkivCx1WQ = __cov_Odm2sUhbg38A$QkivCx1WQ['/home/fahreevr/Projects/vue-apify/lib/index.js'];
-__cov_Odm2sUhbg38A$QkivCx1WQ.s['1']++;var VueApify=function(){__cov_Odm2sUhbg38A$QkivCx1WQ.f['1']++;function VueApify(){__cov_Odm2sUhbg38A$QkivCx1WQ.f['2']++;__cov_Odm2sUhbg38A$QkivCx1WQ.s['3']++;classCallCheck(this,VueApify);}__cov_Odm2sUhbg38A$QkivCx1WQ.s['4']++;createClass(VueApify,null,[{key:'create',value:function create(records,axiosInstance){__cov_Odm2sUhbg38A$QkivCx1WQ.f['3']++;__cov_Odm2sUhbg38A$QkivCx1WQ.s['5']++;return createApiMap(records,axiosInstance);}}]);__cov_Odm2sUhbg38A$QkivCx1WQ.s['6']++;return VueApify;}();__cov_Odm2sUhbg38A$QkivCx1WQ.s['7']++;VueApify.install=install;
+
+function createApiMap (records, ref) {
+  var axiosInstance = ref.axiosInstance;
+
+  var apiMap = {};
+  records.forEach(function (api) { return addApiRecord(apiMap, api, {}, axiosInstance ); });
+  return apiMap
+}
+
+function addApiRecord (apiMap, record, acc, axiosInstance) {
+  record = normalizeRecord(record, acc);
+  apiMap[record.name] = {};
+
+  if (record.children.length) {
+    record.children.forEach(function (child) { addApiRecord(apiMap[record.name], child, record, axiosInstance); });
+    return
+  }
+  apiMap[record.name] = createExecFunc(record, axiosInstance);
+}
+
+function normalizeRecord (record, props) {
+  var options = props.options; if ( options === void 0 ) options = {};
+  var meta = props.meta; if ( meta === void 0 ) meta = {};
+  var hooks = props.hooks; if ( hooks === void 0 ) hooks = [];
+  var createSimpleChildRecord = function (url, method) { return ({ name: method.toLowerCase(), options: { url: url, method: method } }); };
+  var normalizedRecord = {
+    name: record.name,
+    children: record.children || [],
+    options: merge.all([options, record.options || {}]),
+    meta: merge.all([meta, record.meta || {}]),
+    hooks: record.hooks && record.hooks.length
+      ? hooks.concat(record.hooks)
+      : hooks.slice()
+  };
+  if (record.url && record.method) {
+    normalizedRecord.options = merge.all([normalizedRecord.options, { url: record.url, method: record.method }]);
+  }
+  if (normalizedRecord.children.length && normalizedRecord.options.method && normalizedRecord.options.url) {
+    normalizedRecord.children.push(createSimpleChildRecord(normalizedRecord.options.url, normalizedRecord.options.method));
+    delete normalizedRecord.options.url;
+    delete normalizedRecord.options.method;
+  }
+  return normalizedRecord
+}
+
+function createExecFunc (record, axiosInstance) {
+  function createContext(ref) {
+    var meta = ref.meta;
+    var options = ref.options;
+
+    return {
+      meta: meta,
+      options: options,
+      response: null
+    }
+  }
+  function createRequestFunc () {
+    return function (ctx, next) {
+      return axiosInstance(record.options)
+        .then(function (response) {
+          ctx.response = response;
+          next();
+        })
+    }
+  }
+  return function (payload) {
+    record.options = merge(record.options, parseExecArgs(record.options.url, payload));
+    record.hooks.push(createRequestFunc());
+
+    var fn = compose(record.hooks);
+    var context = createContext(record);
+
+    return fn(context).then(function () { return context; })
+  }
+}
+
+function install (Vue) {
+  Object.defineProperty(Vue.prototype, '$api', {
+    get: function get () { return this.$options.api }
+  });
+}
+
+var VueApify = function VueApify () {};
+
+VueApify.create = function create (records, axiosInstance) {
+  return createApiMap(records, axiosInstance)
+};
+
+VueApify.install = install;
 
 export default VueApify;
 //# sourceMappingURL=vue-apify.esm.js.map
