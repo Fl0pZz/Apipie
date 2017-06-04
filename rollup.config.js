@@ -8,7 +8,7 @@ let external = Object.keys(pkg.dependencies);
 export default {
   entry: 'lib/index.js',
   plugins: [
-    node(),
+    node({ jsnext: true }),
     cjs(),
     buble()
   ],
