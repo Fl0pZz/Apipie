@@ -615,8 +615,8 @@ function normalizeRecord (record, props) {
     children: record.children || [],
     options: index$3.all([options, record.options || {}]),
     meta: index$3.all([meta, record.meta || {}]),
-    hooks: record.hooks && record.hooks.length
-      ? hooks.concat(record.hooks)
+    hooks: record.hook
+      ? hooks.concat(record.hook)
       : hooks.slice()
   };
   if (record.url && record.method) {
