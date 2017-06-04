@@ -3,6 +3,8 @@
 This is a tool for transforming the declaration of api call to js object.
 Inspired by VueRouter, Vue render function declaration, koa2.
 
+[Try it here!](https://jsfiddle.net/fl0pzz/1n90wtn0/1/)
+
 ## Installation
 ```bash
 # Using yarn:
@@ -59,7 +61,7 @@ new Vue({
   api,
   // ...
   mounted () {
-    api.user({ url_params: { id: 1 } }) // GET: /user/1
+    this.$api.user({ url_params: { id: 1 } }) // GET: /user/1
       .then(ctx => {
         console.log(ctx.response) // Responce schema as here:
                                   // https://github.com/mzabriskie/axios#response-schema
@@ -68,11 +70,11 @@ new Vue({
       cur_pass: '123',
       new_pass: '321'
     }
-    api.settings.changePassword({ params: change_pass }) // GET: /change_pass?cur_pass='123'&new_pass='321'
+    this.$api.settings.changePassword({ params: change_pass }) // GET: /change_pass?cur_pass='123'&new_pass='321'
       .then(ctx => { console.log(ctx.response) })
       
     const avatar = // ...
-    api.settings.changeAvatar({ data: { avatar } })
+    this.$api.settings.changeAvatar({ data: { avatar } })
   }
 })
 ```
