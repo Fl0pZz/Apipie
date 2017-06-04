@@ -1,6 +1,6 @@
-import buble from 'rollup-plugin-buble';
-import cjs from'rollup-plugin-commonjs';
-import node from 'rollup-plugin-node-resolve';
+const buble = require('rollup-plugin-buble');
+const cjs= require('rollup-plugin-commonjs');
+import resolve from 'rollup-plugin-node-resolve';
 
 let pkg = require('./package.json');
 let external = Object.keys(pkg.dependencies);
@@ -8,19 +8,15 @@ let external = Object.keys(pkg.dependencies);
 export default {
   entry: 'lib/index.js',
   plugins: [
-    node({
-      jsnext: true,
-      main: true,
-      browser: true,
-    }),
+    buble(),
     cjs(),
-    buble()
+    resolve()
   ],
-  external: external,
-  globals: {
-    'path-to-regexp': 'pathToRegexp',
-    deepmerge: 'merge'
-  },
+  //external: external,
+  // globals: {
+  //   'path-to-regexp': 'pathToRegexp',
+  //   deepmerge: 'merge'
+  // },
   targets: [
     {
       dest: pkg.main,
