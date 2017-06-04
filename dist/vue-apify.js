@@ -1,8 +1,5 @@
-(function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('path-to-regexp'), require('deepmerge')) :
-  typeof define === 'function' && define.amd ? define(['path-to-regexp', 'deepmerge'], factory) :
-  (global.VueApify = factory(global.pathToRegexp,global.merge));
-}(this, (function (pathToRegexp,merge) { 'use strict';
+var VueApify = (function (pathToRegexp,merge) {
+'use strict';
 
 pathToRegexp = 'default' in pathToRegexp ? pathToRegexp['default'] : pathToRegexp;
 merge = 'default' in merge ? merge['default'] : merge;
@@ -154,5 +151,5 @@ VueApify.install = install;
 
 return VueApify;
 
-})));
+}(pathToRegexp,merge));
 //# sourceMappingURL=vue-apify.js.map

@@ -8,7 +8,11 @@ let external = Object.keys(pkg.dependencies);
 export default {
   entry: 'lib/index.js',
   plugins: [
-    node({ jsnext: true }),
+    node({
+      jsnext: true,
+      main: true,
+      browser: true,
+    }),
     cjs(),
     buble()
   ],
@@ -20,7 +24,7 @@ export default {
   targets: [
     {
       dest: pkg.main,
-      format: 'umd',
+      format: 'iife',
       moduleName: 'VueApify',
       sourceMap: true
     },
