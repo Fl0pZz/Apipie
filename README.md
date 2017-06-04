@@ -30,7 +30,9 @@ const apiDecl = [
     }
   },
   {
-    name: 'settings',
+    name: 'settings', // You can not call apiMap.settings(), but apiMap.settings.get() will be available
+    url: '/settings',
+    method: 'GET'
     children: [
       { 
         name: 'changePassword', // api.settings.changePass(payload)
@@ -41,10 +43,8 @@ const apiDecl = [
       },
       {
         name: 'changeAvatar',  // api.settings.changeAvatar(payload)
-        options: {
-          url: '/change_avatar',
-          method: 'post'
-        }
+        url: '/change_avatar', // Simple decralation if yoou need only url and method from axios options
+        method: 'post'
       }
     ]
   }
