@@ -82,7 +82,6 @@ new Vue({
 [See here](/docs)
 
 ### TODO
-* Global hooks
 * Check copies of meta, hooks and options
 * Stacking of paths
 * More examples
