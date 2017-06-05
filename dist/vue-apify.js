@@ -586,11 +586,14 @@ return deepmerge
 }));
 });
 
-function createApiMap (records, ref) {
-  var axiosInstance = ref.axiosInstance;
-
+function createApiMap (records, options) {
   var apiMap = {};
-  records.forEach(function (api) { return addApiRecord(apiMap, api, {}, axiosInstance ); });
+  var acc = {};
+  var axiosInstance = options.axiosInstance;
+  if (options.globalHook) {
+    acc.hooks = [options.globalHook];
+  }
+  records.forEach(function (record) { return addApiRecord(apiMap, record, acc, axiosInstance ); });
   return apiMap
 }
 
@@ -669,8 +672,8 @@ function install (Vue) {
 
 var VueApify = function VueApify () {};
 
-VueApify.create = function create (records, axiosInstance) {
-  return createApiMap(records, axiosInstance)
+VueApify.create = function create (records, options) {
+  return createApiMap(records, options)
 };
 
 VueApify.install = install;
