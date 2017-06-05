@@ -51,7 +51,7 @@ type: `String` - наименование метода
 
 #### meta
 
-type: `Object` - подробнее смотри выше.
+type: `Object` - объект с данными, доступ к которым есть в хуках
 
 #### options
 
@@ -69,4 +69,14 @@ type: `Array<Object>` - список дочерних API.
 
 #### create
 
-type: `Object, Object`- возвращает js объект, полученный из трансформирования декларации
+type: `Function: (records, options)`- возвращает js объект, полученный из трансформирования декларации
+
+`records` - объект с декларациями запросов
+
+```
+options: 
+{
+  axiosInstance,
+  globalHook
+}
+```
