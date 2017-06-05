@@ -4,7 +4,7 @@
 
 ## Небольшая история развития
 
-Основная идея декларации взята из `VueRouter`, поэтому тут есть `meta`, `hooks`, `children`, `name`, однако реализация хуков позаимствованна у `koa2-middleware`, а паратры запроса задаются в `options`, как при задании запросов с помощью `axios`.
+Основная идея декларации взята из `VueRouter`, поэтому тут есть `meta`, `hooks`, `children`, `name`, однако реализация хуков позаимствованна у `koa2-middleware`, а параметры запроса задаются в `options`, как при задании запросов с помощью `axios`.
 Кроме того, добавлен некоторый синтаксический сахар: `url` и `method`.
 
 ### Hooks
@@ -15,7 +15,7 @@
 
 ### Request
 
-Настройки запроса через `options` почти полностью взяты у [axios] (https://github.com/mzabriskie/axios#request-config), однако стоит акцентировать внимание на `url`. Внутри `apify` использует [path-to-regexp](https://github.com/pillarjs/path-to-regexp) поэтому теперь поддерживают пути вида `/something/:id/`, просто для этого нужно передать при вызове метода `url_params: { id: /* something */ }`
+Настройки запроса через `options` почти полностью взяты у [axios](https://github.com/mzabriskie/axios#request-config), однако стоит акцентировать внимание на `url`. Внутри `apify` использует [path-to-regexp](https://github.com/pillarjs/path-to-regexp) поэтому теперь поддерживают пути вида `/something/:id/`, просто для этого нужно передать при вызове метода `url_params: { id: /* something */ }`
 
 ### Meta
 
