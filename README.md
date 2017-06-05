@@ -3,7 +3,7 @@
 This is a tool for transforming the declaration of api call to js object.
 Inspired by VueRouter, Vue render function declaration, koa2.
 
-[Try it here!](https://jsfiddle.net/fl0pzz/1n90wtn0/1/)
+[Try it here!](https://jsfiddle.net/fl0pzz/1n90wtn0/2/)
 
 ## Installation
 ```bash
@@ -80,3 +80,9 @@ new Vue({
 ```
 ### Documentations
 [See here](/docs)
+
+### TODO
+* Global hooks
+* Check copies of meta, hooks and options
+* Stacking of paths
+* More examples
