@@ -39,7 +39,44 @@
 
 ### Global hook
 
-Это хук, который будет применен первым к каждой записи. Передается во втором параметре статической функции `create` в поле `globalHook`. 
+Это хук, который будет применен первым к каждой записи. Передается во втором параметре статической функции `create` в поле `globalHook`.
+
+### Calls
+
+Допустим вы определили такую декларацию:
+```js
+{ 
+  name: 'user', // Further you'll use it as `api.user()` for sending request
+  url: '/user/:id',
+  method: 'get'
+}
+```
+Теперь вы можете его вызвать внутри `Vue` как:
+```js
+const user_id = 123;
+this.$api.user({ url_params: { id: user_id } }) // GET: /user/123
+```
+
+Объект, который вы передаете как аргумент при вызове содержит 3 поля:
+```js
+{
+  usr_params, // Те переменные и их значения, что будут подставлены в путь
+  params,     // Параметры запроса как в params в axios
+  data        // Данные, которые необходимо передать
+}
+```
+
+#### Syntax sugar
+
+Часто придется писать такие простые запросы:
+```js
+{ name: 'test', options: { url: '/test', method: 'get' } }
+```
+
+Вместо этого можно использовать более красивый синтаксис для декларации этого же самого запроса:
+```js
+{ name: 'test', url: '/test', method: 'get' }
+```
 
 ## API
 
@@ -52,6 +89,14 @@ type: `String` - наименование метода
 #### meta
 
 type: `Object` - объект с данными, доступ к которым есть в хуках
+
+#### url
+
+type `string` - url запроса, в том числе поддерживает [именнование параметры](https://github.com/pillarjs/path-to-regexp#named-parameters)
+
+#### method
+
+type `string` - тип метода, как `axios options method`
 
 #### options
 
