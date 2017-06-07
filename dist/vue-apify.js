@@ -715,8 +715,8 @@ function createExecFunc (record, axiosInstance) {
 var VueApify = function VueApify(records, options) {
   this.records = records;
   this.hooks = [];
-  this.meta = [];
-  this.options = [];
+  this.meta = [{}];
+  this.options = [{}];
   this.axiosInstance = options.axios;
 };
 VueApify.prototype.globalHook = function globalHook (hook) {
