@@ -8,7 +8,7 @@ Inspired by VueRouter, koa2 and axios.
 ## Installation
 ```bash
 # Using yarn:
-yarn install vue-apify
+yarn add vue-apify
 # Using npm:
 npm install vue-apify
 ```
@@ -63,7 +63,7 @@ new Vue({
   mounted () {
     this.$api.user({ url_params: { id: 1 } }) // GET: /user/1
       .then(ctx => {
-        console.log(ctx.response) // Responce schema as here:
+        console.log(ctx.response) // Response schema as here:
                                   // https://github.com/mzabriskie/axios#response-schema
       })
     const change_pass = {
