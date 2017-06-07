@@ -26,7 +26,7 @@ import VueApify from 'vue-apify'
 import axios from 'axios'
 
 const hook = async (ctx, next) => {
-  console.log('I'm hook!')
+  console.log(`I'm hook!`)
   await next()
 }
 
