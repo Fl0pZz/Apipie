@@ -1,3 +1,9 @@
+function install (Vue) {
+  Object.defineProperty(Vue.prototype, '$api', {
+    get: function get () { return this.$options.api }
+  });
+}
+
 var index$1 = Array.isArray || function (arr) {
   return Object.prototype.toString.call(arr) == '[object Array]';
 };
@@ -583,49 +589,82 @@ return deepmerge
 }));
 });
 
-function createApiMap (records, options) {
-  var apiMap = {};
-  var acc = {};
-  var axiosInstance = options.axiosInstance;
-  if (options.globalHook) {
-    acc.hooks = [options.globalHook];
-  }
-  records.forEach(function (record) { return addApiRecord(apiMap, record, acc, axiosInstance ); });
-  return apiMap
+function createRESTApiTree(records, acc, axiosInstance) {
+  var tree = {};
+  records.forEach(function (record, index) { return addTreeBranch({ tree: tree, records: records }, [index], record, acc, tree, axiosInstance); });
+  return tree
 }
 
-function addApiRecord (apiMap, record, acc, axiosInstance) {
-  record = normalizeRecord(record, acc);
-  apiMap[record.name] = {};
+function addTreeBranch(ref, path, record, acc, branch, axiosInstance) {
+  var tree = ref.tree;
+  var records = ref.records;
 
-  if (record.children.length) {
-    record.children.forEach(function (child) { addApiRecord(apiMap[record.name], child, record, axiosInstance); });
+  branch[record.name] = {};
+  prenormalizeRecord(record);
+  if (record.children && record.children.length) {
+    record.children
+      .forEach(function (childRecord, index) { return addTreeBranch({ tree: tree, records: records }, path.concat(index), childRecord, record, branch[record.name], axiosInstance); });
     return
   }
-  apiMap[record.name] = createExecFunc(record, axiosInstance);
+  function createLeafRESTTree(props) {
+    // Lazy counting of data on call
+    var ref = normalizeStackRecords(records, acc, path, []);
+    var names = ref[0];
+    var record1 = ref[1];
+    names = names.join('.');
+    tree[names] = createExecFunc(record1, axiosInstance);
+    return tree[names](props)
+  }
+  branch[record.name] = createLeafRESTTree;
+}
+
+function normalizeStackRecords(records, acc, path, names) {
+  var record = records[path.shift()];
+  record = normalizeRecord(record, acc);
+  names.push(record.name);
+  if (record.children.length) {
+    return normalizeStackRecords(record.children, record, path, names)
+  }
+  return [names, record]
+}
+
+// { ..., option: { ..., url, method }, children: [...] } -->
+// --> { ..., option: { ..., url, method }, children: [..., { name, option: { url, method } }] }
+function prenormalizeRecord (record) {
+  var createSimpleChildRecord = function (method, url) { return ({ name: method.toLowerCase(), options: { url: url, method: method } }); };
+
+  if (record.children && record.children.length &&
+    (record.method || (record.options && record.options.method))
+    && (record.url || (record.options && record.options.url))) {
+    record.children
+      .push(createSimpleChildRecord(record.method || record.options.method, record.url || record.options.url));
+  }
 }
 
 function normalizeRecord (record, props) {
-  var options = props.options; if ( options === void 0 ) options = {};
-  var meta = props.meta; if ( meta === void 0 ) meta = {};
+  if (record.normalized) { return record }
+
+  var options = props.options; if ( options === void 0 ) options = [];
+  var meta = props.meta; if ( meta === void 0 ) meta = [];
   var hooks = props.hooks; if ( hooks === void 0 ) hooks = [];
-  var createSimpleChildRecord = function (url, method) { return ({ name: method.toLowerCase(), options: { url: url, method: method } }); };
   var normalizedRecord = {
+    normalized: true,
     name: record.name,
-    children: record.children || [],
-    options: index$3.all([options, record.options || {}]),
-    meta: index$3.all([meta, record.meta || {}]),
-    hooks: record.hook
-      ? hooks.concat(record.hook)
-      : hooks.slice()
+    meta: [].concat(meta, record.meta || {}),
+    options: [].concat(options, record.options || {}),
+    hooks: [].concat(hooks, record.hook || []),
+    children: record.children || []
   };
+  // { name, url, method } --> { name, option: { url, method } }
   if (record.url && record.method) {
-    normalizedRecord.options = index$3.all([normalizedRecord.options, { url: record.url, method: record.method }]);
+    normalizedRecord.options.push({ url: record.url, method: record.method });
   }
-  if (normalizedRecord.children.length && normalizedRecord.options.method && normalizedRecord.options.url) {
-    normalizedRecord.children.push(createSimpleChildRecord(normalizedRecord.options.url, normalizedRecord.options.method));
-    delete normalizedRecord.options.url;
-    delete normalizedRecord.options.method;
+  // { ..., option: { ..., url, method }, children: [...] } -->
+  // --> { ..., option: { ... }, children: [..., { name, option: { url, method } }] }
+  var opts = normalizedRecord.options[normalizedRecord.options.length - 1];
+  if (normalizedRecord.children.length && opts.method && opts.url) {
+    delete opts.method;
+    delete opts.url;
   }
   return normalizedRecord
 }
@@ -650,27 +689,39 @@ function createExecFunc (record, axiosInstance) {
         })
     }
   }
-  return function (payload) {
-    record.options = index$3(record.options, parseExecArgs(record.options.url, payload));
+  return function (props) {
+    // TODO: It is necessary to optimize, then what is calculated on each call
+    if (record.options instanceof Array) {
+      record.options = index$3.all(record.options);
+    }
+    record.options = index$3(record.options, parseExecArgs(record.options.url, props));
+
+    if (record.meta instanceof Array) {
+      record.meta = index$3.all(record.meta);
+    }
     record.hooks.push(createRequestFunc());
 
     var fn = compose(record.hooks);
     var context = createContext(record);
 
     return fn(context).then(function () { return context; })
+
   }
 }
 
-function install (Vue) {
-  Object.defineProperty(Vue.prototype, '$api', {
-    get: function get () { return this.$options.api }
-  });
-}
-
-var VueApify = function VueApify () {};
-
-VueApify.create = function create (records, options) {
-  return createApiMap(records, options)
+var VueApify = function VueApify(records, options) {
+  this.records = records;
+  this.hooks = [];
+  this.meta = [];
+  this.options = [];
+  this.axiosInstance = options.axios;
+};
+VueApify.prototype.globalHook = function globalHook (hook) {
+  this.hooks.push(hook);
+};
+VueApify.prototype.create = function create () {
+  var acc = { meta: this.meta, options: this.options, hooks: this.hooks };
+  return createRESTApiTree(this.records, acc, this.axiosInstance)
 };
 
 VueApify.install = install;
