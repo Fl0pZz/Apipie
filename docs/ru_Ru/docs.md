@@ -111,7 +111,7 @@ type: `Object` - объект с данными, доступ к которым 
 
 #### url
 
-type `string` - url запроса, в том числе поддерживает [именнованные параметры](https://github.com/pillarjs/path-to-regexp#named-parameters)
+type `string` - url запроса, в том числе поддерживает [именованные параметры](https://github.com/pillarjs/path-to-regexp#named-parameters)
 
 #### method
 
