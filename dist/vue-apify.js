@@ -606,19 +606,19 @@ function addTreeBranch(ref, path, record, acc, branch, axiosInstance) {
   prenormalizeRecord(record);
   if (record.children && record.children.length) {
     record.children
-      .forEach(function (childRecord, index) { return addTreeBranch({ tree: tree, records: records }, path.concat(index), childRecord, record, branch[record.name], axiosInstance); });
+      .forEach(function (childRecord, index) { return addTreeBranch({ tree: tree, records: records }, path.concat(index), childRecord, acc, branch[record.name], axiosInstance); });
     return
   }
-  function createLeafRESTTree(props) {
+
+  branch[record.name] = function createLeafRESTTree(props) {
     // Lazy counting of data on call
     var ref = normalizeStackRecords(records, acc, path, []);
     var names = ref[0];
     var record1 = ref[1];
-    names = names.join('.');
-    tree[names] = createExecFunc(record1, axiosInstance);
-    return tree[names](props)
-  }
-  branch[record.name] = createLeafRESTTree;
+    var fullName = names.join('.');
+    tree[fullName] = createExecFunc(record1, names, axiosInstance);
+    return tree[fullName](props)
+  };
 }
 
 function normalizeStackRecords(records, acc, path, names) {
@@ -672,7 +672,7 @@ function normalizeRecord (record, props) {
   return normalizedRecord
 }
 
-function createExecFunc (record, axiosInstance) {
+function createExecFunc (record, fullName, axiosInstance) {
   function createContext(ref) {
     var meta = ref.meta;
     var options = ref.options;
@@ -680,7 +680,9 @@ function createExecFunc (record, axiosInstance) {
     return {
       meta: meta,
       options: options,
-      response: null
+      response: null,
+      name: record.name,
+      fullName: fullName
     }
   }
   function createRequestFunc () {
