@@ -13,7 +13,7 @@
 
 Хуки описываются точно так же как и в `koa2-middlewares`. Однако стоит отметить несколько отличий:
 * context состоит из `meta`, `response`, `options`
-* хуки исполняются в виде цепочки промисов (Promise chaining)
+* хуки исполняются в виде цепочки промисов (Promise chaining), а это значит, что каждый хук ДОЛЖЕН возвращать промис (используйте async/await для этого)
 
 ### Request
 
@@ -26,14 +26,18 @@
 {
   name: 'user',
   meta: { something1: true },
-  hook: (ctx, next) => { ctx.meta.something1 // true }
+  hook: async (ctx, next) => { 
+    ctx.meta.something1 // true
+    await next()
+  },
   children: [
     { 
       name: 'get',
       meta: { something2: false },
-      hook: (ctx, next) => {
+      hook: async (ctx, next) => {
         ctx.meta.something1 // true
         ctx.meta.something2 // false
+        await next()
       }
   ]
 }
