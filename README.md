@@ -3,7 +3,7 @@
 This is a tool for transforming the declaration of REST Api to js object.
 Inspired by VueRouter, koa2 and axios.
 
-[Try it here!](https://jsfiddle.net/fl0pzz/1n90wtn0/4/)
+[Try it here!](https://jsfiddle.net/fl0pzz/1n90wtn0/7/)
 
 ## Installation
 ```bash
