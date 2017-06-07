@@ -1,7 +1,7 @@
 # Vue-apify
 
-This is a tool for transforming the declaration of api call to js object.
-Inspired by VueRouter, Vue render function declaration, koa2.
+This is a tool for transforming the declaration of REST Api to js object.
+Inspired by VueRouter, koa2 and axios.
 
 [Try it here!](https://jsfiddle.net/fl0pzz/1n90wtn0/2/)
 
@@ -52,9 +52,9 @@ const apiDecl = [
   }
 ]
 
-const api = VueApify.create(apiDecl, { axiosInstance: axios.create() })
+const api = new VueApify(apiDecl, { axios: axios.create() })
 
-Vue.use(apify)
+Vue.use(VueApify)
 
 new Vue({
   // ...
@@ -82,6 +82,5 @@ new Vue({
 [See here](/docs)
 
 ### TODO
-* Check copies of meta, hooks and options
 * Stacking of paths
 * More examples
