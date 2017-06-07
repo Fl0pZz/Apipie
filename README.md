@@ -6,6 +6,7 @@ Inspired by VueRouter, koa2 and axios.
 [Try it here!](https://jsfiddle.net/fl0pzz/1n90wtn0/7/)
 
 ## Installation
+
 ```bash
 # Using yarn:
 yarn add vue-apify
@@ -14,6 +15,7 @@ npm install vue-apify
 ```
 
 Using CDN:
+
 ```html
 <script src="https://unpkg.com/vue-apify"></script>
 ```
@@ -23,36 +25,31 @@ import Vue from 'vue'
 import VueApify from 'vue-apify'
 import axios from 'axios'
 
+const hook = async (ctx, next) => {
+  console.log('I'm hook!')
+  await next()
+}
+
 const apiDecl = [
   { 
     name: 'user', // Further you'll use it as `api.user()` for sending request
-    options: {    // All of the options you'll find https://github.com/mzabriskie/axios#request-config
-      url: '/user/:id',
-      method: 'get'
-    }
+    // All of the options you'll find https://github.com/mzabriskie/axios#request-config
+    options: { ... }
+    url: '/user/:id',
+    method: 'get'
   },
-  {
-    name: 'settings', // You can not call apiMap.settings(), but apiMap.settings.get() will be available
-    url: '/settings',
-    method: 'GET'
+  { // You can not call apiMap.settings(), but apiMap.settings.get() will be available
+    name: 'settings', url: '/settings', method: 'get',
     children: [
-      { 
-        name: 'changePassword', // api.settings.changePass(payload)
-        options: {
-          url: '/change_pass',
-          method: 'post'
-        }
-      },
-      {
-        name: 'changeAvatar',  // api.settings.changeAvatar(payload)
-        url: '/change_avatar', // Simple decralation if yoou need only url and method from axios options
-        method: 'post'
-      }
+      { name: 'setStatus', url: '/set_status', method: 'post' },
+      { name: 'changeAvatar', url: '/change_avatar', method: 'post' }
     ]
   }
 ]
 
-const api = new VueApify(apiDecl, { axios: axios.create() })
+const apify = new VueApify(apiDecl, { axios })
+apify.globalHook(hook) // Global hook is also available
+const api = apify.create()
 
 Vue.use(VueApify)
 
@@ -66,11 +63,8 @@ new Vue({
         console.log(ctx.response) // Response schema as here:
                                   // https://github.com/mzabriskie/axios#response-schema
       })
-    const change_pass = {
-      cur_pass: '123',
-      new_pass: '321'
-    }
-    this.$api.settings.changePassword({ params: change_pass }) // GET: /change_pass?cur_pass='123'&new_pass='321'
+    // POST: /set_status?status=my_status
+    this.$api.settings.setStatus({ params: { status: 'my_status' } })
       .then(ctx => { console.log(ctx.response) })
       
     const avatar = // ...
