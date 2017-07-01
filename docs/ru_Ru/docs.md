@@ -66,7 +66,7 @@ this.$api.user({ url_params: { id: user_id } }) // GET: /user/123
 Объект, который вы передаете как аргумент при вызове содержит 3 поля:
 ```js
 {
-  usr_params, // Те переменные и их значения, что будут подставлены в путь
+  url_params, // Те переменные и их значения, что будут подставлены в путь
   params,     // Параметры запроса как в params в axios
   data        // Данные, которые необходимо передать
 }
@@ -84,6 +84,19 @@ this.$api.user({ url_params: { id: user_id } }) // GET: /user/123
 { name: 'test', url: '/test', method: 'get' }
 ```
 
+#### Context
+
+Контекст состоит из 5 полей:
+```js
+{
+  meta,
+  options,
+  response,
+  name,
+  fullName // Array, например для api.user.settings fullName = [ 'user', 'settings' ]
+}
+```
+
 ## API
 
 ### Options
@@ -98,7 +111,7 @@ type: `Object` - объект с данными, доступ к которым 
 
 #### url
 
-type `string` - url запроса, в том числе поддерживает [именнование параметры](https://github.com/pillarjs/path-to-regexp#named-parameters)
+type `string` - url запроса, в том числе поддерживает [именованные параметры](https://github.com/pillarjs/path-to-regexp#named-parameters)
 
 #### method
 
