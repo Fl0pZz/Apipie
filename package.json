@@ -1,6 +1,6 @@
 {
   "name": "vue-apify",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "Transform REST API declaration to js object",
   "main": "dist/vue-apify.js",
   "module": "dist/vue-apify.esm.js",
