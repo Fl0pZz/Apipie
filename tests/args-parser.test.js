@@ -1,4 +1,4 @@
-import parseExecArgs from './args-parser'
+import parseExecArgs from '../lib/utils/args-parser'
 
 describe('parseExecArgs', () => {
   const url = '/test/:id'

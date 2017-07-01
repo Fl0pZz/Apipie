@@ -4,7 +4,7 @@ import {
   normalizeStackRecords,
   prenormalizeRecord,
   normalizeRecord,
-  createExecFunc,  } from './create-rest-tree'
+  createExecFunc,  } from '../lib/create-rest-tree'
 
 describe('Create REST Api routing', () => {
   describe('prenormalizeRecord', () => {
