@@ -21,7 +21,7 @@ export default {
     {
       dest: pkg.main,
       format: 'iife',
-      moduleName: 'Apify',
+      moduleName: 'apipie',
       sourceMap: true
     },
     {

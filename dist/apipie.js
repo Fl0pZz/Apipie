@@ -1,4 +1,4 @@
-var Apify = (function () {
+var apipie = (function () {
 'use strict';
 
 var index$1 = Array.isArray || function (arr) {
@@ -749,4 +749,4 @@ Apify.prototype.create = function create () {
 return Apify;
 
 }());
-//# sourceMappingURL=apify.js.map
+//# sourceMappingURL=apipie.js.map

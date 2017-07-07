@@ -1,4 +1,4 @@
-# Apify
+# Apipie
 (Previously called VueApify )
 
 This is a tool for transforming the declaration of REST Api to js object.
@@ -10,9 +10,9 @@ Inspired by VueRouter, koa2 and axios.
 
 ```bash
 # Using yarn:
-yarn add vue-apify
+yarn add apipie
 # Using npm:
-npm install vue-apify
+npm install apipie
 ```
 
 Using CDN:
