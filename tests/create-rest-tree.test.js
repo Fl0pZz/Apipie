@@ -352,7 +352,39 @@ describe('Create REST Api routing', () => {
       expect(tree).toHaveProperty('test.get')
       expect(tree).toHaveProperty('test.test1')
       expect(tree).toHaveProperty('test.test2')
-
+    })
+    describe('Test named parameters', () => {
+      const records = [
+        { name: 'test', method: 'get', url: '/test/:id' }
+      ]
+      const acc = { meta: [{}], options: [{}], hooks: [], axios: axiosMock, records }
+      const tree = createTreeSkeleton(records, acc)
+      test('with id=1', () => {
+        const expectedCtx = {
+          meta: {},
+          options: {
+            method: 'get',
+            url: '/test/1'
+          },
+          name: 'test',
+          fullName: ['test'],
+          response: { success: true }
+        }
+        return expect(tree.test({ url_params: { id: 1 } })).resolves.toEqual(expectedCtx)
+      })
+      test('with id=2 and with same request', () => {
+        const expectedCtx = {
+          meta: {},
+          options: {
+            method: 'get',
+            url: '/test/2'
+          },
+          name: 'test',
+          fullName: ['test'],
+          response: { success: true }
+        }
+        return expect(tree.test({ url_params: { id: 2 } })).resolves.toEqual(expectedCtx)
+      })
     })
   })
 })
