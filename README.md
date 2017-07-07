@@ -18,12 +18,11 @@ npm install apipie
 Using CDN:
 
 ```html
-<script src="https://unpkg.com/vue-apify"></script>
+<script src="https://unpkg.com/apipie"></script>
 ```
 
 ```js
-import Vue from 'vue'
-import VueApify from 'vue-apify'
+import Apipie from 'apipie'
 import axios from 'axios'
 
 const hook = async (ctx, next) => {
@@ -31,8 +30,8 @@ const hook = async (ctx, next) => {
   await next()
 }
 
-const apiDecl = [
-  { 
+const decl = [
+  {
     name: 'user', // Further you'll use it as `api.user()` for sending request
     // All of the options you'll find https://github.com/mzabriskie/axios#request-config
     options: { ... }
@@ -48,31 +47,24 @@ const apiDecl = [
   }
 ]
 
-const apify = new VueApify(apiDecl, { axios })
-apify.globalHook(hook) // Global hook is also available
-const api = apify.create()
+const apipie = new Apipie(decl, { axios })
+apipie.globalHook(hook) // Global hook is also available
+const api = apipie.create()
 
-Vue.use(VueApify)
+api.user({ url_params: { id: 1 } }) // GET: /user/1
+  .then(ctx => {
+    console.log(ctx.response) // Response schema as here:
+                              // https://github.com/mzabriskie/axios#response-schema
+  })
 
-new Vue({
-  // ...
-  api,
-  // ...
-  mounted () {
-    this.$api.user({ url_params: { id: 1 } }) // GET: /user/1
-      .then(ctx => {
-        console.log(ctx.response) // Response schema as here:
-                                  // https://github.com/mzabriskie/axios#response-schema
-      })
-    // POST: /set_status?status=my_status
-    this.$api.settings.setStatus({ params: { status: 'my_status' } })
-      .then(ctx => { console.log(ctx.response) })
-      
-    const avatar = // ...
-    this.$api.settings.changeAvatar({ data: { avatar } })
-  }
-})
+// POST: /set_status?status=my_status
+api.settings.setStatus({ params: { status: 'my_status' } })
+  .then(ctx => { console.log(ctx.response) })
+
+const avatar = // ...
+api.settings.changeAvatar({ data: { avatar } })
 ```
+
 ### Documentations
 [See here](/docs)
 
