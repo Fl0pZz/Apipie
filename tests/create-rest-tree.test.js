@@ -4,6 +4,7 @@ import {
   calculateBranchNodes,
   normalizeRecord,
   createExecFunc,  } from '../lib/create-rest-tree'
+import VueApify from '../lib/index'
 
 describe('Create REST Api routing', () => {
   describe('normalizeRecord', () => {
@@ -311,7 +312,6 @@ describe('Create REST Api routing', () => {
       const path = [0]
       const record = records[0]
       addTreeBranch(tree, record, path, acc)
-      console.log(acc)
       test('Tree properties', () => {
         expect(tree).toHaveProperty('test')
         expect(tree).toHaveProperty('test.get')
@@ -385,6 +385,24 @@ describe('Create REST Api routing', () => {
         }
         return expect(tree.test({ url_params: { id: 2 } })).resolves.toEqual(expectedCtx)
       })
+    })
+  })
+  describe('VueApify', () => {
+    const axiosMock = () => Promise.resolve({ success: true })
+    test('Basic', () => {
+      const records = [{
+        name: 'test', url: '/test', method: 'get',
+        children: [
+          {name: 'test1', url: '/test/1', method: 'get'},
+          {name: 'test2', url: '/test/2', method: 'get'}
+        ]
+      }]
+      const apify = new VueApify(records, { axios: axiosMock })
+      const api = apify.create()
+      expect(api).toHaveProperty('test')
+      expect(api).toHaveProperty('test.get')
+      expect(api).toHaveProperty('test.test1')
+      expect(api).toHaveProperty('test.test2')
     })
   })
 })

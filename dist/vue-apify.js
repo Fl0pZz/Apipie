@@ -714,8 +714,8 @@ function createExecFunc (record, fullName, axios) {
       fullName: fullName
     }
   }
-  function createRequestFunc (options) {
-    return function (ctx, next) { return axios(options)
+  function createRequestFunc () {
+    return function (ctx, next) { return axios(ctx.options)
       .then(function (response) {
         ctx.response = response;
         next();
