@@ -4,7 +4,6 @@ import {
   calculateBranchNodes,
   normalizeRecord,
   createExecFunc,  } from '../lib/create-rest-tree'
-import VueApify from '../lib/index'
 
 describe('Create REST Api routing', () => {
   describe('normalizeRecord', () => {
@@ -385,24 +384,6 @@ describe('Create REST Api routing', () => {
         }
         return expect(tree.test({ url_params: { id: 2 } })).resolves.toEqual(expectedCtx)
       })
-    })
-  })
-  describe('VueApify', () => {
-    const axiosMock = () => Promise.resolve({ success: true })
-    test('Basic', () => {
-      const records = [{
-        name: 'test', url: '/test', method: 'get',
-        children: [
-          {name: 'test1', url: '/test/1', method: 'get'},
-          {name: 'test2', url: '/test/2', method: 'get'}
-        ]
-      }]
-      const apify = new VueApify(records, { axios: axiosMock })
-      const api = apify.create()
-      expect(api).toHaveProperty('test')
-      expect(api).toHaveProperty('test.get')
-      expect(api).toHaveProperty('test.test1')
-      expect(api).toHaveProperty('test.test2')
     })
   })
 })

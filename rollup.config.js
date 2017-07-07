@@ -21,7 +21,7 @@ export default {
     {
       dest: pkg.main,
       format: 'iife',
-      moduleName: 'VueApify',
+      moduleName: 'Apify',
       sourceMap: true
     },
     {

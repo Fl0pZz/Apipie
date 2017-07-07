@@ -1,10 +1,10 @@
 {
-  "name": "vue-apify",
-  "version": "0.10.1",
+  "name": "apify",
+  "version": "0.11.0",
   "description": "Transform REST API declaration to js object",
-  "main": "dist/vue-apify.js",
-  "module": "dist/vue-apify.esm.js",
-  "unpkg": "dist/vue-apify.js",
+  "main": "dist/apify.js",
+  "module": "dist/apify.esm.js",
+  "unpkg": "dist/apify.js",
   "scripts": {
     "prebuild": "eslint lib test",
     "build": "rollup -c",
@@ -15,10 +15,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Fl0pZz/vue-apify.git"
+    "url": "https://github.com/Fl0pZz/apify.git"
   },
   "keywords": [
-    "vue",
     "api",
     "apify",
     "rest"
@@ -26,13 +25,13 @@
   "author": "Rafael Fakhreev",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Fl0pZz/vue-apify/issues"
+    "url": "https://github.com/Fl0pZz/apify/issues"
   },
   "files": [
     "lib",
     "dist"
   ],
-  "homepage": "https://github.com/Fl0pZz/vue-apify",
+  "homepage": "https://github.com/Fl0pZz/apify",
   "dependencies": {
     "deepmerge": "^1.3.2",
     "path-to-regexp": "^1.7.0"

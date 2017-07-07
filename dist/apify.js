@@ -1,11 +1,5 @@
-var VueApify = (function () {
+var Apify = (function () {
 'use strict';
-
-function install (Vue) {
-  Object.defineProperty(Vue.prototype, '$api', {
-    get: function get () { return this.$options.api }
-  });
-}
 
 var index$1 = Array.isArray || function (arr) {
   return Object.prototype.toString.call(arr) == '[object Array]';
@@ -738,23 +732,21 @@ function createExecFunc (record, fullName, axios) {
   }
 }
 
-var VueApify = function VueApify(records, options) {
+var Apify = function Apify(records, options) {
   this.records = records;
   this.hooks = [];
   this.meta = [{}];
   this.options = [{}];
   this.axios = options.axios;
 };
-VueApify.prototype.globalHook = function globalHook (hook) {
+Apify.prototype.globalHook = function globalHook (hook) {
   this.hooks.push(hook);
 };
-VueApify.prototype.create = function create () {
+Apify.prototype.create = function create () {
   return createTreeSkeleton(this.records, this)
 };
 
-VueApify.install = install;
-
-return VueApify;
+return Apify;
 
 }());
-//# sourceMappingURL=vue-apify.js.map
+//# sourceMappingURL=apify.js.map

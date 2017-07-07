@@ -1,4 +1,5 @@
-# Vue-apify
+# Apify
+(Previously called VueApify )
 
 This is a tool for transforming the declaration of REST Api to js object.
 Inspired by VueRouter, koa2 and axios.
