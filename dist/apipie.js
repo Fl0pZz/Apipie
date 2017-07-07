@@ -435,8 +435,20 @@ index.compile = compile_1;
 index.tokensToFunction = tokensToFunction_1;
 index.tokensToRegExp = tokensToRegExp_1;
 
-function parseExecArgs (url, props) {
+function parseExecArgs (url, props, ref) {
+  var _require = ref._require;
+
   var result = { url: url };
+  if (_require.params && (!props || !props.params)) { throw new Error('Require params!') }
+  if (_require.data && (!props || !props.data)) { throw new Error('Require data!') }
+  var requireParams = index.parse(url)
+    .filter(function (token) { return typeof token !== 'string'; } )
+    .map(function (ref) {
+      var name = ref.name;
+
+      return name;
+  });
+  if (requireParams.length && !props) { throw new Error('Require url_params!') }
   if (!props) {
     return result
   }
@@ -444,13 +456,11 @@ function parseExecArgs (url, props) {
   var params = props.params;
   var data = props.data;
   if (url_params) {
-    /*
-      TODO: add validations of url_params
-      let names = pathToRegexp.parse(url)
-        .filter(token => typeof token !== 'string' )
-        .map(({ name }) => name)
-      names === Object.keys(url_params)
-    */
+    requireParams.forEach(function (param) {
+      if (!url_params[param]) {
+        throw new Error(("Require " + (requireParams.join(', ')) + ", but given " + (Object.keys(url_params).join(', ') || 'nothing')))
+      }
+    });
     var toPath = index.compile(url);
     result.url = toPath(url_params);
   }
@@ -621,7 +631,13 @@ function addTreeBranch (branch, record, indexPath, closurePack) {
   branch[record.name] = {};
   if (record.children && record.children.length) {
     if (record.method) {
-      record.children.push({ name: record.method, method: record.method, url: record.url });
+      record.children.push({
+        name: record.method,
+        method: record.method,
+        url: record.url,
+        data: !!record.data,
+        params: !!record.params
+      });
     }
     record.children.forEach(function (childRecord, index) { return addTreeBranch(branch[record.name], childRecord, indexPath.concat(index), closurePack); });
     return
@@ -664,6 +680,10 @@ function normalizeRecord (record, props) {
   var hooks = props.hooks; if ( hooks === void 0 ) hooks = [];
   var normalizedRecord = {
     _normalized: true,
+    _require: {
+      data: !!record.data,
+      params: !!record.params
+    },
     name: record.name,
     meta: [].concat(meta, record.meta || {}),
     options: [].concat(options, record.options || {}),
@@ -722,7 +742,7 @@ function createExecFunc (record, fullName, axios) {
     if (record.meta instanceof Array) {
       record.meta = index$3.all(record.meta);
     }
-    var tmpOptions = index$3(record.options, parseExecArgs(record.options.url, props));
+    var tmpOptions = index$3(record.options, parseExecArgs(record.options.url, props, record));
     record.hooks.push(createRequestFunc());
 
     var fn = compose(record.hooks);
@@ -732,21 +752,21 @@ function createExecFunc (record, fullName, axios) {
   }
 }
 
-var Apify = function Apify(records, options) {
+var Apipie = function Apipie(records, options) {
   this.records = records;
   this.hooks = [];
   this.meta = [{}];
   this.options = [{}];
   this.axios = options.axios;
 };
-Apify.prototype.globalHook = function globalHook (hook) {
+Apipie.prototype.globalHook = function globalHook (hook) {
   this.hooks.push(hook);
 };
-Apify.prototype.create = function create () {
+Apipie.prototype.create = function create () {
   return createTreeSkeleton(this.records, this)
 };
 
-return Apify;
+return Apipie;
 
 }());
 //# sourceMappingURL=apipie.js.map

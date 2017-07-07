@@ -12,6 +12,7 @@ describe('Create REST Api routing', () => {
       const props = {}
       const expected = {
         _normalized: true,
+        _require: { data: false, params: false },
         name: 'test',
         meta: [{}],
         options: [{ url: 'url', method: 'get' }],
@@ -25,6 +26,7 @@ describe('Create REST Api routing', () => {
       const props = {}
       const expected = {
         _normalized: true,
+        _require: { data: false, params: false },
         name: 'test',
         meta: [{}],
         options: [{}, { url: 'url', method: 'get' }],
@@ -38,6 +40,7 @@ describe('Create REST Api routing', () => {
       const props = {}
       const expected = {
         _normalized: true,
+        _require: { data: false, params: false },
         name: 'test',
         meta: [{}],
         options: [{}],
@@ -60,6 +63,7 @@ describe('Create REST Api routing', () => {
       }
       const expected = {
         _normalized: true,
+        _require: { data: false, params: false },
         name: 'test',
         meta: [{ props: 'props', test: "123" }, { test: 'test' }],
         options: [{ props: 'props' }, { test: 'test' }, { url: 'url', method: 'get' }],
@@ -73,6 +77,7 @@ describe('Create REST Api routing', () => {
     const axiosMock = () => Promise.resolve({ success: true })
     test('Basic', () => {
       const record = {
+        _require: { data: false, params: false },
         name: 'test',
         options: [{}, {
           url: '/test/:id',
@@ -99,6 +104,7 @@ describe('Create REST Api routing', () => {
     })
     test('With data and params', () => {
       const record = {
+        _require: { data: false, params: false },
         name: 'test',
         options: [{}, {
           url: '/test/:id',
@@ -139,6 +145,7 @@ describe('Create REST Api routing', () => {
       }
       const record1 = {
         _normalized: true,
+        _require: { data: false, params: false },
         name: 'test',
         meta: [props.meta[0], { test: 'test' }],
         options: [props.options[0], { test: 'test' }, { url: '/test/:id', method: 'get' }],
@@ -147,6 +154,7 @@ describe('Create REST Api routing', () => {
       }
       const record2 = {
         _normalized: true,
+        _require: { data: false, params: false },
         name: 'test',
         meta: [props.meta[0], { test: 'test' }],
         options: [props.options[0], { test: 'test' }, { url: '/test/:id', method: 'get' }],
@@ -234,6 +242,111 @@ describe('Create REST Api routing', () => {
       const fn = createExecFunc(normalizeRecord(record, props), ['a'], axiosMock)
       return expect(fn()).resolves.toMatchObject({ meta: { test1: false, test2: true } })
     })
+    describe('Test data, params and url_params validations', () => {
+      const data = true
+      const params = true
+      const props = { meta: [{}], options: [{}], hooks: [] }
+      describe('Test data validation', () => {
+        test('Valid', () => {
+          const record = { name: 'test', method: 'get', url: '/test', data }
+          const expectedCtx = {
+            meta: {},
+            options: {
+              data: 'test_data',
+              method: 'get',
+              url: '/test'
+            },
+            name: 'test',
+            fullName: ['test'],
+            response: { success: true }
+          }
+          const normalizedRecord = normalizeRecord(record, props)
+          const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
+          return expect(fn({ data: 'test_data' })).resolves.toEqual(expectedCtx)
+        })
+        test('Invalid', () => {
+          const record = { name: 'test', method: 'get', url: '/test', data }
+          const normalizedRecord = normalizeRecord(record, props)
+          const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
+          try {
+            expect.assertions(1)
+            fn()
+          } catch (err) {
+            expect(err.message).toEqual('Require data!')
+          }
+        })
+      })
+      describe('Test params validation', () => {
+        test('Valid', () => {
+          const record = { name: 'test', method: 'get', url: '/test', params }
+          const expectedCtx = {
+            meta: {},
+            options: {
+              params: { test: 'test_param' },
+              method: 'get',
+              url: '/test'
+            },
+            name: 'test',
+            fullName: ['test'],
+            response: { success: true }
+          }
+          const normalizedRecord = normalizeRecord(record, props)
+          const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
+          return expect(fn({ params: { test: 'test_param' }})).resolves.toEqual(expectedCtx)
+        })
+        test('Invalid', () => {
+          const record = { name: 'test', method: 'get', url: '/test', params }
+          const normalizedRecord = normalizeRecord(record, props)
+          const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
+          try {
+            expect.assertions(1)
+            fn()
+          } catch (err) {
+            expect(err.message).toEqual('Require params!')
+          }
+        })
+      })
+      describe('Test url_params validation', () => {
+        test('Valid', () => {
+          const record = { name: 'test', method: 'get', url: '/test/:id1/:id2' }
+          const expectedCtx = {
+            meta: {},
+            options: {
+              method: 'get',
+              url: '/test/1/2'
+            },
+            name: 'test',
+            fullName: ['test'],
+            response: { success: true }
+          }
+          const normalizedRecord = normalizeRecord(record, props)
+          const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
+          return expect(fn({ url_params: { id1: 1, id2: 2 }})).resolves.toEqual(expectedCtx)
+        })
+        test('Invalid all params', () => {
+          const record = { name: 'test', method: 'get', url: '/test/:id1/:id2' }
+          const normalizedRecord = normalizeRecord(record, props)
+          const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
+          try {
+            expect.assertions(1)
+            fn()
+          } catch (err) {
+            expect(err.message).toEqual('Require url_params!')
+          }
+        })
+        test('Invalid with part of url_params', () => {
+          const record = { name: 'test', method: 'get', url: '/test/:id1/:id2' }
+          const normalizedRecord = normalizeRecord(record, props)
+          const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
+          try {
+            expect.assertions(1)
+            fn({ url_params: { id1: 1 } })
+          } catch (err) {
+            expect(err.message).toEqual('Require id1, id2, but given id1')
+          }
+        })
+      })
+    })
   })
   describe('calculateBranchNodes', () => {
     test('Basic', () => {
@@ -246,6 +359,7 @@ describe('Create REST Api routing', () => {
       }]
       const expectedRecord = {
         _normalized: true,
+        _require: { data: false, params: false },
         name: 'test1',
         meta: [ {}, {} ],
         options: [ {}, {}, {}, { url: '/test/1', method: 'get' } ],
@@ -280,6 +394,7 @@ describe('Create REST Api routing', () => {
       const path = [0, 0]
       const expectedRecord = {
         _normalized: true,
+        _require: { data: false, params: false },
         name: 'test1',
         meta: [ { acc: 'acc' }, { test: 'test' }, { test1: 'test1' } ],
         options:

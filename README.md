@@ -1,5 +1,5 @@
 # Apipie
-(Previously called VueApify )
+Thanks [Akiyamka](https://github.com/akiyamka) for new project name!! (Previously called VueApify)
 
 This is a tool for transforming the declaration of REST Api to js object.
 Inspired by VueRouter, koa2 and axios.
