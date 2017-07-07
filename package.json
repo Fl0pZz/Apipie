@@ -1,6 +1,6 @@
 {
   "name": "vue-apify",
-  "version": "0.9.4",
+  "version": "0.10.0",
   "description": "Transform REST API declaration to js object",
   "main": "dist/vue-apify.js",
   "module": "dist/vue-apify.esm.js",
@@ -35,8 +35,6 @@
   "homepage": "https://github.com/Fl0pZz/vue-apify",
   "dependencies": {
     "deepmerge": "^1.3.2",
-    "lodash.get": "^4.4.2",
-    "lodash.set": "^4.3.2",
     "path-to-regexp": "^1.7.0"
   },
   "devDependencies": {
