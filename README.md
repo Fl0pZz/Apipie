@@ -38,7 +38,7 @@ const decl = [
     url: '/user/:id',
     method: 'get'
   },
-  { // You can not call apiMap.settings(), but apiMap.settings.get() will be available
+  { // You can not call api.settings(), but api.settings.get() will be available
     name: 'settings', url: '/settings', method: 'get',
     children: [
       { name: 'setStatus', url: '/set_status', method: 'post' },
