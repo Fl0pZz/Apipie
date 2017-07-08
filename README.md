@@ -6,6 +6,8 @@ Inspired by VueRouter, koa2 and axios.
 
 [Try it here! (version v0.9.*)](https://jsfiddle.net/fl0pzz/1n90wtn0/7/)
 
+[Why should i use it? Why? Why? Why?](/docs/ru_Ru/whywhywhy.md)
+
 ## Installation
 
 ```bash
