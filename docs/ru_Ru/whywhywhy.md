@@ -84,13 +84,15 @@ const decl = [
   {
     name: 'img',
     children: [
-      { name: 'upload', method: 'post', url: '/catalog/developer/image/', data }
+      { name: 'upload', method: 'post', url: '/catalog/developer/image/',
+        options: { headers: { 'Content-Type': 'multipart/form-data' } }, data }
     ]
   },
   {
     name: 'file',
     children: [
-      { name: 'upload', method: 'post', url: '/catalog/developer/content/', data },
+      { name: 'upload', method: 'post', url: '/catalog/developer/content/',
+        options: { headers: { 'Content-Type': 'multipart/form-data' } }, data },
       { name: 'post', method: 'post', url: '/catalog/developer/content/:id/', data }
     ]
   },
