@@ -309,19 +309,10 @@ describe('Create REST Api routing', () => {
       describe('Test url_params validation', () => {
         test('Valid', () => {
           const record = { name: 'test', method: 'get', url: '/test/:id1/:id2' }
-          const expectedCtx = {
-            meta: {},
-            options: {
-              method: 'get',
-              url: '/test/1/2'
-            },
-            name: 'test',
-            fullName: ['test'],
-            response: { success: true }
-          }
           const normalizedRecord = normalizeRecord(record, props)
           const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
-          return expect(fn({ url_params: { id1: 1, id2: 2 }})).resolves.toEqual(expectedCtx)
+          const url_params = {url_params: { id1: 1, id2: 2 }}
+          return expect(fn(url_params)).resolves.toHaveProperty('options.url', '/test/1/2')
         })
         test('Invalid all params', () => {
           const record = { name: 'test', method: 'get', url: '/test/:id1/:id2' }
@@ -344,6 +335,22 @@ describe('Create REST Api routing', () => {
           } catch (err) {
             expect(err.message).toEqual('Require id1, id2, but given id1')
           }
+        })
+        describe('Optional names params', () => {
+          test('Without optional names params', () => {
+            const record = { name: 'test', method: 'get', url: '/test/:id1/:id2/:id3?' }
+            const normalizedRecord = normalizeRecord(record, props)
+            const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
+            const url_params = {url_params: { id1: 1, id2: 2 }}
+            return expect(fn(url_params)).resolves.toHaveProperty('options.url', '/test/1/2')
+          })
+          test('With optional names params', () => {
+            const record = { name: 'test', method: 'get', url: '/test/:id1/:id2/:id3?' }
+            const normalizedRecord = normalizeRecord(record, props)
+            const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
+            const url_params = { url_params: { id1: 1, id2: 2, id3: 3} }
+            return expect(fn(url_params)).resolves.toHaveProperty('options.url', '/test/1/2/3')
+          })
         })
       })
     })

@@ -439,7 +439,12 @@ function parseExecArgs (url, props, ref) {
   if (_require.params && (!props || !props.params)) { throw new Error('Require params!') }
   if (_require.data && (!props || !props.data)) { throw new Error('Require data!') }
   var requireParams = index.parse(url)
-    .filter(function (token) { return typeof token !== 'string'; } )
+    .filter(function (token) { return [
+          typeof token !== 'string',
+          !token.optional, // https://github.com/pillarjs/path-to-regexp#optional
+          !token.asterisk // https://github.com/pillarjs/path-to-regexp#asterisk
+        ].every(Boolean); }
+    )
     .map(function (ref) {
       var name = ref.name;
 
