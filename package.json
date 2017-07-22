@@ -1,6 +1,6 @@
 {
   "name": "apipie",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "description": "Transform REST API declaration to js object",
   "main": "dist/apipie.js",
   "module": "dist/apipie.esm.js",

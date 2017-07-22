@@ -666,9 +666,9 @@ function lazyCalcLeafNode (indexPath, closurePack) {
 /*
 * STEP 2: Сompute only the necessary nodes of the tree to execute the request
 */
-function calculateBranchNodes (records, indexPath, propNamesPath, acc) {
+function calculateBranchNodes (records, indexPath, propNamesPath, closurePack) {
   var index = indexPath.shift();
-  records[index] = normalizeRecord(records[index], acc);
+  records[index] = normalizeRecord(records[index], closurePack);
   var record = records[index];
   propNamesPath.push(record.name);
   if (record.children.length) {
@@ -740,19 +740,18 @@ function createExecFunc (record, fullName, axios) {
         next();
       }); }
   }
+  if (record.options instanceof Array) {
+    record.options = index$3.all(record.options);
+  }
+  if (record.meta instanceof Array) {
+    record.meta = index$3.all(record.meta);
+  }
+  record.hooks.push(createRequestFunc());
+  var fn = compose(record.hooks);
+
   return function (props) {
-    if (record.options instanceof Array) {
-      record.options = index$3.all(record.options);
-    }
-    if (record.meta instanceof Array) {
-      record.meta = index$3.all(record.meta);
-    }
-    var tmpOptions = index$3(record.options, parseExecArgs(record.options.url, props, record));
-    record.hooks.push(createRequestFunc());
-
-    var fn = compose(record.hooks);
+    var tmpOptions = index$3(record.options, parseExecArgs(record.options.url, props, record), { clone: true });
     var context = createContext(record.meta, tmpOptions);
-
     return fn(context).then(function () { return context; })
   }
 }

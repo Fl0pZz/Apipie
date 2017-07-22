@@ -175,17 +175,33 @@ describe('Create REST Api routing', () => {
       }
       const fn1 = createExecFunc(record1, ['test'], axiosMock)
       const fn2 = createExecFunc(record2, ['test'], axiosMock)
-      test('Resolve of test1', () => {
-        return expect(fn1({ url_params: { id: 1 } })).resolves.toEqual(expectedCtx)
-      })
-      test('Resolve of test2', () => {
-        return expect(fn2({ url_params: { id: 1 } })).resolves.toEqual(expectedCtx)
-      })
 
       props.meta[0].props = 'not_props'
       props.options[0].props = 'not_props'
 
-      expectedCtx = {
+      test('Immutable of meta, options of record1', () => {
+        return expect(fn1({ url_params: { id: 1 } })).resolves.toEqual(expectedCtx)
+      })
+      test('Immutable of meta, options of record2', () => {
+        return expect(fn2({ url_params: { id: 1 } })).resolves.toEqual(expectedCtx)
+      })
+      const record3 = {
+        _normalized: true,
+        _require: { data: false, params: false },
+        name: 'test',
+        meta: [props.meta[0], { test: 'test' }],
+        options: [props.options[0], { test: 'test' }, { url: '/test/:id', method: 'get' }],
+        hooks: [
+          (ctx, next) => { next() },
+          (ctx, next) => {
+            ctx.meta.props = 'not_props'
+            ctx.options.props = 'not_props'
+            next()
+          }
+        ],
+        children: []
+      }
+      const expectedCtx2 = {
         meta: { props: 'not_props', test: 'test' },
         options: {
           props: 'not_props',
@@ -197,12 +213,9 @@ describe('Create REST Api routing', () => {
         fullName: ['test'],
         response: { success: true }
       }
-
-      test('Mutable of meta, options of record1', () => {
-        return expect(fn1({ url_params: { id: 1 } })).resolves.toEqual(expectedCtx)
-      })
-      test('Mutable of meta, options of record1', () => {
-        return expect(fn2({ url_params: { id: 1 } })).resolves.toEqual(expectedCtx)
+      const fn3 = createExecFunc(record3, ['test'], axiosMock)
+      test('Mutable meta, options of record3', () => {
+        return expect(fn3({ url_params: { id: 1 } })).resolves.toEqual(expectedCtx2)
       })
     })
     test('Base hook', () => {
