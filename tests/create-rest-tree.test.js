@@ -8,35 +8,35 @@ import {
 describe('Create REST Api routing', () => {
   describe('normalizeRecord', () => {
     test('Base', () => {
-      const record = { name: 'test', options: { url: 'url', method: 'get' } }
+      const record = { name: 'test', options: { url: '/url', method: 'get' } }
       const props = {}
       const expected = {
         _normalized: true,
         _require: { data: false, params: false },
         name: 'test',
         meta: [{}],
-        options: [{ url: 'url', method: 'get' }],
+        options: [{ url: '/url', method: 'get' }],
         hooks: [],
         children: []
       }
       expect(normalizeRecord(record, props)).toEqual(expected)
     })
     test('Base with sugar syntax', () => {
-      const record = { name: 'test', url: 'url', method: 'get' }
+      const record = { name: 'test', url: '/url', method: 'get' }
       const props = {}
       const expected = {
         _normalized: true,
         _require: { data: false, params: false },
         name: 'test',
         meta: [{}],
-        options: [{}, { url: 'url', method: 'get' }],
+        options: [{ url: '/url', method: 'get' }],
         hooks: [],
         children: []
       }
       expect(normalizeRecord(record, props)).toEqual(expected)
     })
     test('Without request options, but with children', () => {
-      const record = { name: 'test', children: [{ name: 'child', url: 'url', method: 'get' }] }
+      const record = { name: 'test', children: [{ name: 'child', url: '/url', method: 'get' }] }
       const props = {}
       const expected = {
         _normalized: true,
@@ -45,13 +45,13 @@ describe('Create REST Api routing', () => {
         meta: [{}],
         options: [{}],
         hooks: [],
-        children: [{ name: 'child', url: 'url', method: 'get' }]
+        children: [{ name: 'child', url: '/url', method: 'get' }]
       }
       expect(normalizeRecord(record, props)).toEqual(expected)
     })
     test('Stacking of meta, options and hooks', () => {
       const record = {
-        name: 'test', url: 'url', method: 'get',
+        name: 'test', url: '/url', method: 'get',
         meta: { test: 'test' },
         options: { test: 'test' },
         hook: { test: 'test' }
@@ -66,7 +66,7 @@ describe('Create REST Api routing', () => {
         _require: { data: false, params: false },
         name: 'test',
         meta: [{ props: 'props', test: "123" }, { test: 'test' }],
-        options: [{ props: 'props' }, { test: 'test' }, { url: 'url', method: 'get' }],
+        options: [{ props: 'props' }, { test: 'test', url: '/url', method: 'get' }],
         hooks: [{ props: 'props' }, { test: 'test' }],
         children: []
       }
@@ -225,7 +225,7 @@ describe('Create REST Api routing', () => {
         ctx.meta.after = true
       }
       const record = { name: 'a', url: '/a', method: 'GET', hook }
-      const fn = createExecFunc(normalizeRecord(record, { meta: {} }), ['a'], axiosMock)
+      const fn = createExecFunc(normalizeRecord(record, { meta: {}, options: {} }), ['a'], axiosMock)
       return expect(fn()).resolves.toMatchObject({ meta: { before: true, after: true } })
     })
     test('Async hook', () => {
@@ -235,7 +235,7 @@ describe('Create REST Api routing', () => {
         ctx.meta.after = true
       }
       const record = { name: 'a', url: '/a', method: 'GET', hook }
-      const fn = createExecFunc(normalizeRecord(record, { meta: {} }), ['a'], axiosMock)
+      const fn = createExecFunc(normalizeRecord(record, { meta: {}, options: {} }), ['a'], axiosMock)
       return expect(fn()).resolves.toMatchObject({ meta: { before: true, after: true } })
     })
     test('Composition of hook', () => {
@@ -382,7 +382,7 @@ describe('Create REST Api routing', () => {
         _require: { data: false, params: false },
         name: 'test1',
         meta: [ {}, {} ],
-        options: [ {}, {}, {}, { url: '/test/1', method: 'get' } ],
+        options: [{ url: '/test' }, { url: '/test/1', method: 'get' }],
         hooks: [],
         children: []
       }
@@ -418,11 +418,16 @@ describe('Create REST Api routing', () => {
         name: 'test1',
         meta: [ { acc: 'acc' }, { test: 'test' }, { test1: 'test1' } ],
         options:
-          [ { acc: 'acc' },
-            { test: 'test' },
-            {},
-            { test1: 'test1' },
-            { url: '/test/1', method: 'get' } ],
+          // [ { acc: 'acc' },
+          //   { test: 'test' },
+          //   { url: '/test' },
+          //   { test1: 'test1' },
+          //   { url: '/test/1', method: 'get' } ],
+          [
+            { acc: 'acc' },
+            { test: 'test', url: '/test' },
+            { test1: 'test1', url: '/test/1', method: 'get' }
+          ],
         hooks: [],
         children: []
       }
@@ -438,7 +443,7 @@ describe('Create REST Api routing', () => {
         name: 'test', url: '/test', method: 'get',
         children: [
           { name: 'test1', url: '/test/1', method: 'get' },
-          { name: 'test2', url: '/test/2', method: 'get' }
+          { name: 'test2', url: 'test/2', method: 'get' }
         ]
       }]
       const tree = {}
@@ -467,6 +472,71 @@ describe('Create REST Api routing', () => {
         }
         const fn = tree.test.get
         return expect(fn()).resolves.toEqual(expectedCtx)
+      })
+      test('Test', () => {
+        const expectedCtx = {
+          meta: {},
+          options: { method: 'get', url: '/test/1' },
+          response: { success: true },
+          name: 'test1',
+          fullName: ['test', 'test1']
+        }
+        const fn = tree.test.test1
+        return expect(fn()).resolves.toEqual(expectedCtx)
+      })
+      test('Stack urls', () => {
+        const expectedCtx = {
+          meta: {},
+          options: { method: 'get', url: '/test/test/2' },
+          response: { success: true },
+          name: 'test2',
+          fullName: ['test', 'test2']
+        }
+        const fn = tree.test.test2
+        return expect(fn()).resolves.toEqual(expectedCtx)
+      })
+    })
+    describe('Full path stacking', () => {
+      const records = [{
+        name: 'root',
+        url: '/',
+        children: [
+          { name: 'test1', url: '/test/1', method: 'get' },
+          { name: 'test2', url: 'test/2', method: 'get' },
+          {
+            name: 'test3',
+            children: [
+              { name: 'test4', url: 'test/4', method: 'get' },
+              { name: 'test5', url: ':id/5', method: 'get' },
+              { name: 'test6', url: '/:id/6', method: 'get' }
+            ]
+          }
+        ]
+      }]
+      const tree = {}
+      const acc = { meta: [], options: [], hooks: [], axios: axiosMock, tree, records }
+      const path = [0]
+      const record = records[0]
+      addTreeBranch(tree, record, path, acc)
+      test('Basic', () => {
+        const fn = tree.root.test1
+        return expect(fn()).resolves.toHaveProperty('options.url', '/test/1')
+      })
+      test('Basic stack', () => {
+        const fn = tree.root.test2
+        return expect(fn()).resolves.toHaveProperty('options.url', '/test/2')
+      })
+      test('Stack path', () => {
+        const fn = tree.root.test3.test4
+        return expect(fn()).resolves.toHaveProperty('options.url', '/test/4')
+      })
+      test('Stack path with url_param', () => {
+        const fn = tree.root.test3.test5
+        return expect(fn({ url_params: { id: 't' } })).resolves.toHaveProperty('options.url', '/t/5')
+      })
+      test('Path with url_param', () => {
+        const fn = tree.root.test3.test6
+        return expect(fn({ url_params: { id: 't' } })).resolves.toHaveProperty('options.url', '/t/6')
       })
     })
   })
