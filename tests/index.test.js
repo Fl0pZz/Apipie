@@ -1,10 +1,10 @@
 import VueApify from '../lib/index'
 
-describe('VueApify', () => {
+describe('Apipie', () => {
   describe('GlobalHook', () => {
     const axiosMock = () => Promise.resolve({ success: true })
     test('Base', () => {
-      const records = [{ name: 'test', url: 'url', method: 'get' }]
+      const records = [{ name: 'test', url: '/url', method: 'get' }]
       const hook = (ctx, next) => {
         ctx.meta.hook = 'hook!'
         next()
@@ -15,7 +15,7 @@ describe('VueApify', () => {
       return expect(api.test()).resolves.toMatchObject({ meta: { hook: 'hook!' } })
     })
     test('Async base', () => {
-      const records = [{ name: 'test', url: 'url', method: 'get' }]
+      const records = [{ name: 'test', url: '/url', method: 'get' }]
       const hook = async (ctx, next) => {
         ctx.meta.hook = 'hook!'
         await next()
@@ -36,7 +36,7 @@ describe('VueApify', () => {
         await next()
         ctx.meta.afterHook = 'afterHook'
       }
-      const records = [{ name: 'test', url: 'url', method: 'get', hook }]
+      const records = [{ name: 'test', url: '/url', method: 'get', hook }]
       const apify = new VueApify(records, { axios: axiosMock })
       apify.globalHook(globalHook)
       const api = apify.create()
