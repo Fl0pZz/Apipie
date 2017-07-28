@@ -475,34 +475,6 @@ function parseExecArgs (url, props, ref) {
   return result
 }
 
-function compose (hooks) {
-  if (!Array.isArray(hooks)) { throw new TypeError('Hooks stack must be an array!') }
-  hooks.forEach(function (fn) { if (typeof fn !== 'function') { throw new TypeError('Hooks must be composed of functions!') } });
-  // for (const fn of hooks) {
-  //   if (typeof fn !== 'function') throw new TypeError('Hooks must be composed of functions!')
-  // }
-  
-  return function (context, next) {
-    // last called middleware #
-    var index = -1;
-    return dispatch(0)
-    function dispatch (i) {
-      if (i <= index) { return Promise.reject(new Error('next() called multiple times')) }
-      index = i;
-      var fn = hooks[i];
-      if (i === hooks.length) { fn = next; }
-      if (!fn) { return Promise.resolve() }
-      try {
-        return Promise.resolve(fn(context, function next () {
-          return dispatch(i + 1)
-        }))
-      } catch (err) {
-        return Promise.reject(err)
-      }
-    }
-  }
-}
-
 var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
 
@@ -598,6 +570,84 @@ return deepmerge
 }));
 });
 
+function normalizeRecord (record, ref) {
+  var options = ref.options; if ( options === void 0 ) options = {};
+  var meta = ref.meta; if ( meta === void 0 ) meta = {};
+  var hooks = ref.hooks; if ( hooks === void 0 ) hooks = [];
+
+  if (record._normalized) { return record }
+  transformSugarSyntax(record);
+  stackUrl(options, record.options);
+  return {
+    _normalized: true,
+    _require: {
+      data: !!record.data,
+      params: !!record.params
+    },
+    name: record.name,
+    meta: index$3(meta, record.meta || {}, { clone: true }),
+    options: index$3(options, record.options || {}, { clone: true }),
+    hooks: [].concat(hooks, record.hook || []),
+    children: record.children || []
+  }
+}
+
+function transformSugarSyntax(record) {
+  // { name, url, method } --> { name, option: { url, method } }
+  if (record.options == null) { record.options = {}; }
+  if (record.url) {
+    record.options.url = record.url;
+  }
+  if (record.url && record.method && (record.children == null)) {
+    record.options.method = record.method;
+  }
+}
+
+function stackUrl (parentOpts, options) {
+  // console.warn({parentOpts, options})
+  if (parentOpts.url == null && options.url == null) { return null }
+  var url = options.url;
+  var parentUrl = parentOpts.url;
+  if ((url != null) && url.startsWith('/')) { return url }
+  if (parentUrl == null && !url.startsWith('/')) {
+    throw new Error('Can not find root of path!')
+  }
+  if ((url == null || url === '') && parentUrl) { return parentUrl }
+  if (parentUrl.endsWith('/')) {
+    options.url = parentUrl + url;
+  } else {
+    options.url = parentUrl + "/" + url;
+  }
+}
+
+function compose (hooks) {
+  if (!Array.isArray(hooks)) { throw new TypeError('Hooks stack must be an array!') }
+  hooks.forEach(function (fn) { if (typeof fn !== 'function') { throw new TypeError('Hooks must be composed of functions!') } });
+  // for (const fn of hooks) {
+  //   if (typeof fn !== 'function') throw new TypeError('Hooks must be composed of functions!')
+  // }
+  
+  return function (context, next) {
+    // last called middleware #
+    var index = -1;
+    return dispatch(0)
+    function dispatch (i) {
+      if (i <= index) { return Promise.reject(new Error('next() called multiple times')) }
+      index = i;
+      var fn = hooks[i];
+      if (i === hooks.length) { fn = next; }
+      if (!fn) { return Promise.resolve() }
+      try {
+        return Promise.resolve(fn(context, function next () {
+          return dispatch(i + 1)
+        }))
+      } catch (err) {
+        return Promise.reject(err)
+      }
+    }
+  }
+}
+
 function setVal (obj, propNamesPath, val) {
   propNamesPath.reduce(function (acc, propName, i) {
     if (i === propNamesPath.length - 1) { return acc[propName] = val }
@@ -674,52 +724,6 @@ function calculateBranchNodes (records, indexPath, propNamesPath, closurePack) {
   return [propNamesPath, record]
 }
 
-function normalizeRecord (record, props) {
-  if (record._normalized) { return record }
-
-  var options = props.options; if ( options === void 0 ) options = [];
-  var meta = props.meta; if ( meta === void 0 ) meta = [];
-  var hooks = props.hooks; if ( hooks === void 0 ) hooks = [];
-  var normalizedRecord = {
-    _normalized: true,
-    _require: {
-      data: !!record.data,
-      params: !!record.params
-    },
-    name: record.name,
-    meta: [].concat(meta, record.meta || {}),
-    options: [].concat(options, record.options || {}),
-    hooks: [].concat(hooks, record.hook || []),
-    children: record.children || []
-  };
-  // { name, url, method } --> { name, option: { url, method } }
-  if (record.url && record.method) {
-    normalizedRecord.options.push({ url: record.url, method: record.method });
-  }
-  /*
-    {
-      ...,
-      option: { ...,url, method },
-      children: [...]
-    }
-    transform to
-    {
-      ...,
-      option: { ... },
-      children: [
-        ...,
-        { name: method, option: { url, method } }
-      ]
-    }
-   */
-  var opts = normalizedRecord.options[normalizedRecord.options.length - 1];
-  if (normalizedRecord.children.length && opts.method && opts.url) {
-    delete opts.method;
-    delete opts.url;
-  }
-  return normalizedRecord
-}
-
 function createExecFunc (record, fullName, axios) {
   function createContext(meta, options) {
     return {
@@ -756,8 +760,8 @@ function createExecFunc (record, fullName, axios) {
 var Apipie = function Apipie(records, options) {
   this.records = records;
   this.hooks = [];
-  this.meta = [{}];
-  this.options = [{}];
+  this.meta = {};
+  this.options = {};
   this.axios = options.axios;
 };
 Apipie.prototype.globalHook = function globalHook (hook) {
