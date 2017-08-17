@@ -683,6 +683,7 @@ function normalizeRecord (record, props) {
   var options = props.options; if ( options === void 0 ) options = [];
   var meta = props.meta; if ( meta === void 0 ) meta = [];
   var hooks = props.hooks; if ( hooks === void 0 ) hooks = [];
+  removeSugarSyntax(record);
   var normalizedRecord = {
     _normalized: true,
     _require: {
@@ -695,10 +696,6 @@ function normalizeRecord (record, props) {
     hooks: [].concat(hooks, record.hook || []),
     children: record.children || []
   };
-  // { name, url, method } --> { name, option: { url, method } }
-  if (record.url && record.method) {
-    normalizedRecord.options.push({ url: record.url, method: record.method });
-  }
   /*
     {
       ...,
@@ -716,11 +713,53 @@ function normalizeRecord (record, props) {
     }
    */
   var opts = normalizedRecord.options[normalizedRecord.options.length - 1];
-  if (normalizedRecord.children.length && opts.method && opts.url) {
+  if (normalizedRecord.children.length && opts.method) {
     delete opts.method;
-    delete opts.url;
   }
+  stackUrl(normalizedRecord.options);
   return normalizedRecord
+}
+
+var arrayOfMethods = ['get', 'delete', 'head', 'post', 'options', 'put', 'patch'];
+
+function removeSugarSyntax(record) {
+  // { name, url, method } --> { name, option: { url, method } }
+  if (record.options == null) { record.options = {}; }
+  if (record.url) {
+    record.options.url = record.url;
+  }
+  if (record.url && record.method) {
+    record.options.method = record.method;
+  }
+  
+  // { name, method: url } --> { name, option: { url, method } }
+  var httpMethod = arrayOfMethods.find(function (key) { return key in record; });
+  if (httpMethod && typeof record[httpMethod] === 'string') {
+    record.options.url = record[httpMethod];
+    record.options.method = httpMethod;
+  }
+}
+
+function stackUrl (options) {
+  options = options.filter(function (opt) { return opt.url != null; });
+  var getUrl = function (arr, offset) {
+    if ( offset === void 0 ) offset = 1;
+
+    if (arr.length - offset >= 0) {
+      if (arr[arr.length - offset].url == null) { return null }
+      return arr[arr.length - offset].url
+    }
+    return null
+  };
+  var url = getUrl(options);
+  if ((url != null) && url.startsWith('/')) { return }
+  var parentUrl = getUrl(options, 2);
+  if (parentUrl == null) { return }
+  if (parentUrl.endsWith('/')) {
+    options[options.length - 1].url = parentUrl + url;
+  } else {
+    options[options.length - 1].url = parentUrl + "/" + url;
+  }
 }
 
 function createExecFunc (record, fullName, axios) {
