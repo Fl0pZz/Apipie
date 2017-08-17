@@ -57,10 +57,10 @@ const apipie = new Apipie(decl, { axios })
 apipie.globalHook(hook) // Global hook is also available
 const api = apipie.create()
 
-// Oop, throw error becouse required :id url_params
+// Oop, throw error becouse required :id urlParams
 api.user() // GET: /user/undefined
 // That's ok
-api.user({ url_params: { id: 1 } }) // GET: /user/1
+api.user({ urlParams: { id: 1 } }) // GET: /user/1
   .then(ctx => {
     console.log(ctx.response) // Response schema as here:
                               // https://github.com/mzabriskie/axios#response-schema
