@@ -6,7 +6,7 @@ Inspired by VueRouter, koa2 and axios.
 
 [Try it here! (version v0.9.*)](https://jsfiddle.net/fl0pzz/1n90wtn0/7/)
 
-[Why should i use it? Why? Why? Why?](/docs/ru_Ru/whywhywhy.md)
+[Why should i use it? Why? Why? Why?](/docs/en_US/whywhywhy.md)
 
 ## Installation
 
@@ -77,7 +77,7 @@ api.settings.changeAvatar({ data: { avatar } })
 ```
 
 ### Documentations
-[See here](/docs)
+[See here (RU)](/docs/ru_Ru/docs.md)
 
 ### TODO
 * Stacking of paths
