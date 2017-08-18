@@ -4,15 +4,15 @@ describe('parseExecArgs', () => {
   const url = '/test/:id'
 
   test('basic', () => {
-    expect(parseExecArgs(url, { urlParams: { id: 1 } }, { _require: { params: false, data: false } })).toEqual({ url: '/test/1' })
+    expect(parseExecArgs(url, { params: { id: 1 } }, { _require: { query: false, data: false } })).toEqual({ url: '/test/1' })
   })
   test('all', () => {
     const payload = {
-      urlParams: { id: 1 },
-      params: { abc: 'abc' },
+      params: { id: 1 },
+      query: { abc: 'abc' },
       data: { test: 'test' }
     }
-    const result = parseExecArgs(url, payload, { _require: { params: false, data: false } })
+    const result = parseExecArgs(url, payload, { _require: { query: false, data: false } })
     const expected = {
       url: '/test/1',
       params: { abc: 'abc' },

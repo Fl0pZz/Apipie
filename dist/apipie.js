@@ -439,8 +439,18 @@ function parseExecArgs (url, props, ref) {
   var _require = ref._require;
 
   var result = { url: url };
-  if (_require.params && (!props || !props.params)) { throw new Error('Require params!') }
-  if (_require.data && (!props || !props.data)) { throw new Error('Require data!') }
+  
+  // validate query
+  if (_require.query && (!props || !props.query)) {
+    throw new Error('Require query!')
+  }
+
+  // validate data
+  if (_require.data && (!props || !props.data)) {
+    throw new Error('Require data!')
+  }
+
+  //validate params
   var requireParams = index.parse(url)
     .filter(function (token) { return [
           typeof token !== 'string',
@@ -453,28 +463,39 @@ function parseExecArgs (url, props, ref) {
 
       return name;
   });
-  if (requireParams.length && !props) { throw new Error('Require urlParams!') }
+
+  if (requireParams.length && !props) {
+    throw new Error('Require urlParams!')
+  }
+
   if (!props) {
     return result
   }
-  var urlParams = props.urlParams;
+
   var params = props.params;
+  var query = props.query;
   var data = props.data;
-  if (urlParams) {
+
+  if (params) {
     requireParams.forEach(function (param) {
-      if (!urlParams[param]) {
-        throw new Error(("Require " + (requireParams.join(', ')) + ", but given " + (Object.keys(urlParams).join(', ') || 'nothing')))
+      if (!params[param]) {
+        throw new Error(("Require " + (requireParams.join(', ')) + ", but given " + (Object.keys(params).join(', ') || 'nothing')))
       }
     });
+
     var toPath = index.compile(url);
-    result.url = toPath(urlParams);
+    result.url = toPath(params);
   }
-  if (params) {
-    result.params = params;
+
+  // query == params for axios
+  if (query) {
+    result.params = query;
   }
+
   if (data) {
     result.data = data;
   }
+
   return result
 }
 
@@ -641,7 +662,7 @@ function addTreeBranch (branch, record, indexPath, closurePack) {
         method: record.method,
         url: record.url,
         data: !!record.data,
-        params: !!record.params
+        query: !!record.query
       });
     }
     record.children.forEach(function (childRecord, index) { return addTreeBranch(branch[record.name], childRecord, indexPath.concat(index), closurePack); });
@@ -688,7 +709,7 @@ function normalizeRecord (record, props) {
     _normalized: true,
     _require: {
       data: !!record.data,
-      params: !!record.params
+      query: !!record.query
     },
     name: record.name,
     meta: [].concat(meta, record.meta || {}),
