@@ -1,7 +1,7 @@
 import {
-  /* createTreeSkeleton,
+  createTreeSkeleton,
   addTreeBranch,
-  calculateBranchNodes, */
+  calculateBranchNodes,
   normalizeRecord,
   createExecFunc,  } from '../lib/create-rest-tree'
 
@@ -368,227 +368,227 @@ describe('Create REST Api routing', () => {
       })
     })
   })
-  // describe('calculateBranchNodes', () => {
-  //   test('Basic', () => {
-  //     const records = [{
-  //       name: 'test', url: '/test', method: 'get',
-  //       children: [
-  //         { name: 'test1', url: '/test/1', method: 'get' },
-  //         { name: 'test2', url: '/test/2', method: 'get' }
-  //       ]
-  //     }]
-  //     const expectedRecord = {
-  //       _normalized: true,
-  //       _require: { data: false, params: false },
-  //       name: 'test1',
-  //       meta: [ {}, {} ],
-  //       options: [{ url: '/test' }, { url: '/test/1', method: 'get' }],
-  //       hooks: [],
-  //       children: []
-  //     }
-  //     const acc = { meta: [], options: [], hooks: [] }
-  //     const path = [0, 0]
-  //     const [names, record] = calculateBranchNodes(records, path, [], acc)
-  //     expect(names).toEqual(['test', 'test1'])
-  //     expect(record).toEqual(expectedRecord)
-  //   })
-  //   test('With meta, options', () => {
-  //     const acc = {
-  //       meta: [{ acc: 'acc' }],
-  //       options: [{ acc: 'acc' }],
-  //       hooks: []
-  //     }
-  //     const records = [{
-  //       name: 'test', url: '/test', method: 'get',
-  //       meta: { test: 'test' },
-  //       options: { test: 'test' },
-  //       children: [
-  //         {
-  //           name: 'test1', url: '/test/1', method: 'get',
-  //           meta: { test1: 'test1' },
-  //           options: { test1: 'test1' }
-  //         },
-  //         { name: 'test2', url: '/test/2', method: 'get' }
-  //       ]
-  //     }]
-  //     const path = [0, 0]
-  //     const expectedRecord = {
-  //       _normalized: true,
-  //       _require: { data: false, params: false },
-  //       name: 'test1',
-  //       meta: [ { acc: 'acc' }, { test: 'test' }, { test1: 'test1' } ],
-  //       options:
-  //         // [ { acc: 'acc' },
-  //         //   { test: 'test' },
-  //         //   { url: '/test' },
-  //         //   { test1: 'test1' },
-  //         //   { url: '/test/1', method: 'get' } ],
-  //         [
-  //           { acc: 'acc' },
-  //           { test: 'test', url: '/test' },
-  //           { test1: 'test1', url: '/test/1', method: 'get' }
-  //         ],
-  //       hooks: [],
-  //       children: []
-  //     }
-  //     const [names, record] = calculateBranchNodes(records, path, [], acc)
-  //     expect(names).toEqual(['test', 'test1'])
-  //     expect(record).toEqual(expectedRecord)
-  //   })
-  // })
-  // describe('addTreeBranch', () => {
-  //   const axiosMock = () => Promise.resolve({ success: true })
-  //   describe('Basic', () => {
-  //     const records = [{
-  //       name: 'test', url: '/test', method: 'get',
-  //       children: [
-  //         { name: 'test1', url: '/test/1', method: 'get' },
-  //         { name: 'test2', url: 'test/2', method: 'get' }
-  //       ]
-  //     }]
-  //     const tree = {}
-  //     const acc = { meta: [], options: [], hooks: [], axios: axiosMock, tree, records }
-  //     const path = [0]
-  //     const record = records[0]
-  //     addTreeBranch(tree, record, path, acc)
-  //     test('Tree properties', () => {
-  //       expect(tree).toHaveProperty('test')
-  //       expect(tree).toHaveProperty('test.get')
-  //       expect(tree).toHaveProperty('test.test1')
-  //       expect(tree).toHaveProperty('test.test2')
-  //     })
-  //     test('Leafs of tree is a Function', () => {
-  //       expect(tree.test.get).toBeInstanceOf(Function)
-  //       expect(tree.test.test1).toBeInstanceOf(Function)
-  //       expect(tree.test.test2).toBeInstanceOf(Function)
-  //     })
-  //     test('Execution of leaf', () => {
-  //       const expectedCtx = {
-  //         meta: {},
-  //         options: { method: 'get', url: '/test' },
-  //         response: { success: true },
-  //         name: 'get',
-  //         fullName: ['test', 'get']
-  //       }
-  //       const fn = tree.test.get
-  //       return expect(fn()).resolves.toEqual(expectedCtx)
-  //     })
-  //     test('Test', () => {
-  //       const expectedCtx = {
-  //         meta: {},
-  //         options: { method: 'get', url: '/test/1' },
-  //         response: { success: true },
-  //         name: 'test1',
-  //         fullName: ['test', 'test1']
-  //       }
-  //       const fn = tree.test.test1
-  //       return expect(fn()).resolves.toEqual(expectedCtx)
-  //     })
-  //     test('Stack urls', () => {
-  //       const expectedCtx = {
-  //         meta: {},
-  //         options: { method: 'get', url: '/test/test/2' },
-  //         response: { success: true },
-  //         name: 'test2',
-  //         fullName: ['test', 'test2']
-  //       }
-  //       const fn = tree.test.test2
-  //       return expect(fn()).resolves.toEqual(expectedCtx)
-  //     })
-  //   })
-  //   describe('Full path stacking', () => {
-  //     const records = [{
-  //       name: 'root',
-  //       url: '/',
-  //       children: [
-  //         { name: 'test1', url: '/test/1', method: 'get' },
-  //         { name: 'test2', url: 'test/2', method: 'get' },
-  //         {
-  //           name: 'test3',
-  //           children: [
-  //             { name: 'test4', url: 'test/4', method: 'get' },
-  //             { name: 'test5', url: ':id/5', method: 'get' },
-  //             { name: 'test6', url: '/:id/6', method: 'get' }
-  //           ]
-  //         }
-  //       ]
-  //     }]
-  //     const tree = {}
-  //     const acc = { meta: [], options: [], hooks: [], axios: axiosMock, tree, records }
-  //     const path = [0]
-  //     const record = records[0]
-  //     addTreeBranch(tree, record, path, acc)
-  //     test('Basic', () => {
-  //       const fn = tree.root.test1
-  //       return expect(fn()).resolves.toHaveProperty('options.url', '/test/1')
-  //     })
-  //     test('Basic stack', () => {
-  //       const fn = tree.root.test2
-  //       return expect(fn()).resolves.toHaveProperty('options.url', '/test/2')
-  //     })
-  //     test('Stack path', () => {
-  //       const fn = tree.root.test3.test4
-  //       return expect(fn()).resolves.toHaveProperty('options.url', '/test/4')
-  //     })
-  //     test('Stack path with urlParam', () => {
-  //       const fn = tree.root.test3.test5
-  //       return expect(fn({ urlParams: { id: 't' } })).resolves.toHaveProperty('options.url', '/t/5')
-  //     })
-  //     test('Path with urlParam', () => {
-  //       const fn = tree.root.test3.test6
-  //       return expect(fn({ urlParams: { id: 't' } })).resolves.toHaveProperty('options.url', '/t/6')
-  //     })
-  //   })
-  // })
-  // describe('createTreeSkeleton', () => {
-  //   const axiosMock = () => Promise.resolve({ success: true })
-  //   test('Basic', () => {
-  //     const records = [{
-  //       name: 'test', url: '/test', method: 'get',
-  //       children: [
-  //         { name: 'test1', url: '/test/1', method: 'get' },
-  //         { name: 'test2', url: '/test/2', method: 'get' }
-  //       ]
-  //     }]
-  //     const acc = { meta: [], options: [], hooks: [], axios: axiosMock, records }
-  //     const tree = createTreeSkeleton(records, acc)
-  //     expect(tree).toHaveProperty('test')
-  //     expect(tree).toHaveProperty('test.get')
-  //     expect(tree).toHaveProperty('test.test1')
-  //     expect(tree).toHaveProperty('test.test2')
-  //   })
-  //   describe('Test named parameters', () => {
-  //     const records = [
-  //       { name: 'test', method: 'get', url: '/test/:id' }
-  //     ]
-  //     const acc = { meta: [{}], options: [{}], hooks: [], axios: axiosMock, records }
-  //     const tree = createTreeSkeleton(records, acc)
-  //     test('with id=1', () => {
-  //       const expectedCtx = {
-  //         meta: {},
-  //         options: {
-  //           method: 'get',
-  //           url: '/test/1'
-  //         },
-  //         name: 'test',
-  //         fullName: ['test'],
-  //         response: { success: true }
-  //       }
-  //       return expect(tree.test({ urlParams: { id: 1 } })).resolves.toEqual(expectedCtx)
-  //     })
-  //     test('with id=2 and with same request', () => {
-  //       const expectedCtx = {
-  //         meta: {},
-  //         options: {
-  //           method: 'get',
-  //           url: '/test/2'
-  //         },
-  //         name: 'test',
-  //         fullName: ['test'],
-  //         response: { success: true }
-  //       }
-  //       return expect(tree.test({ urlParams: { id: 2 } })).resolves.toEqual(expectedCtx)
-  //     })
-  //   })
-  // })
+  describe('calculateBranchNodes', () => {
+    test('Basic', () => {
+      const records = [{
+        name: 'test', url: '/test', method: 'get',
+        children: [
+          { name: 'test1', url: '/test/1', method: 'get' },
+          { name: 'test2', url: '/test/2', method: 'get' }
+        ]
+      }]
+      const expectedRecord = {
+        _normalized: true,
+        _require: { data: false, query: false },
+        name: 'test1',
+        meta: [ {}, {} ],
+        options: [{ url: '/test' }, { url: '/test/1', method: 'get' }],
+        hooks: [],
+        children: []
+      }
+      const acc = { meta: [], options: [], hooks: [] }
+      const path = [0, 0]
+      const [names, record] = calculateBranchNodes(records, path, [], acc)
+      expect(names).toEqual(['test', 'test1'])
+      expect(record).toEqual(expectedRecord)
+    })
+    test('With meta, options', () => {
+      const acc = {
+        meta: [{ acc: 'acc' }],
+        options: [{ acc: 'acc' }],
+        hooks: []
+      }
+      const records = [{
+        name: 'test', url: '/test', method: 'get',
+        meta: { test: 'test' },
+        options: { test: 'test' },
+        children: [
+          {
+            name: 'test1', url: '/test/1', method: 'get',
+            meta: { test1: 'test1' },
+            options: { test1: 'test1' }
+          },
+          { name: 'test2', url: '/test/2', method: 'get' }
+        ]
+      }]
+      const path = [0, 0]
+      const expectedRecord = {
+        _normalized: true,
+        _require: { data: false, query: false },
+        name: 'test1',
+        meta: [ { acc: 'acc' }, { test: 'test' }, { test1: 'test1' } ],
+        options:
+          // [ { acc: 'acc' },
+          //   { test: 'test' },
+          //   { url: '/test' },
+          //   { test1: 'test1' },
+          //   { url: '/test/1', method: 'get' } ],
+          [
+            { acc: 'acc' },
+            { test: 'test', url: '/test' },
+            { test1: 'test1', url: '/test/1', method: 'get' }
+          ],
+        hooks: [],
+        children: []
+      }
+      const [names, record] = calculateBranchNodes(records, path, [], acc)
+      expect(names).toEqual(['test', 'test1'])
+      expect(record).toEqual(expectedRecord)
+    })
+  })
+  describe('addTreeBranch', () => {
+    const axiosMock = () => Promise.resolve({ success: true })
+    describe('Basic', () => {
+      const records = [{
+        name: 'test', url: '/test', method: 'get',
+        children: [
+          { name: 'test1', url: '/test/1', method: 'get' },
+          { name: 'test2', url: 'test/2', method: 'get' }
+        ]
+      }]
+      const tree = {}
+      const acc = { meta: [], options: [], hooks: [], axios: axiosMock, tree, records }
+      const path = [0]
+      const record = records[0]
+      addTreeBranch(tree, record, path, acc)
+      test('Tree properties', () => {
+        expect(tree).toHaveProperty('test')
+        expect(tree).toHaveProperty('test.get')
+        expect(tree).toHaveProperty('test.test1')
+        expect(tree).toHaveProperty('test.test2')
+      })
+      test('Leafs of tree is a Function', () => {
+        expect(tree.test.get).toBeInstanceOf(Function)
+        expect(tree.test.test1).toBeInstanceOf(Function)
+        expect(tree.test.test2).toBeInstanceOf(Function)
+      })
+      test('Execution of leaf', () => {
+        const expectedCtx = {
+          meta: {},
+          options: { method: 'get', url: '/test' },
+          response: { success: true },
+          name: 'get',
+          fullName: ['test', 'get']
+        }
+        const fn = tree.test.get
+        return expect(fn()).resolves.toEqual(expectedCtx)
+      })
+      test('Test', () => {
+        const expectedCtx = {
+          meta: {},
+          options: { method: 'get', url: '/test/1' },
+          response: { success: true },
+          name: 'test1',
+          fullName: ['test', 'test1']
+        }
+        const fn = tree.test.test1
+        return expect(fn()).resolves.toEqual(expectedCtx)
+      })
+      test('Stack urls', () => {
+        const expectedCtx = {
+          meta: {},
+          options: { method: 'get', url: '/test/test/2' },
+          response: { success: true },
+          name: 'test2',
+          fullName: ['test', 'test2']
+        }
+        const fn = tree.test.test2
+        return expect(fn()).resolves.toEqual(expectedCtx)
+      })
+    })
+    describe('Full path stacking', () => {
+      const records = [{
+        name: 'root',
+        url: '/',
+        children: [
+          { name: 'test1', url: '/test/1', method: 'get' },
+          { name: 'test2', url: 'test/2', method: 'get' },
+          {
+            name: 'test3',
+            children: [
+              { name: 'test4', url: 'test/4', method: 'get' },
+              { name: 'test5', url: ':id/5', method: 'get' },
+              { name: 'test6', url: '/:id/6', method: 'get' }
+            ]
+          }
+        ]
+      }]
+      const tree = {}
+      const acc = { meta: [], options: [], hooks: [], axios: axiosMock, tree, records }
+      const path = [0]
+      const record = records[0]
+      addTreeBranch(tree, record, path, acc)
+      test('Basic', () => {
+        const fn = tree.root.test1
+        return expect(fn()).resolves.toHaveProperty('options.url', '/test/1')
+      })
+      test('Basic stack', () => {
+        const fn = tree.root.test2
+        return expect(fn()).resolves.toHaveProperty('options.url', '/test/2')
+      })
+      test('Stack path', () => {
+        const fn = tree.root.test3.test4
+        return expect(fn()).resolves.toHaveProperty('options.url', '/test/4')
+      })
+      test('Stack path with urlParam', () => {
+        const fn = tree.root.test3.test5
+        return expect(fn({ params: { id: 't' } })).resolves.toHaveProperty('options.url', '/t/5')
+      })
+      test('Path with urlParam', () => {
+        const fn = tree.root.test3.test6
+        return expect(fn({ params: { id: 't' } })).resolves.toHaveProperty('options.url', '/t/6')
+      })
+    })
+  })
+  describe('createTreeSkeleton', () => {
+    const axiosMock = () => Promise.resolve({ success: true })
+    test('Basic', () => {
+      const records = [{
+        name: 'test', url: '/test', method: 'get',
+        children: [
+          { name: 'test1', url: '/test/1', method: 'get' },
+          { name: 'test2', url: '/test/2', method: 'get' }
+        ]
+      }]
+      const acc = { meta: [], options: [], hooks: [], axios: axiosMock, records }
+      const tree = createTreeSkeleton(records, acc)
+      expect(tree).toHaveProperty('test')
+      expect(tree).toHaveProperty('test.get')
+      expect(tree).toHaveProperty('test.test1')
+      expect(tree).toHaveProperty('test.test2')
+    })
+    describe('Test named parameters', () => {
+      const records = [
+        { name: 'test', method: 'get', url: '/test/:id' }
+      ]
+      const acc = { meta: [{}], options: [{}], hooks: [], axios: axiosMock, records }
+      const tree = createTreeSkeleton(records, acc)
+      test('with id=1', () => {
+        const expectedCtx = {
+          meta: {},
+          options: {
+            method: 'get',
+            url: '/test/1'
+          },
+          name: 'test',
+          fullName: ['test'],
+          response: { success: true }
+        }
+        return expect(tree.test({ params: { id: 1 } })).resolves.toEqual(expectedCtx)
+      })
+      test('with id=2 and with same request', () => {
+        const expectedCtx = {
+          meta: {},
+          options: {
+            method: 'get',
+            url: '/test/2'
+          },
+          name: 'test',
+          fullName: ['test'],
+          response: { success: true }
+        }
+        return expect(tree.test({ params: { id: 2 } })).resolves.toEqual(expectedCtx)
+      })
+    })
+  })
 })
