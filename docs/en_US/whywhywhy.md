@@ -1,7 +1,7 @@
-## Было
+## How it looked before
 
-Здесь, я попытался сделать красивый и удобное апи для обращений к серверу.
-Оно работает! Однако это врядли можно назвать декларативным.
+Here I tried to release a beautiful and convenient composition of calls to the server.
+It works! However, this can hardly be called expressive!!
 
 ```js
 import axios from './axios-custom'
@@ -38,7 +38,7 @@ export const file = {
 }
 ```
 
-### Стало
+### How it looks now
 
 ```js
 import axios from 'axios'
