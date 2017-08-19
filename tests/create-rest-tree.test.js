@@ -35,6 +35,21 @@ describe('Create REST Api routing', () => {
       }
       expect(normalizeRecord(record, props)).toEqual(expected)
     })
+    test('Base with method sugar syntax', () => {
+      const record = { name: 'test', get: '/url' }
+      const props = {}
+      const expected = {
+        _normalized: true,
+        _require: { data: false, params: false },
+        name: 'test',
+        meta: [{}],
+        options: [{ url: '/url', method: 'get' }],
+        hooks: [],
+        children: []
+      }
+      
+      expect(normalizeRecord(record, props)).toEqual(expected);
+    })
     test('Without request options, but with children', () => {
       const record = { name: 'test', children: [{ name: 'child', url: '/url', method: 'get' }] }
       const props = {}

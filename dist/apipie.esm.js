@@ -717,6 +717,8 @@ function normalizeRecord (record, props) {
   return normalizedRecord
 }
 
+var arrayOfMethods = ['get', 'delete', 'head', 'post', 'options', 'put', 'patch'];
+
 function removeSugarSyntax(record) {
   // { name, url, method } --> { name, option: { url, method } }
   if (record.options == null) { record.options = {}; }
@@ -725,6 +727,13 @@ function removeSugarSyntax(record) {
   }
   if (record.url && record.method) {
     record.options.method = record.method;
+  }
+  
+  // { name, method: url } --> { name, option: { url, method } }
+  var httpMethod = arrayOfMethods.find(function (key) { return key in record; });
+  if (httpMethod && typeof record[httpMethod] === 'string') {
+    record.options.url = record[httpMethod];
+    record.options.method = httpMethod;
   }
 }
 
