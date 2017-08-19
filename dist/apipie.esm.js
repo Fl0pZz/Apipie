@@ -450,21 +450,21 @@ function parseExecArgs (url, props, ref) {
 
       return name;
   });
-  if (requireParams.length && !props) { throw new Error('Require url_params!') }
+  if (requireParams.length && !props) { throw new Error('Require urlParams!') }
   if (!props) {
     return result
   }
-  var url_params = props.url_params;
+  var urlParams = props.urlParams;
   var params = props.params;
   var data = props.data;
-  if (url_params) {
+  if (urlParams) {
     requireParams.forEach(function (param) {
-      if (!url_params[param]) {
-        throw new Error(("Require " + (requireParams.join(', ')) + ", but given " + (Object.keys(url_params).join(', ') || 'nothing')))
+      if (!urlParams[param]) {
+        throw new Error(("Require " + (requireParams.join(', ')) + ", but given " + (Object.keys(urlParams).join(', ') || 'nothing')))
       }
     });
     var toPath = index.compile(url);
-    result.url = toPath(url_params);
+    result.url = toPath(urlParams);
   }
   if (params) {
     result.params = params;

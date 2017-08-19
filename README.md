@@ -6,7 +6,7 @@ Inspired by VueRouter, koa2 and axios.
 
 [Try it here! (version v0.9.*)](https://jsfiddle.net/fl0pzz/1n90wtn0/7/)
 
-[Why should i use it? Why? Why? Why?](/docs/ru_Ru/whywhywhy.md)
+[Why should i use it? Why? Why? Why?](/docs/en_US/whywhywhy.md)
 
 ## Installation
 
@@ -57,10 +57,10 @@ const apipie = new Apipie(decl, { axios })
 apipie.globalHook(hook) // Global hook is also available
 const api = apipie.create()
 
-// Oop, throw error becouse required :id url_params
+// Oop, throw error becouse required :id urlParams
 api.user() // GET: /user/undefined
 // That's ok
-api.user({ url_params: { id: 1 } }) // GET: /user/1
+api.user({ urlParams: { id: 1 } }) // GET: /user/1
   .then(ctx => {
     console.log(ctx.response) // Response schema as here:
                               // https://github.com/mzabriskie/axios#response-schema
@@ -77,7 +77,7 @@ api.settings.changeAvatar({ data: { avatar } })
 ```
 
 ### Documentations
-[See here](/docs)
+[See here (RU)](/docs/ru_Ru/docs.md)
 
 ### TODO
 * Stacking of paths
