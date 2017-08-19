@@ -530,11 +530,11 @@ describe('Create REST Api routing', () => {
         const fn = tree.root.test3.test4
         return expect(fn()).resolves.toHaveProperty('options.url', '/test/4')
       })
-      test('Stack path with urlParam', () => {
+      test('Stack path with params', () => {
         const fn = tree.root.test3.test5
         return expect(fn({ params: { id: 't' } })).resolves.toHaveProperty('options.url', '/t/5')
       })
-      test('Path with urlParam', () => {
+      test('Path with params', () => {
         const fn = tree.root.test3.test6
         return expect(fn({ params: { id: 't' } })).resolves.toHaveProperty('options.url', '/t/6')
       })
