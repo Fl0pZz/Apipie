@@ -86,17 +86,17 @@ describe('Full tests', () => {
     expect(api).toHaveProperty('content.apps')
   })
   test('Reject hook', () => {
-    return expect(api.user.settings({urlParams: {id: 1}})).rejects.toBeInstanceOf(Error)
+    return expect(api.user.settings({params: {id: 1}})).rejects.toBeInstanceOf(Error)
   })
   test('Access to response', () => {
-    return expect(api.user.get({urlParams: {id: 1}})).resolves.toMatchObject({response: {success: true}})
+    return expect(api.user.get({params: {id: 1}})).resolves.toMatchObject({response: {success: true}})
   })
   test('Meta', () => {
     const expectMeta = {
       contentMeta: 'content',
       imagesMeta: 'image'
     }
-    api.content.images({urlParams: {id: 1}}).then(ctx => {
+    api.content.images({params: {id: 1}}).then(ctx => {
       expect(ctx.meta).toEqual(expectMeta)
     })
   })
