@@ -4,11 +4,11 @@ describe('parseExecArgs', () => {
   const url = '/test/:id'
 
   test('basic', () => {
-    expect(parseExecArgs(url, { url_params: { id: 1 } }, { _require: { params: false, data: false } })).toEqual({ url: '/test/1' })
+    expect(parseExecArgs(url, { urlParams: { id: 1 } }, { _require: { params: false, data: false } })).toEqual({ url: '/test/1' })
   })
   test('all', () => {
     const payload = {
-      url_params: { id: 1 },
+      urlParams: { id: 1 },
       params: { abc: 'abc' },
       data: { test: 'test' }
     }

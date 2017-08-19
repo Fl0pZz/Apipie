@@ -17,7 +17,7 @@
 
 ### Request
 
-Настройки запроса через `options` почти полностью взяты у [axios](https://github.com/mzabriskie/axios#request-config), однако стоит акцентировать внимание на `url`. `Apipie` внутри использует [path-to-regexp](https://github.com/pillarjs/path-to-regexp), поэтому теперь поддерживаются пути вида `/something/:id/`. Для этого нужно передать при вызове метода `url_params: { id: /* something */ }`.
+Настройки запроса через `options` почти полностью взяты у [axios](https://github.com/mzabriskie/axios#request-config), однако стоит акцентировать внимание на `url`. `Apipie` внутри использует [path-to-regexp](https://github.com/pillarjs/path-to-regexp), поэтому теперь поддерживаются пути вида `/something/:id/`. Для этого нужно передать при вызове метода `urlParams: { id: /* something */ }`.
 
 ### Meta
 
@@ -60,13 +60,13 @@
 Теперь вы можете его вызвать внутри `Vue` как:
 ```js
 const user_id = 123;
-this.$api.user({ url_params: { id: user_id } }) // GET: /user/123
+this.$api.user({ urlParams: { id: user_id } }) // GET: /user/123
 ```
 
 Объект, который вы передаете как аргумент при вызове содержит 3 поля:
 ```js
 {
-  url_params, // Те переменные и их значения, что будут подставлены в путь
+  urlParams, // Те переменные и их значения, что будут подставлены в путь
   params,     // Параметры запроса как в params в axios
   data        // Данные, которые необходимо передать
 }
@@ -97,7 +97,7 @@ this.$api.user({ url_params: { id: user_id } }) // GET: /user/123
 }
 ```
 
-### Data&params&url_params validations
+### Data&params&urlParams validations
 
 Хочется сразу видеть, что запрос требует `params` и/или `data`.
 
@@ -109,9 +109,9 @@ this.$api.user({ url_params: { id: user_id } }) // GET: /user/123
 
 Аналогичный механиз применяется и для валидации `data`.
 
-#### url_params
+#### urlParams
 
-Для валидации `url_params` не нужно ничего довольнительно добавлять, вы это уже сделали, когда воспользовалиись именованными параметрами при указании пути: `url: '/test/:id1/:id2'`. При вызове будет проверено не только начиличие переданных параметров в `{ url_params: {...} }`, но проверено на соответсвие с тем, что указано в декларации, в данном примере ожидаются `id1` и `id2`. Если валидация выявит ошибку, то будет сгенерировано исключение, с описанием ожидаемых именованных параметров и переданных. Более того, вы можете использовать больше возможностей, такие как [опциональные именованные параметры](https://github.com/pillarjs/path-to-regexp#optional), [безымяные параметры](https://github.com/pillarjs/path-to-regexp#unnamed-parameters), и многое другое, что может [pathToRegexp](https://github.com/pillarjs/path-to-regexp).
+Для валидации `urlParams` не нужно ничего довольнительно добавлять, вы это уже сделали, когда воспользовалиись именованными параметрами при указании пути: `url: '/test/:id1/:id2'`. При вызове будет проверено не только начиличие переданных параметров в `{ urlParams: {...} }`, но проверено на соответсвие с тем, что указано в декларации, в данном примере ожидаются `id1` и `id2`. Если валидация выявит ошибку, то будет сгенерировано исключение, с описанием ожидаемых именованных параметров и переданных. Более того, вы можете использовать больше возможностей, такие как [опциональные именованные параметры](https://github.com/pillarjs/path-to-regexp#optional), [безымяные параметры](https://github.com/pillarjs/path-to-regexp#unnamed-parameters), и многое другое, что может [pathToRegexp](https://github.com/pillarjs/path-to-regexp).
 
 ## API
 
