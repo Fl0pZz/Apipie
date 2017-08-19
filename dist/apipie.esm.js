@@ -496,34 +496,6 @@ function parseExecArgs (url, props, ref) {
   return result
 }
 
-function compose (hooks) {
-  if (!Array.isArray(hooks)) { throw new TypeError('Hooks stack must be an array!') }
-  hooks.forEach(function (fn) { if (typeof fn !== 'function') { throw new TypeError('Hooks must be composed of functions!') } });
-  // for (const fn of hooks) {
-  //   if (typeof fn !== 'function') throw new TypeError('Hooks must be composed of functions!')
-  // }
-  
-  return function (context, next) {
-    // last called middleware #
-    var index = -1;
-    return dispatch(0)
-    function dispatch (i) {
-      if (i <= index) { return Promise.reject(new Error('next() called multiple times')) }
-      index = i;
-      var fn = hooks[i];
-      if (i === hooks.length) { fn = next; }
-      if (!fn) { return Promise.resolve() }
-      try {
-        return Promise.resolve(fn(context, function next () {
-          return dispatch(i + 1)
-        }))
-      } catch (err) {
-        return Promise.reject(err)
-      }
-    }
-  }
-}
-
 var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
 
@@ -619,6 +591,95 @@ return deepmerge
 }));
 });
 
+function normalizeRecord (record, ref) {
+  var options = ref.options; if ( options === void 0 ) options = {};
+  var meta = ref.meta; if ( meta === void 0 ) meta = {};
+  var hooks = ref.hooks; if ( hooks === void 0 ) hooks = [];
+
+  if (record._normalized) { return record }
+  transformSugarSyntax(record);
+  stackUrl(options, record.options);
+
+  return {
+    _normalized: true,
+    _require: {
+      data: !!record.data,
+      query: !!record.query
+    },
+    name: record.name,
+    meta: index$3(meta, record.meta || {}, { clone: true }),
+    options: index$3(options, record.options || {}, { clone: true }),
+    hooks: [].concat(hooks, record.hook || []),
+    children: record.children || []
+  }
+}
+
+var arrayOfMethods = ['get', 'delete', 'head', 'post', 'options', 'put', 'patch'];
+
+function transformSugarSyntax(record) {
+  // { name, url, method } --> { name, option: { url, method } }
+  if (record.options == null) { record.options = {}; }
+  if (record.url) {
+    record.options.url = record.url;
+  }
+  if (record.url && record.method && (record.children == null)) {
+    record.options.method = record.method;
+  }
+
+  // { name, method: url } --> { name, option: { url, method } }
+  var httpMethod = arrayOfMethods.find(function (key) { return key in record; });
+  
+  if (httpMethod && typeof record[httpMethod] === 'string') {
+    record.options.url = record[httpMethod];
+    record.options.method = httpMethod;
+  }
+}
+
+function stackUrl (parentOpts, options) {
+  // console.warn({parentOpts, options})
+  if (parentOpts.url == null && options.url == null) { return null }
+  var url = options.url;
+  var parentUrl = parentOpts.url;
+  if ((url != null) && url.startsWith('/')) { return url }
+  if (parentUrl == null && !url.startsWith('/')) {
+    throw new Error('Can not find root of path!')
+  }
+  if ((url == null || url === '') && parentUrl) { return parentUrl }
+  if (parentUrl.endsWith('/')) {
+    options.url = parentUrl + url;
+  } else {
+    options.url = parentUrl + "/" + url;
+  }
+}
+
+function compose (hooks) {
+  if (!Array.isArray(hooks)) { throw new TypeError('Hooks stack must be an array!') }
+  hooks.forEach(function (fn) { if (typeof fn !== 'function') { throw new TypeError('Hooks must be composed of functions!') } });
+  // for (const fn of hooks) {
+  //   if (typeof fn !== 'function') throw new TypeError('Hooks must be composed of functions!')
+  // }
+  
+  return function (context, next) {
+    // last called middleware #
+    var index = -1;
+    return dispatch(0)
+    function dispatch (i) {
+      if (i <= index) { return Promise.reject(new Error('next() called multiple times')) }
+      index = i;
+      var fn = hooks[i];
+      if (i === hooks.length) { fn = next; }
+      if (!fn) { return Promise.resolve() }
+      try {
+        return Promise.resolve(fn(context, function next () {
+          return dispatch(i + 1)
+        }))
+      } catch (err) {
+        return Promise.reject(err)
+      }
+    }
+  }
+}
+
 function setVal (obj, propNamesPath, val) {
   propNamesPath.reduce(function (acc, propName, i) {
     if (i === propNamesPath.length - 1) { return acc[propName] = val }
@@ -695,91 +756,6 @@ function calculateBranchNodes (records, indexPath, propNamesPath, closurePack) {
   return [propNamesPath, record]
 }
 
-function normalizeRecord (record, props) {
-  if (record._normalized) { return record }
-
-  var options = props.options; if ( options === void 0 ) options = [];
-  var meta = props.meta; if ( meta === void 0 ) meta = [];
-  var hooks = props.hooks; if ( hooks === void 0 ) hooks = [];
-  removeSugarSyntax(record);
-  var normalizedRecord = {
-    _normalized: true,
-    _require: {
-      data: !!record.data,
-      query: !!record.query
-    },
-    name: record.name,
-    meta: [].concat(meta, record.meta || {}),
-    options: [].concat(options, record.options || {}),
-    hooks: [].concat(hooks, record.hook || []),
-    children: record.children || []
-  };
-  /*
-    {
-      ...,
-      option: { ...,url, method },
-      children: [...]
-    }
-    transform to
-    {
-      ...,
-      option: { ... },
-      children: [
-        ...,
-        { name: method, option: { url, method } }
-      ]
-    }
-   */
-  var opts = normalizedRecord.options[normalizedRecord.options.length - 1];
-  if (normalizedRecord.children.length && opts.method) {
-    delete opts.method;
-  }
-  stackUrl(normalizedRecord.options);
-  return normalizedRecord
-}
-
-var arrayOfMethods = ['get', 'delete', 'head', 'post', 'options', 'put', 'patch'];
-
-function removeSugarSyntax(record) {
-  // { name, url, method } --> { name, option: { url, method } }
-  if (record.options == null) { record.options = {}; }
-  if (record.url) {
-    record.options.url = record.url;
-  }
-  if (record.url && record.method) {
-    record.options.method = record.method;
-  }
-  
-  // { name, method: url } --> { name, option: { url, method } }
-  var httpMethod = arrayOfMethods.find(function (key) { return key in record; });
-  if (httpMethod && typeof record[httpMethod] === 'string') {
-    record.options.url = record[httpMethod];
-    record.options.method = httpMethod;
-  }
-}
-
-function stackUrl (options) {
-  options = options.filter(function (opt) { return opt.url != null; });
-  var getUrl = function (arr, offset) {
-    if ( offset === void 0 ) offset = 1;
-
-    if (arr.length - offset >= 0) {
-      if (arr[arr.length - offset].url == null) { return null }
-      return arr[arr.length - offset].url
-    }
-    return null
-  };
-  var url = getUrl(options);
-  if ((url != null) && url.startsWith('/')) { return }
-  var parentUrl = getUrl(options, 2);
-  if (parentUrl == null) { return }
-  if (parentUrl.endsWith('/')) {
-    options[options.length - 1].url = parentUrl + url;
-  } else {
-    options[options.length - 1].url = parentUrl + "/" + url;
-  }
-}
-
 function createExecFunc (record, fullName, axios) {
   function createContext(meta, options) {
     return {
@@ -816,8 +792,8 @@ function createExecFunc (record, fullName, axios) {
 var Apipie = function Apipie(records, options) {
   this.records = records;
   this.hooks = [];
-  this.meta = [{}];
-  this.options = [{}];
+  this.meta = {};
+  this.options = {};
   this.axios = options.axios;
 };
 Apipie.prototype.globalHook = function globalHook (hook) {
