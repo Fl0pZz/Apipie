@@ -45,7 +45,7 @@ import axios from 'axios'
 import Apipie from 'apipie'
 
 // shorthand property names
-const params = true
+const query = true
 const data = true
 
 const decl = [
@@ -99,7 +99,7 @@ const decl = [
   { name: 'category', method: 'get', url: '/catalog/categories/' },
   { name: 'platform', method: 'get', url: '/catalog/platforms/' },
   { name: 'apps', method: 'get', url: '/catalog/apps/' },
-  { name: 'categoryApps', method: 'get', url: '/catalog/apps/', params }
+  { name: 'categoryApps', method: 'get', url: '/catalog/apps/', query }
 ]
 
 const apipie = new Apipie(records, { axios })

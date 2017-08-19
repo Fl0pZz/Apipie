@@ -33,7 +33,7 @@ const hook = async (ctx, next) => {
 }
 
 const data = true
-const params = true
+const query = true
 
 const decl = [
   {
@@ -47,7 +47,7 @@ const decl = [
     name: 'settings', url: '/settings', method: 'get',
     children: [
       { name: 'setStatus', url: '/set_status', method: 'post',
-        params // or params: true if do not prefer shorthand property names syntax },
+        query // or query: true if do not prefer shorthand property names syntax },
       { name: 'changeAvatar', url: '/change_avatar', method: 'post' }
     ]
   }
@@ -57,19 +57,19 @@ const apipie = new Apipie(decl, { axios })
 apipie.globalHook(hook) // Global hook is also available
 const api = apipie.create()
 
-// Oop, throw error becouse required :id urlParams
+// Oop, throw error becouse required :id params
 api.user() // GET: /user/undefined
 // That's ok
-api.user({ urlParams: { id: 1 } }) // GET: /user/1
+api.user({ params: { id: 1 } }) // GET: /user/1
   .then(ctx => {
     console.log(ctx.response) // Response schema as here:
                               // https://github.com/mzabriskie/axios#response-schema
   })
 
-api.settings.setStatus() // Oops, expect params!
+api.settings.setStatus() // Oops, expect query!
 
 // POST: /set_status?status=my_status
-api.settings.setStatus({ params: { status: 'my_status' } })
+api.settings.setStatus({ query: { status: 'my_status' } })
   .then(ctx => { console.log(ctx.response) })
 
 const avatar = // ...
