@@ -462,7 +462,7 @@ function parseExecArgs (url, props, ref) {
   });
 
   if (requireParams.length && !props) {
-    throw new Error('Require urlParams!')
+    throw new Error('Require params!')
   }
 
   if (!props) {

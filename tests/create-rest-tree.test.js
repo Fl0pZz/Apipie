@@ -3,7 +3,7 @@ import {
   addTreeBranch,
   calculateBranchNodes, */
   normalizeRecord,
-  /* createExecFunc, */  } from '../lib/create-rest-tree'
+  createExecFunc,  } from '../lib/create-rest-tree'
 
 describe('Create REST Api routing', () => {
   describe('normalizeRecord', () => {
@@ -73,301 +73,301 @@ describe('Create REST Api routing', () => {
       expect(normalizeRecord(record, props)).toEqual(expected)
     })
   })
-  // describe('createExecFunc', () => {
-  //   const axiosMock = () => Promise.resolve({ success: true })
-  //   test('Basic', () => {
-  //     const record = {
-  //       _require: { data: false, params: false },
-  //       name: 'test',
-  //       options: [{}, {
-  //         url: '/test/:id',
-  //         timeout: 1000,
-  //         headers: {'X-Custom-Header': 'foobar'},
-  //         method: "GET"
-  //       }],
-  //       meta: [{}, { meta: true }], hooks: [], children: []
-  //     }
-  //     const expectedCtx = {
-  //       meta: { meta: true },
-  //       options: {
-  //         timeout: 1000,
-  //         headers: {'X-Custom-Header': 'foobar'},
-  //         method: "GET",
-  //         url: '/test/1'
-  //       },
-  //       name: 'test',
-  //       fullName: ['test'],
-  //       response: { success: true }
-  //     }
-  //     const fn = createExecFunc(record, ['test'], axiosMock)
-  //     return expect(fn({ urlParams: { id: 1 } })).resolves.toEqual(expectedCtx)
-  //   })
-  //   test('With data and params', () => {
-  //     const record = {
-  //       _require: { data: false, params: false },
-  //       name: 'test',
-  //       options: [{}, {
-  //         url: '/test/:id',
-  //         timeout: 1000,
-  //         headers: {'X-Custom-Header': 'foobar'},
-  //         method: "GET"
-  //       }],
-  //       meta: { meta: true }, hooks: [], children: []
-  //     }
-  //     const expectedCtx = {
-  //       meta: { meta: true },
-  //       options: {
-  //         timeout: 1000,
-  //         headers: {'X-Custom-Header': 'foobar'},
-  //         method: "GET",
-  //         url: '/test/1',
-  //         params: { abc: 'abc' },
-  //         data: {
-  //           data: 'some_data'
-  //         }
-  //       },
-  //       name: 'test',
-  //       fullName: ['test'],
-  //       response: { success: true }
-  //     }
+  describe('createExecFunc', () => {
+    const axiosMock = () => Promise.resolve({ success: true })
+    test('Basic', () => {
+      const record = {
+        _require: { data: false, query: false },
+        name: 'test',
+        options: [{}, {
+          url: '/test/:id',
+          timeout: 1000,
+          headers: {'X-Custom-Header': 'foobar'},
+          method: "GET"
+        }],
+        meta: [{}, { meta: true }], hooks: [], children: []
+      }
+      const expectedCtx = {
+        meta: { meta: true },
+        options: {
+          timeout: 1000,
+          headers: {'X-Custom-Header': 'foobar'},
+          method: "GET",
+          url: '/test/1'
+        },
+        name: 'test',
+        fullName: ['test'],
+        response: { success: true }
+      }
+      const fn = createExecFunc(record, ['test'], axiosMock)
+      return expect(fn({ params: { id: 1 } })).resolves.toEqual(expectedCtx)
+    })
+    test('With data and query', () => {
+      const record = {
+        _require: { data: false, query: false },
+        name: 'test',
+        options: [{}, {
+          url: '/test/:id',
+          timeout: 1000,
+          headers: {'X-Custom-Header': 'foobar'},
+          method: "GET"
+        }],
+        meta: { meta: true }, hooks: [], children: []
+      }
+      const expectedCtx = {
+        meta: { meta: true },
+        options: {
+          timeout: 1000,
+          headers: {'X-Custom-Header': 'foobar'},
+          method: "GET",
+          url: '/test/1',
+          params: { abc: 'abc' },
+          data: {
+            data: 'some_data'
+          }
+        },
+        name: 'test',
+        fullName: ['test'],
+        response: { success: true }
+      }
 
-  //     const fn = createExecFunc(record, ['test'], axiosMock)
-  //     // fn({ urlParams: {id: 1}, params: { abc: 'abc' }, data: { data: 'some_data' } })
-  //     //   .then(ctx => { expect(ctx).toEqual(expectedCtx) })
-  //     return expect(fn({ urlParams: {id: 1}, params: { abc: 'abc' }, data: { data: 'some_data' } }))
-  //       .resolves.toEqual(expectedCtx)
-  //   })
-  //   describe('Copying of options, hooks and meta', () => {
-  //     let props = {
-  //       meta: [{ props: 'props', test: '123' }],
-  //       options: [{ props: 'props' }],
-  //       hooks: [(ctx, next) => { next() }]
-  //     }
-  //     const record1 = {
-  //       _normalized: true,
-  //       _require: { data: false, params: false },
-  //       name: 'test',
-  //       meta: [props.meta[0], { test: 'test' }],
-  //       options: [props.options[0], { test: 'test' }, { url: '/test/:id', method: 'get' }],
-  //       hooks: [(ctx, next) => { next() }, (ctx, next) => { next() }],
-  //       children: []
-  //     }
-  //     const record2 = {
-  //       _normalized: true,
-  //       _require: { data: false, params: false },
-  //       name: 'test',
-  //       meta: [props.meta[0], { test: 'test' }],
-  //       options: [props.options[0], { test: 'test' }, { url: '/test/:id', method: 'get' }],
-  //       hooks: [(ctx, next) => { next() }, (ctx, next) => { next() }],
-  //       children: []
-  //     }
-  //     let expectedCtx = {
-  //       meta: { props: 'props', test: 'test' },
-  //       options: {
-  //         test: 'test',
-  //         props: 'props',
-  //         method: 'get',
-  //         url: '/test/1'
-  //       },
-  //       name: 'test',
-  //       fullName: ['test'],
-  //       response: { success: true }
-  //     }
-  //     const fn1 = createExecFunc(record1, ['test'], axiosMock)
-  //     const fn2 = createExecFunc(record2, ['test'], axiosMock)
+      const fn = createExecFunc(record, ['test'], axiosMock)
+      // fn({ urlParams: {id: 1}, params: { abc: 'abc' }, data: { data: 'some_data' } })
+      //   .then(ctx => { expect(ctx).toEqual(expectedCtx) })
+      return expect(fn({ params: {id: 1}, query: { abc: 'abc' }, data: { data: 'some_data' } }))
+        .resolves.toEqual(expectedCtx)
+    })
+    describe('Copying of options, hooks and meta', () => {
+      let props = {
+        meta: [{ props: 'props', test: '123' }],
+        options: [{ props: 'props' }],
+        hooks: [(ctx, next) => { next() }]
+      }
+      const record1 = {
+        _normalized: true,
+        _require: { data: false, query: false },
+        name: 'test',
+        meta: [props.meta[0], { test: 'test' }],
+        options: [props.options[0], { test: 'test' }, { url: '/test/:id', method: 'get' }],
+        hooks: [(ctx, next) => { next() }, (ctx, next) => { next() }],
+        children: []
+      }
+      const record2 = {
+        _normalized: true,
+        _require: { data: false, query: false },
+        name: 'test',
+        meta: [props.meta[0], { test: 'test' }],
+        options: [props.options[0], { test: 'test' }, { url: '/test/:id', method: 'get' }],
+        hooks: [(ctx, next) => { next() }, (ctx, next) => { next() }],
+        children: []
+      }
+      let expectedCtx = {
+        meta: { props: 'props', test: 'test' },
+        options: {
+          test: 'test',
+          props: 'props',
+          method: 'get',
+          url: '/test/1'
+        },
+        name: 'test',
+        fullName: ['test'],
+        response: { success: true }
+      }
+      const fn1 = createExecFunc(record1, ['test'], axiosMock)
+      const fn2 = createExecFunc(record2, ['test'], axiosMock)
 
-  //     props.meta[0].props = 'not_props'
-  //     props.options[0].props = 'not_props'
+      props.meta[0].props = 'not_props'
+      props.options[0].props = 'not_props'
 
-  //     test('Immutable of meta, options of record1', () => {
-  //       return expect(fn1({ urlParams: { id: 1 } })).resolves.toEqual(expectedCtx)
-  //     })
-  //     test('Immutable of meta, options of record2', () => {
-  //       return expect(fn2({ urlParams: { id: 1 } })).resolves.toEqual(expectedCtx)
-  //     })
-  //     const record3 = {
-  //       _normalized: true,
-  //       _require: { data: false, params: false },
-  //       name: 'test',
-  //       meta: [props.meta[0], { test: 'test' }],
-  //       options: [props.options[0], { test: 'test' }, { url: '/test/:id', method: 'get' }],
-  //       hooks: [
-  //         (ctx, next) => { next() },
-  //         (ctx, next) => {
-  //           ctx.meta.props = 'not_props'
-  //           ctx.options.props = 'not_props'
-  //           next()
-  //         }
-  //       ],
-  //       children: []
-  //     }
-  //     const expectedCtx2 = {
-  //       meta: { props: 'not_props', test: 'test' },
-  //       options: {
-  //         props: 'not_props',
-  //         test: 'test',
-  //         method: 'get',
-  //         url: '/test/1'
-  //       },
-  //       name: 'test',
-  //       fullName: ['test'],
-  //       response: { success: true }
-  //     }
-  //     const fn3 = createExecFunc(record3, ['test'], axiosMock)
-  //     test('Mutable meta, options of record3', () => {
-  //       return expect(fn3({ urlParams: { id: 1 } })).resolves.toEqual(expectedCtx2)
-  //     })
-  //   })
-  //   test('Base hook', () => {
-  //     const hook = (ctx, next) => {
-  //       ctx.meta.before = true
-  //       next()
-  //       ctx.meta.after = true
-  //     }
-  //     const record = { name: 'a', url: '/a', method: 'GET', hook }
-  //     const fn = createExecFunc(normalizeRecord(record, { meta: {}, options: {} }), ['a'], axiosMock)
-  //     return expect(fn()).resolves.toMatchObject({ meta: { before: true, after: true } })
-  //   })
-  //   test('Async hook', () => {
-  //     const hook = async (ctx, next) => {
-  //       ctx.meta.before = true
-  //       await next()
-  //       ctx.meta.after = true
-  //     }
-  //     const record = { name: 'a', url: '/a', method: 'GET', hook }
-  //     const fn = createExecFunc(normalizeRecord(record, { meta: {}, options: {} }), ['a'], axiosMock)
-  //     return expect(fn()).resolves.toMatchObject({ meta: { before: true, after: true } })
-  //   })
-  //   test('Composition of hook', () => {
-  //     const hook1 = async (ctx, next) => {
-  //       ctx.meta.test1 = true
-  //       ctx.meta.test2 = true
-  //       await next()
-  //       ctx.meta.test2 = true
-  //     }
-  //     const hook2 = async (ctx, next) => {
-  //       ctx.meta.test1 = false
-  //       await next()
-  //       ctx.meta.test2 = false
-  //     }
-  //     const record = { name: 'a', url: '/a', method: 'GET' }
-  //     const props = { hooks: [ hook1, hook2 ], meta: {}, options: {} }
-  //     const fn = createExecFunc(normalizeRecord(record, props), ['a'], axiosMock)
-  //     return expect(fn()).resolves.toMatchObject({ meta: { test1: false, test2: true } })
-  //   })
-  //   describe('Test data, params and urlParams validations', () => {
-  //     const data = true
-  //     const params = true
-  //     const props = { meta: [{}], options: [{}], hooks: [] }
-  //     describe('Test data validation', () => {
-  //       test('Valid', () => {
-  //         const record = { name: 'test', method: 'get', url: '/test', data }
-  //         const expectedCtx = {
-  //           meta: {},
-  //           options: {
-  //             data: 'test_data',
-  //             method: 'get',
-  //             url: '/test'
-  //           },
-  //           name: 'test',
-  //           fullName: ['test'],
-  //           response: { success: true }
-  //         }
-  //         const normalizedRecord = normalizeRecord(record, props)
-  //         const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
-  //         return expect(fn({ data: 'test_data' })).resolves.toEqual(expectedCtx)
-  //       })
-  //       test('Invalid', () => {
-  //         const record = { name: 'test', method: 'get', url: '/test', data }
-  //         const normalizedRecord = normalizeRecord(record, props)
-  //         const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
-  //         try {
-  //           expect.assertions(1)
-  //           fn()
-  //         } catch (err) {
-  //           expect(err.message).toEqual('Require data!')
-  //         }
-  //       })
-  //     })
-  //     describe('Test params validation', () => {
-  //       test('Valid', () => {
-  //         const record = { name: 'test', method: 'get', url: '/test', params }
-  //         const expectedCtx = {
-  //           meta: {},
-  //           options: {
-  //             params: { test: 'test_param' },
-  //             method: 'get',
-  //             url: '/test'
-  //           },
-  //           name: 'test',
-  //           fullName: ['test'],
-  //           response: { success: true }
-  //         }
-  //         const normalizedRecord = normalizeRecord(record, props)
-  //         const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
-  //         return expect(fn({ params: { test: 'test_param' }})).resolves.toEqual(expectedCtx)
-  //       })
-  //       test('Invalid', () => {
-  //         const record = { name: 'test', method: 'get', url: '/test', params }
-  //         const normalizedRecord = normalizeRecord(record, props)
-  //         const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
-  //         try {
-  //           expect.assertions(1)
-  //           fn()
-  //         } catch (err) {
-  //           expect(err.message).toEqual('Require params!')
-  //         }
-  //       })
-  //     })
-  //     describe('Test urlParams validation', () => {
-  //       test('Valid', () => {
-  //         const record = { name: 'test', method: 'get', url: '/test/:id1/:id2' }
-  //         const normalizedRecord = normalizeRecord(record, props)
-  //         const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
-  //         const urlParams = {urlParams: { id1: 1, id2: 2 }}
-  //         return expect(fn(urlParams)).resolves.toHaveProperty('options.url', '/test/1/2')
-  //       })
-  //       test('Invalid all params', () => {
-  //         const record = { name: 'test', method: 'get', url: '/test/:id1/:id2' }
-  //         const normalizedRecord = normalizeRecord(record, props)
-  //         const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
-  //         try {
-  //           expect.assertions(1)
-  //           fn()
-  //         } catch (err) {
-  //           expect(err.message).toEqual('Require urlParams!')
-  //         }
-  //       })
-  //       test('Invalid with part of urlParams', () => {
-  //         const record = { name: 'test', method: 'get', url: '/test/:id1/:id2' }
-  //         const normalizedRecord = normalizeRecord(record, props)
-  //         const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
-  //         try {
-  //           expect.assertions(1)
-  //           fn({ urlParams: { id1: 1 } })
-  //         } catch (err) {
-  //           expect(err.message).toEqual('Require id1, id2, but given id1')
-  //         }
-  //       })
-  //       describe('Optional names params', () => {
-  //         test('Without optional names params', () => {
-  //           const record = { name: 'test', method: 'get', url: '/test/:id1/:id2/:id3?' }
-  //           const normalizedRecord = normalizeRecord(record, props)
-  //           const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
-  //           const urlParams = {urlParams: { id1: 1, id2: 2 }}
-  //           return expect(fn(urlParams)).resolves.toHaveProperty('options.url', '/test/1/2')
-  //         })
-  //         test('With optional names params', () => {
-  //           const record = { name: 'test', method: 'get', url: '/test/:id1/:id2/:id3?' }
-  //           const normalizedRecord = normalizeRecord(record, props)
-  //           const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
-  //           const urlParams = { urlParams: { id1: 1, id2: 2, id3: 3} }
-  //           return expect(fn(urlParams)).resolves.toHaveProperty('options.url', '/test/1/2/3')
-  //         })
-  //       })
-  //     })
-  //   })
-  // })
+      test('Immutable of meta, options of record1', () => {
+        return expect(fn1({ params: { id: 1 } })).resolves.toEqual(expectedCtx)
+      })
+      test('Immutable of meta, options of record2', () => {
+        return expect(fn2({ params: { id: 1 } })).resolves.toEqual(expectedCtx)
+      })
+      const record3 = {
+        _normalized: true,
+        _require: { data: false, query: false },
+        name: 'test',
+        meta: [props.meta[0], { test: 'test' }],
+        options: [props.options[0], { test: 'test' }, { url: '/test/:id', method: 'get' }],
+        hooks: [
+          (ctx, next) => { next() },
+          (ctx, next) => {
+            ctx.meta.props = 'not_props'
+            ctx.options.props = 'not_props'
+            next()
+          }
+        ],
+        children: []
+      }
+      const expectedCtx2 = {
+        meta: { props: 'not_props', test: 'test' },
+        options: {
+          props: 'not_props',
+          test: 'test',
+          method: 'get',
+          url: '/test/1'
+        },
+        name: 'test',
+        fullName: ['test'],
+        response: { success: true }
+      }
+      const fn3 = createExecFunc(record3, ['test'], axiosMock)
+      test('Mutable meta, options of record3', () => {
+        return expect(fn3({ params: { id: 1 } })).resolves.toEqual(expectedCtx2)
+      })
+    })
+    test('Base hook', () => {
+      const hook = (ctx, next) => {
+        ctx.meta.before = true
+        next()
+        ctx.meta.after = true
+      }
+      const record = { name: 'a', url: '/a', method: 'GET', hook }
+      const fn = createExecFunc(normalizeRecord(record, { meta: {}, options: {} }), ['a'], axiosMock)
+      return expect(fn()).resolves.toMatchObject({ meta: { before: true, after: true } })
+    })
+    test('Async hook', () => {
+      const hook = async (ctx, next) => {
+        ctx.meta.before = true
+        await next()
+        ctx.meta.after = true
+      }
+      const record = { name: 'a', url: '/a', method: 'GET', hook }
+      const fn = createExecFunc(normalizeRecord(record, { meta: {}, options: {} }), ['a'], axiosMock)
+      return expect(fn()).resolves.toMatchObject({ meta: { before: true, after: true } })
+    })
+    test('Composition of hook', () => {
+      const hook1 = async (ctx, next) => {
+        ctx.meta.test1 = true
+        ctx.meta.test2 = true
+        await next()
+        ctx.meta.test2 = true
+      }
+      const hook2 = async (ctx, next) => {
+        ctx.meta.test1 = false
+        await next()
+        ctx.meta.test2 = false
+      }
+      const record = { name: 'a', url: '/a', method: 'GET' }
+      const props = { hooks: [ hook1, hook2 ], meta: {}, options: {} }
+      const fn = createExecFunc(normalizeRecord(record, props), ['a'], axiosMock)
+      return expect(fn()).resolves.toMatchObject({ meta: { test1: false, test2: true } })
+    })
+    describe('Test data, query and oarams validations', () => {
+      const data = true
+      const query = true
+      const props = { meta: [{}], options: [{}], hooks: [] }
+      describe('Test data validation', () => {
+        test('Valid', () => {
+          const record = { name: 'test', method: 'get', url: '/test', data }
+          const expectedCtx = {
+            meta: {},
+            options: {
+              data: 'test_data',
+              method: 'get',
+              url: '/test'
+            },
+            name: 'test',
+            fullName: ['test'],
+            response: { success: true }
+          }
+          const normalizedRecord = normalizeRecord(record, props)
+          const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
+          return expect(fn({ data: 'test_data' })).resolves.toEqual(expectedCtx)
+        })
+        test('Invalid', () => {
+          const record = { name: 'test', method: 'get', url: '/test', data }
+          const normalizedRecord = normalizeRecord(record, props)
+          const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
+          try {
+            expect.assertions(1)
+            fn()
+          } catch (err) {
+            expect(err.message).toEqual('Require data!')
+          }
+        })
+      })
+      describe('Test query validation', () => {
+        test('Valid', () => {
+          const record = { name: 'test', method: 'get', url: '/test', query }
+          const expectedCtx = {
+            meta: {},
+            options: {
+              params: { test: 'test_param' },
+              method: 'get',
+              url: '/test'
+            },
+            name: 'test',
+            fullName: ['test'],
+            response: { success: true }
+          }
+          const normalizedRecord = normalizeRecord(record, props)
+          const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
+          return expect(fn({ query: { test: 'test_param' }})).resolves.toEqual(expectedCtx)
+        })
+        test('Invalid', () => {
+          const record = { name: 'test', method: 'get', url: '/test', query }
+          const normalizedRecord = normalizeRecord(record, props)
+          const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
+          try {
+            expect.assertions(1)
+            fn()
+          } catch (err) {
+            expect(err.message).toEqual('Require query!')
+          }
+        })
+      })
+      describe('Test params validation', () => {
+        test('Valid', () => {
+          const record = { name: 'test', method: 'get', url: '/test/:id1/:id2' }
+          const normalizedRecord = normalizeRecord(record, props)
+          const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
+          const params = {params: { id1: 1, id2: 2 }}
+          return expect(fn(params)).resolves.toHaveProperty('options.url', '/test/1/2')
+        })
+        test('Invalid all params', () => {
+          const record = { name: 'test', method: 'get', url: '/test/:id1/:id2' }
+          const normalizedRecord = normalizeRecord(record, props)
+          const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
+          try {
+            expect.assertions(1)
+            fn()
+          } catch (err) {
+            expect(err.message).toEqual('Require params!')
+          }
+        })
+        test('Invalid with part of params', () => {
+          const record = { name: 'test', method: 'get', url: '/test/:id1/:id2' }
+          const normalizedRecord = normalizeRecord(record, props)
+          const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
+          try {
+            expect.assertions(1)
+            fn({ params: { id1: 1 } })
+          } catch (err) {
+            expect(err.message).toEqual('Require id1, id2, but given id1')
+          }
+        })
+        describe('Optional names params', () => {
+          test('Without optional names params', () => {
+            const record = { name: 'test', method: 'get', url: '/test/:id1/:id2/:id3?' }
+            const normalizedRecord = normalizeRecord(record, props)
+            const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
+            const params = {params: { id1: 1, id2: 2 }}
+            return expect(fn(params)).resolves.toHaveProperty('options.url', '/test/1/2')
+          })
+          test('With optional names params', () => {
+            const record = { name: 'test', method: 'get', url: '/test/:id1/:id2/:id3?' }
+            const normalizedRecord = normalizeRecord(record, props)
+            const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
+            const params = { params: { id1: 1, id2: 2, id3: 3} }
+            return expect(fn(params)).resolves.toHaveProperty('options.url', '/test/1/2/3')
+          })
+        })
+      })
+    })
+  })
   // describe('calculateBranchNodes', () => {
   //   test('Basic', () => {
   //     const records = [{
