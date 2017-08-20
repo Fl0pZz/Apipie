@@ -450,7 +450,7 @@ function parseExecArgs(url, props, _ref) {
     throw new Error('Require data!');
   }
 
-  //validate params
+  // validate params
   var requireParams = index.parse(url).filter(function (token) {
     return [typeof token !== 'string', !token.optional, // https://github.com/pillarjs/path-to-regexp#optional
     !token.asterisk // https://github.com/pillarjs/path-to-regexp#asterisk
@@ -796,7 +796,11 @@ var slicedToArray = function () {
 
 function setVal(obj, propNamesPath, val) {
   propNamesPath.reduce(function (acc, propName, i) {
-    if (i === propNamesPath.length - 1) return acc[propName] = val;
+    if (i === propNamesPath.length - 1) {
+      acc[propName] = val;
+      return val;
+    }
+
     return acc[propName];
   }, obj);
 }
