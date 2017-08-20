@@ -447,7 +447,7 @@ function parseExecArgs(url, props, _ref) {
     throw new Error('Require data!');
   }
 
-  //validate params
+  // validate params
   var requireParams = index.parse(url).filter(function (token) {
     return [typeof token !== 'string', !token.optional, // https://github.com/pillarjs/path-to-regexp#optional
     !token.asterisk // https://github.com/pillarjs/path-to-regexp#asterisk
@@ -618,10 +618,14 @@ var arrayOfMethods = ['get', 'delete', 'head', 'post', 'options', 'put', 'patch'
 
 function transformSugarSyntax(record) {
   // { name, url, method } --> { name, option: { url, method } }
-  if (record.options == null) record.options = {};
+  if (record.options == null) {
+    record.options = {};
+  }
+
   if (record.url) {
     record.options.url = record.url;
   }
+
   if (record.url && record.method && record.children == null) {
     record.options.method = record.method;
   }
@@ -630,7 +634,6 @@ function transformSugarSyntax(record) {
   var httpMethod = arrayOfMethods.find(function (key) {
     return key in record;
   });
-
   if (httpMethod && typeof record[httpMethod] === 'string') {
     record.options.url = record[httpMethod];
     record.options.method = httpMethod;
@@ -639,14 +642,25 @@ function transformSugarSyntax(record) {
 
 function stackUrl(parentOpts, options) {
   // console.warn({parentOpts, options})
-  if (parentOpts.url == null && options.url == null) return null;
+  if (parentOpts.url == null && options.url == null) {
+    return null;
+  }
+
   var url = options.url;
   var parentUrl = parentOpts.url;
-  if (url != null && url.startsWith('/')) return url;
+
+  if (url != null && url.startsWith('/')) {
+    return url;
+  }
+
   if (parentUrl == null && !url.startsWith('/')) {
     throw new Error('Can not find root of path!');
   }
-  if ((url == null || url === '') && parentUrl) return parentUrl;
+
+  if ((url == null || url === '') && parentUrl) {
+    return parentUrl;
+  }
+
   if (parentUrl.endsWith('/')) {
     options.url = parentUrl + url;
   } else {
@@ -793,7 +807,11 @@ var slicedToArray = function () {
 
 function setVal(obj, propNamesPath, val) {
   propNamesPath.reduce(function (acc, propName, i) {
-    if (i === propNamesPath.length - 1) return acc[propName] = val;
+    if (i === propNamesPath.length - 1) {
+      acc[propName] = val;
+      return val;
+    }
+
     return acc[propName];
   }, obj);
 }
@@ -838,11 +856,14 @@ function addTreeBranch(branch, record, indexPath, closurePack) {
         query: !!record.query
       });
     }
+
     record.children.forEach(function (childRecord, index) {
       return addTreeBranch(branch[record.name], childRecord, indexPath.concat(index), closurePack);
     });
+
     return;
   }
+
   // Create lazy calculation leaf
   branch[record.name] = lazyCalcLeafNode(indexPath, closurePack);
 }
@@ -859,6 +880,7 @@ function lazyCalcLeafNode(indexPath, closurePack) {
         record = _calculateBranchNodes2[1];
 
     setVal(tree, propNamesPath, createExecFunc(record, propNamesPath, axios));
+
     return getVal(tree, propNamesPath)(props);
   };
 }
@@ -873,6 +895,7 @@ function calculateBranchNodes(records, indexPath, propNamesPath, closurePack) {
   if (record.children.length) {
     return calculateBranchNodes(record.children, indexPath, propNamesPath, record);
   }
+
   return [propNamesPath, record];
 }
 
@@ -886,6 +909,7 @@ function createExecFunc(record, fullName, axios) {
       fullName: fullName
     };
   }
+
   function createRequestFunc() {
     return function (ctx, next) {
       return axios(ctx.options).then(function (response) {
@@ -894,12 +918,15 @@ function createExecFunc(record, fullName, axios) {
       });
     };
   }
+
   if (record.options instanceof Array) {
     record.options = index$3.all(record.options);
   }
+
   if (record.meta instanceof Array) {
     record.meta = index$3.all(record.meta);
   }
+
   record.hooks.push(createRequestFunc());
   var fn = index$4(record.hooks);
 
