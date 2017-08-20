@@ -11,6 +11,7 @@
     "watch": "rollup -c -w",
     "pretest": "npm run build",
     "test": "jest",
+    "test:watch": "jest --watch",
     "prepublish": "npm test"
   },
   "repository": {
