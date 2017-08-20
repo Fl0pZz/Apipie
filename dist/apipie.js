@@ -435,51 +435,48 @@ index.compile = compile_1;
 index.tokensToFunction = tokensToFunction_1;
 index.tokensToRegExp = tokensToRegExp_1;
 
-function parseExecArgs (url, props, ref) {
-  var _require = ref._require;
+function parseExecArgs(url, props, _ref) {
+  var _require = _ref._require;
 
-  var result = { url: url };
-  
-  // validate query
-  if (_require.query && (!props || !props.query)) {
-    throw new Error('Require query!')
+  var result = { url: url
+
+    // validate query
+  };if (_require.query && (!props || !props.query)) {
+    throw new Error('Require query!');
   }
 
   // validate data
   if (_require.data && (!props || !props.data)) {
-    throw new Error('Require data!')
+    throw new Error('Require data!');
   }
 
   //validate params
-  var requireParams = index.parse(url)
-    .filter(function (token) { return [
-          typeof token !== 'string',
-          !token.optional, // https://github.com/pillarjs/path-to-regexp#optional
-          !token.asterisk // https://github.com/pillarjs/path-to-regexp#asterisk
-        ].every(Boolean); }
-    )
-    .map(function (ref) {
-      var name = ref.name;
-
-      return name;
+  var requireParams = index.parse(url).filter(function (token) {
+    return [typeof token !== 'string', !token.optional, // https://github.com/pillarjs/path-to-regexp#optional
+    !token.asterisk // https://github.com/pillarjs/path-to-regexp#asterisk
+    ].every(Boolean);
+  }).map(function (_ref2) {
+    var name = _ref2.name;
+    return name;
   });
 
   if (requireParams.length && !props) {
-    throw new Error('Require params!')
+    throw new Error('Require params!');
   }
 
   if (!props) {
-    return result
+    return result;
   }
 
-  var params = props.params;
-  var query = props.query;
-  var data = props.data;
+  var params = props.params,
+      query = props.query,
+      data = props.data;
+
 
   if (params) {
     requireParams.forEach(function (param) {
       if (!params[param]) {
-        throw new Error(("Require " + (requireParams.join(', ')) + ", but given " + (Object.keys(params).join(', ') || 'nothing')))
+        throw new Error('Require ' + requireParams.join(', ') + ', but given ' + (Object.keys(params).join(', ') || 'nothing'));
       }
     });
 
@@ -496,7 +493,7 @@ function parseExecArgs (url, props, ref) {
     result.data = data;
   }
 
-  return result
+  return result;
 }
 
 var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
@@ -594,12 +591,15 @@ return deepmerge
 }));
 });
 
-function normalizeRecord (record, ref) {
-  var options = ref.options; if ( options === void 0 ) options = {};
-  var meta = ref.meta; if ( meta === void 0 ) meta = {};
-  var hooks = ref.hooks; if ( hooks === void 0 ) hooks = [];
+function normalizeRecord(record, _ref) {
+  var _ref$options = _ref.options,
+      options = _ref$options === undefined ? {} : _ref$options,
+      _ref$meta = _ref.meta,
+      meta = _ref$meta === undefined ? {} : _ref$meta,
+      _ref$hooks = _ref.hooks,
+      hooks = _ref$hooks === undefined ? [] : _ref$hooks;
 
-  if (record._normalized) { return record }
+  if (record._normalized) return record;
   transformSugarSyntax(record);
   stackUrl(options, record.options);
 
@@ -614,90 +614,184 @@ function normalizeRecord (record, ref) {
     options: index$3(options, record.options || {}, { clone: true }),
     hooks: [].concat(hooks, record.hook || []),
     children: record.children || []
-  }
+  };
 }
 
 var arrayOfMethods = ['get', 'delete', 'head', 'post', 'options', 'put', 'patch'];
 
 function transformSugarSyntax(record) {
   // { name, url, method } --> { name, option: { url, method } }
-  if (record.options == null) { record.options = {}; }
+  if (record.options == null) record.options = {};
   if (record.url) {
     record.options.url = record.url;
   }
-  if (record.url && record.method && (record.children == null)) {
+  if (record.url && record.method && record.children == null) {
     record.options.method = record.method;
   }
 
   // { name, method: url } --> { name, option: { url, method } }
-  var httpMethod = arrayOfMethods.find(function (key) { return key in record; });
-  
+  var httpMethod = arrayOfMethods.find(function (key) {
+    return key in record;
+  });
+
   if (httpMethod && typeof record[httpMethod] === 'string') {
     record.options.url = record[httpMethod];
     record.options.method = httpMethod;
   }
 }
 
-function stackUrl (parentOpts, options) {
+function stackUrl(parentOpts, options) {
   // console.warn({parentOpts, options})
-  if (parentOpts.url == null && options.url == null) { return null }
+  if (parentOpts.url == null && options.url == null) return null;
   var url = options.url;
   var parentUrl = parentOpts.url;
-  if ((url != null) && url.startsWith('/')) { return url }
+  if (url != null && url.startsWith('/')) return url;
   if (parentUrl == null && !url.startsWith('/')) {
-    throw new Error('Can not find root of path!')
+    throw new Error('Can not find root of path!');
   }
-  if ((url == null || url === '') && parentUrl) { return parentUrl }
+  if ((url == null || url === '') && parentUrl) return parentUrl;
   if (parentUrl.endsWith('/')) {
     options.url = parentUrl + url;
   } else {
-    options.url = parentUrl + "/" + url;
+    options.url = parentUrl + '/' + url;
   }
 }
 
-function compose (hooks) {
-  if (!Array.isArray(hooks)) { throw new TypeError('Hooks stack must be an array!') }
-  hooks.forEach(function (fn) { if (typeof fn !== 'function') { throw new TypeError('Hooks must be composed of functions!') } });
+function compose(hooks) {
+  if (!Array.isArray(hooks)) throw new TypeError('Hooks stack must be an array!');
+  hooks.forEach(function (fn) {
+    if (typeof fn !== 'function') throw new TypeError('Hooks must be composed of functions!');
+  }
   // for (const fn of hooks) {
   //   if (typeof fn !== 'function') throw new TypeError('Hooks must be composed of functions!')
   // }
-  
-  return function (context, next) {
+
+  );return function (context, next) {
     // last called middleware #
     var index = -1;
-    return dispatch(0)
-    function dispatch (i) {
-      if (i <= index) { return Promise.reject(new Error('next() called multiple times')) }
+    return dispatch(0);
+    function dispatch(i) {
+      if (i <= index) return Promise.reject(new Error('next() called multiple times'));
       index = i;
       var fn = hooks[i];
-      if (i === hooks.length) { fn = next; }
-      if (!fn) { return Promise.resolve() }
+      if (i === hooks.length) fn = next;
+      if (!fn) return Promise.resolve();
       try {
-        return Promise.resolve(fn(context, function next () {
-          return dispatch(i + 1)
-        }))
+        return Promise.resolve(fn(context, function next() {
+          return dispatch(i + 1);
+        }));
       } catch (err) {
-        return Promise.reject(err)
+        return Promise.reject(err);
       }
     }
+  };
+}
+
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
   }
-}
+};
 
-function setVal (obj, propNamesPath, val) {
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var slicedToArray = function () {
+  function sliceIterator(arr, i) {
+    var _arr = [];
+    var _n = true;
+    var _d = false;
+    var _e = undefined;
+
+    try {
+      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+        _arr.push(_s.value);
+
+        if (i && _arr.length === i) break;
+      }
+    } catch (err) {
+      _d = true;
+      _e = err;
+    } finally {
+      try {
+        if (!_n && _i["return"]) _i["return"]();
+      } finally {
+        if (_d) throw _e;
+      }
+    }
+
+    return _arr;
+  }
+
+  return function (arr, i) {
+    if (Array.isArray(arr)) {
+      return arr;
+    } else if (Symbol.iterator in Object(arr)) {
+      return sliceIterator(arr, i);
+    } else {
+      throw new TypeError("Invalid attempt to destructure non-iterable instance");
+    }
+  };
+}();
+
+function setVal(obj, propNamesPath, val) {
   propNamesPath.reduce(function (acc, propName, i) {
-    if (i === propNamesPath.length - 1) { return acc[propName] = val }
-      return acc[propName]
-    }, obj);
+    if (i === propNamesPath.length - 1) return acc[propName] = val;
+    return acc[propName];
+  }, obj);
 }
 
-function getVal (obj, propNamesPath) {
-  return propNamesPath.reduce(function (acc, propName) { return acc[propName]; }, obj)
+function getVal(obj, propNamesPath) {
+  return propNamesPath.reduce(function (acc, propName) {
+    return acc[propName];
+  }, obj);
 }
 
 /*
 * STEP 1: Create a skeleton tree with minimal intermediate computations
 */
-function createTreeSkeleton (records, baseOptions) {
+function createTreeSkeleton(records, baseOptions) {
   /*
   * options: {
   *   hooks,
@@ -710,11 +804,13 @@ function createTreeSkeleton (records, baseOptions) {
   var tree = {};
   baseOptions.tree = tree;
   var closurePack = baseOptions;
-  records.forEach(function (record, index) { return addTreeBranch(tree, record, [index], closurePack); });
-  return tree
+  records.forEach(function (record, index) {
+    return addTreeBranch(tree, record, [index], closurePack);
+  });
+  return tree;
 }
 
-function addTreeBranch (branch, record, indexPath, closurePack) {
+function addTreeBranch(branch, record, indexPath, closurePack) {
   branch[record.name] = {};
   if (record.children && record.children.length) {
     if (record.method) {
@@ -726,40 +822,45 @@ function addTreeBranch (branch, record, indexPath, closurePack) {
         query: !!record.query
       });
     }
-    record.children.forEach(function (childRecord, index) { return addTreeBranch(branch[record.name], childRecord, indexPath.concat(index), closurePack); });
-    return
+    record.children.forEach(function (childRecord, index) {
+      return addTreeBranch(branch[record.name], childRecord, indexPath.concat(index), closurePack);
+    });
+    return;
   }
   // Create lazy calculation leaf
   branch[record.name] = lazyCalcLeafNode(indexPath, closurePack);
 }
 
-function lazyCalcLeafNode (indexPath, closurePack) {
+function lazyCalcLeafNode(indexPath, closurePack) {
   return function (props) {
-    var tree = closurePack.tree;
-    var records = closurePack.records;
-    var axios = closurePack.axios;
-    var ref = calculateBranchNodes(records, indexPath, [], closurePack);
-    var propNamesPath = ref[0];
-    var record = ref[1];
+    var tree = closurePack.tree,
+        records = closurePack.records,
+        axios = closurePack.axios;
+
+    var _calculateBranchNodes = calculateBranchNodes(records, indexPath, [], closurePack),
+        _calculateBranchNodes2 = slicedToArray(_calculateBranchNodes, 2),
+        propNamesPath = _calculateBranchNodes2[0],
+        record = _calculateBranchNodes2[1];
+
     setVal(tree, propNamesPath, createExecFunc(record, propNamesPath, axios));
-    return getVal(tree, propNamesPath)(props)
-  }
+    return getVal(tree, propNamesPath)(props);
+  };
 }
 /*
 * STEP 2: Сompute only the necessary nodes of the tree to execute the request
 */
-function calculateBranchNodes (records, indexPath, propNamesPath, closurePack) {
+function calculateBranchNodes(records, indexPath, propNamesPath, closurePack) {
   var index = indexPath.shift();
   records[index] = normalizeRecord(records[index], closurePack);
   var record = records[index];
   propNamesPath.push(record.name);
   if (record.children.length) {
-    return calculateBranchNodes(record.children, indexPath, propNamesPath, record)
+    return calculateBranchNodes(record.children, indexPath, propNamesPath, record);
   }
-  return [propNamesPath, record]
+  return [propNamesPath, record];
 }
 
-function createExecFunc (record, fullName, axios) {
+function createExecFunc(record, fullName, axios) {
   function createContext(meta, options) {
     return {
       meta: meta,
@@ -767,14 +868,15 @@ function createExecFunc (record, fullName, axios) {
       response: null,
       name: record.name,
       fullName: fullName
-    }
+    };
   }
-  function createRequestFunc () {
-    return function (ctx, next) { return axios(ctx.options)
-      .then(function (response) {
+  function createRequestFunc() {
+    return function (ctx, next) {
+      return axios(ctx.options).then(function (response) {
         ctx.response = response;
         next();
-      }); }
+      });
+    };
   }
   if (record.options instanceof Array) {
     record.options = index$3.all(record.options);
@@ -788,23 +890,36 @@ function createExecFunc (record, fullName, axios) {
   return function (props) {
     var tmpOptions = index$3(record.options, parseExecArgs(record.options.url, props, record), { clone: true });
     var context = createContext(record.meta, tmpOptions);
-    return fn(context).then(function () { return context; })
-  }
+    return fn(context).then(function () {
+      return context;
+    });
+  };
 }
 
-var Apipie = function Apipie(records, options) {
-  this.records = records;
-  this.hooks = [];
-  this.meta = {};
-  this.options = {};
-  this.axios = options.axios;
-};
-Apipie.prototype.globalHook = function globalHook (hook) {
-  this.hooks.push(hook);
-};
-Apipie.prototype.create = function create () {
-  return createTreeSkeleton(this.records, this)
-};
+var Apipie = function () {
+  function Apipie(records, options) {
+    classCallCheck(this, Apipie);
+
+    this.records = records;
+    this.hooks = [];
+    this.meta = {};
+    this.options = {};
+    this.axios = options.axios;
+  }
+
+  createClass(Apipie, [{
+    key: 'globalHook',
+    value: function globalHook(hook) {
+      this.hooks.push(hook);
+    }
+  }, {
+    key: 'create',
+    value: function create() {
+      return createTreeSkeleton(this.records, this);
+    }
+  }]);
+  return Apipie;
+}();
 
 return Apipie;
 
