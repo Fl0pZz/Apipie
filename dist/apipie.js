@@ -657,34 +657,53 @@ function stackUrl(parentOpts, options) {
   }
 }
 
-function compose(hooks) {
-  if (!Array.isArray(hooks)) throw new TypeError('Hooks stack must be an array!');
-  hooks.forEach(function (fn) {
-    if (typeof fn !== 'function') throw new TypeError('Hooks must be composed of functions!');
-  }
-  // for (const fn of hooks) {
-  //   if (typeof fn !== 'function') throw new TypeError('Hooks must be composed of functions!')
-  // }
+/**
+ * Expose compositor.
+ */
 
-  );return function (context, next) {
+var index$4 = compose;
+
+/**
+ * Compose `middleware` returning
+ * a fully valid middleware comprised
+ * of all those which are passed.
+ *
+ * @param {Array} middleware
+ * @return {Function}
+ * @api public
+ */
+
+function compose (middleware) {
+  if (!Array.isArray(middleware)) throw new TypeError('Middleware stack must be an array!')
+  for (const fn of middleware) {
+    if (typeof fn !== 'function') throw new TypeError('Middleware must be composed of functions!')
+  }
+
+  /**
+   * @param {Object} context
+   * @return {Promise}
+   * @api public
+   */
+
+  return function (context, next) {
     // last called middleware #
-    var index = -1;
-    return dispatch(0);
-    function dispatch(i) {
-      if (i <= index) return Promise.reject(new Error('next() called multiple times'));
+    let index = -1;
+    return dispatch(0)
+    function dispatch (i) {
+      if (i <= index) return Promise.reject(new Error('next() called multiple times'))
       index = i;
-      var fn = hooks[i];
-      if (i === hooks.length) fn = next;
-      if (!fn) return Promise.resolve();
+      let fn = middleware[i];
+      if (i === middleware.length) fn = next;
+      if (!fn) return Promise.resolve()
       try {
-        return Promise.resolve(fn(context, function next() {
-          return dispatch(i + 1);
-        }));
+        return Promise.resolve(fn(context, function next () {
+          return dispatch(i + 1)
+        }))
       } catch (err) {
-        return Promise.reject(err);
+        return Promise.reject(err)
       }
     }
-  };
+  }
 }
 
 var classCallCheck = function (instance, Constructor) {
@@ -885,7 +904,7 @@ function createExecFunc(record, fullName, axios) {
     record.meta = index$3.all(record.meta);
   }
   record.hooks.push(createRequestFunc());
-  var fn = compose(record.hooks);
+  var fn = index$4(record.hooks);
 
   return function (props) {
     var tmpOptions = index$3(record.options, parseExecArgs(record.options.url, props, record), { clone: true });
