@@ -17,16 +17,18 @@ describe('Create REST Api routing', () => {
           url: '/test/:id',
           timeout: 1000,
           headers: {'X-Custom-Header': 'foobar'},
-          method: "GET"
+          method: 'GET'
         }],
-        meta: [{}, { meta: true }], hooks: [], children: []
+        meta: [{}, { meta: true }],
+        hooks: [],
+        children: []
       }
       const expectedCtx = {
         meta: { meta: true },
         options: {
           timeout: 1000,
           headers: {'X-Custom-Header': 'foobar'},
-          method: "GET",
+          method: 'GET',
           url: '/test/1'
         },
         name: 'test',
@@ -44,16 +46,18 @@ describe('Create REST Api routing', () => {
           url: '/test/:id',
           timeout: 1000,
           headers: {'X-Custom-Header': 'foobar'},
-          method: "GET"
+          method: 'GET'
         }],
-        meta: { meta: true }, hooks: [], children: []
+        meta: { meta: true },
+        hooks: [],
+        children: []
       }
       const expectedCtx = {
         meta: { meta: true },
         options: {
           timeout: 1000,
           headers: {'X-Custom-Header': 'foobar'},
-          method: "GET",
+          method: 'GET',
           url: '/test/1',
           params: { abc: 'abc' },
           data: {
@@ -305,7 +309,9 @@ describe('Create REST Api routing', () => {
   describe('calculateBranchNodes', () => {
     test('Basic', () => {
       const records = [{
-        name: 'test', url: '/test', method: 'get',
+        name: 'test',
+        url: '/test',
+        method: 'get',
         children: [
           { name: 'test1', url: '/test/1', method: 'get' },
           { name: 'test2', url: '/test/2', method: 'get' }
@@ -333,12 +339,16 @@ describe('Create REST Api routing', () => {
         hooks: []
       }
       const records = [{
-        name: 'test', url: '/test', method: 'get',
+        name: 'test',
+        url: '/test',
+        method: 'get',
         meta: { test: 'test' },
         options: { test: 'test' },
         children: [
           {
-            name: 'test1', url: '/test/1', method: 'get',
+            name: 'test1',
+            url: '/test/1',
+            method: 'get',
             meta: { test1: 'test1' },
             options: { test1: 'test1' }
           },
@@ -364,7 +374,9 @@ describe('Create REST Api routing', () => {
     const axiosMock = () => Promise.resolve({ success: true })
     describe('Basic', () => {
       const records = [{
-        name: 'test', url: '/test', method: 'get',
+        name: 'test',
+        url: '/test',
+        method: 'get',
         children: [
           { name: 'test1', url: '/test/1', method: 'get' },
           { name: 'test2', url: 'test/2', method: 'get' }
@@ -468,7 +480,9 @@ describe('Create REST Api routing', () => {
     const axiosMock = () => Promise.resolve({ success: true })
     test('Basic', () => {
       const records = [{
-        name: 'test', url: '/test', method: 'get',
+        name: 'test',
+        url: '/test',
+        method: 'get',
         children: [
           { name: 'test1', url: '/test/1', method: 'get' },
           { name: 'test2', url: '/test/2', method: 'get' }

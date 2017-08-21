@@ -44,7 +44,7 @@ describe('Apipie', () => {
         beforeGlobalHook: 'beforeGlobalHook',
         afterGlobalHook: 'afterGlobalHook',
         beforeHook: 'beforeHook',
-        afterHook:'afterHook'
+        afterHook: 'afterHook'
       }
       return expect(api.test()).resolves.toMatchObject({ meta: expectedMeta })
     })
@@ -53,7 +53,7 @@ describe('Apipie', () => {
 
 describe('Full tests', () => {
   const axiosMock = () => Promise.resolve({ success: true })
-  function hook(ctx, next) {
+  function hook (ctx, next) {
     if (ctx.meta.requireAuth) {
       throw new Error('Auth require')
     }
@@ -61,13 +61,18 @@ describe('Full tests', () => {
   }
   const records = [
     {
-      name: 'user', meta: {requireAuth: true}, hook, children: [
+      name: 'user',
+      meta: {requireAuth: true},
+      hook,
+      children: [
         {name: 'get', meta: {requireAuth: false}, options: {url: '/user/:id', method: 'GET'}},
         {name: 'settings', options: {url: '/user/:id/settings', method: 'GET'}}
       ]
     },
     {
-      name: 'content', meta: {contentMeta: 'content'}, children: [
+      name: 'content',
+      meta: {contentMeta: 'content'},
+      children: [
         {name: 'images', meta: {imagesMeta: 'image'}, options: {url: '/images/:id', method: 'GET'}},
         {name: 'apps', options: {url: '/apps/:id', method: 'GET'}}
       ]

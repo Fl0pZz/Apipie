@@ -74,7 +74,7 @@ describe('normalizeRecord', () => {
       hook
     }
     const props = {
-      meta: { props: 'props', test: "123" },
+      meta: { props: 'props', test: '123' },
       options: { props: 'props' },
       hooks: [hook]
     }
