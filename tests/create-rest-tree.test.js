@@ -243,7 +243,7 @@ describe('Create REST Api routing', () => {
           }
           const normalizedRecord = normalizeRecord(record, props)
           const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
-          return expect(fn({ query: { test: 'test_param' }})).resolves.toEqual(expectedCtx)
+          return expect(fn({ query: { test: 'test_param' } })).resolves.toEqual(expectedCtx)
         })
         test('Invalid', () => {
           const record = { name: 'test', method: 'get', url: '/test', query }
@@ -299,7 +299,7 @@ describe('Create REST Api routing', () => {
             const record = { name: 'test', method: 'get', url: '/test/:id1/:id2/:id3?' }
             const normalizedRecord = normalizeRecord(record, props)
             const fn = createExecFunc(normalizedRecord, ['test'], axiosMock)
-            const params = { params: { id1: 1, id2: 2, id3: 3} }
+            const params = { params: { id1: 1, id2: 2, id3: 3 } }
             return expect(fn(params)).resolves.toHaveProperty('options.url', '/test/1/2/3')
           })
         })
@@ -361,7 +361,7 @@ describe('Create REST Api routing', () => {
         _require: { data: false, query: false },
         name: 'test1',
         meta: { acc: 'acc', test: 'test', test1: 'test1' },
-        options: {acc: 'acc', test: 'test', test1: 'test1', url: '/test/1', method: 'get' },
+        options: { acc: 'acc', test: 'test', test1: 'test1', url: '/test/1', method: 'get' },
         hooks: [],
         children: []
       }
@@ -473,6 +473,72 @@ describe('Create REST Api routing', () => {
       test('Path with params', () => {
         const fn = tree.root.test3.test6
         return expect(fn({ params: { id: 't' } })).resolves.toHaveProperty('options.url', '/t/6')
+      })
+    })
+    describe('New exec', () => {
+      const records = [{
+        name: 'test',
+        get: '/test',
+        children: [
+          { name: 'test1', get: '/test/1' },
+          { name: 'test2', get: 'test/2' }
+        ]
+      }]
+      const tree = {}
+      const acc = { meta: [], options: [], hooks: [], axios: axiosMock, tree, records }
+      const path = [0]
+      const record = records[0]
+      addTreeBranch(tree, record, path, acc)
+      test('Tree properties', () => {
+        expect(tree).toHaveProperty('test')
+        expect(tree).toHaveProperty('test.test1')
+        expect(tree).toHaveProperty('test.test2')
+      })
+      test('Leafs of tree is a Function', () => {
+        expect(tree.test).toBeInstanceOf(Function)
+        expect(tree.test.test1).toBeInstanceOf(Function)
+        expect(tree.test.test2).toBeInstanceOf(Function)
+      })
+      test('Execution of leaf', () => {
+        const expectedCtx = {
+          meta: {},
+          options: { method: 'get', url: '/test' },
+          response: { success: true },
+          name: 'test',
+          fullName: ['test']
+        }
+        return expect(tree.test()).resolves.toEqual(expectedCtx)
+      })
+      test('Test', () => {
+        const expectedCtx = {
+          meta: {},
+          options: { method: 'get', url: '/test/1' },
+          response: { success: true },
+          name: 'test1',
+          fullName: ['test', 'test1']
+        }
+        return expect(tree.test.test1()).resolves.toEqual(expectedCtx)
+      })
+      test('Reexecution of leaf', () => {
+        const expectedCtx = {
+          meta: {},
+          options: { method: 'get', url: '/test' },
+          response: { success: true },
+          name: 'test',
+          fullName: ['test']
+        }
+        return expect(tree.test()).resolves.toEqual(expectedCtx)
+      })
+      test('Stack urls', () => {
+        const expectedCtx = {
+          meta: {},
+          options: { method: 'get', url: '/test/test/2' },
+          response: { success: true },
+          name: 'test2',
+          fullName: ['test', 'test2']
+        }
+        const fn = tree.test.test2
+        return expect(fn()).resolves.toEqual(expectedCtx)
       })
     })
   })
