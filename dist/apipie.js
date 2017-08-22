@@ -629,7 +629,7 @@ function transformSugarSyntax(record) {
     record.options.url = record.url;
   }
 
-  if (record.url && record.method && record.children == null) {
+  if (record.url && record.method) {
     record.options.method = record.method;
   }
 
@@ -670,6 +670,13 @@ function stackUrl(parentOpts, options) {
     options.url = parentUrl + '/' + url;
   }
 }
+
+var checkRecordOnMethod = function checkRecordOnMethod(record) {
+  var httpMethod = arrayOfMethods.find(function (key) {
+    return key in record;
+  });
+  return record.method || record.options && record.options.method || httpMethod && typeof record[httpMethod] === 'string';
+};
 
 /**
  * Expose compositor.
@@ -848,27 +855,20 @@ function createTreeSkeleton(records, baseOptions) {
 }
 
 function addTreeBranch(branch, record, indexPath, closurePack) {
-  branch[record.name] = {};
-  if (record.children && record.children.length) {
-    if (record.method) {
-      record.children.push({
-        name: record.method,
-        method: record.method,
-        url: record.url,
-        data: !!record.data,
-        query: !!record.query
-      });
+  var setTree = function setTree(record, indexPath, closurePack) {
+    if (checkRecordOnMethod(record)) {
+      return lazyCalcLeafNode(indexPath, closurePack);
     }
 
+    return {};
+  };
+
+  branch[record.name] = setTree(record, indexPath, closurePack);
+  if (record.children && record.children.length) {
     record.children.forEach(function (childRecord, index) {
-      return addTreeBranch(branch[record.name], childRecord, indexPath.concat(index), closurePack);
+      addTreeBranch(branch[record.name], childRecord, indexPath.concat(index), closurePack);
     });
-
-    return;
   }
-
-  // Create lazy calculation leaf
-  branch[record.name] = lazyCalcLeafNode(indexPath, closurePack);
 }
 
 function lazyCalcLeafNode(indexPath, closurePack) {
@@ -882,7 +882,13 @@ function lazyCalcLeafNode(indexPath, closurePack) {
         propNamesPath = _calculateBranchNodes2[0],
         record = _calculateBranchNodes2[1];
 
-    setVal(tree, propNamesPath, createExecFunc(record, propNamesPath, axios));
+    var execFunc = createExecFunc(record, propNamesPath, axios);
+    var prevState = getVal(tree, propNamesPath);
+    for (var child in prevState) {
+      execFunc[child] = prevState[child];
+    }
+
+    setVal(tree, propNamesPath, execFunc);
 
     return getVal(tree, propNamesPath)(props);
   };
@@ -895,7 +901,7 @@ function calculateBranchNodes(records, indexPath, propNamesPath, closurePack) {
   records[index] = normalizeRecord(records[index], closurePack);
   var record = records[index];
   propNamesPath.push(record.name);
-  if (record.children.length) {
+  if (indexPath.length > 0 && record.children.length > 0) {
     return calculateBranchNodes(record.children, indexPath, propNamesPath, record);
   }
 
