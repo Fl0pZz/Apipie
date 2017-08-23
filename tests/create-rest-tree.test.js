@@ -389,12 +389,11 @@ describe('Create REST Api routing', () => {
       addTreeBranch(tree, record, path, acc)
       test('Tree properties', () => {
         expect(tree).toHaveProperty('test')
-        expect(tree).toHaveProperty('test.get')
         expect(tree).toHaveProperty('test.test1')
         expect(tree).toHaveProperty('test.test2')
       })
       test('Leafs of tree is a Function', () => {
-        expect(tree.test.get).toBeInstanceOf(Function)
+        expect(tree.test).toBeInstanceOf(Function)
         expect(tree.test.test1).toBeInstanceOf(Function)
         expect(tree.test.test2).toBeInstanceOf(Function)
       })
@@ -403,10 +402,10 @@ describe('Create REST Api routing', () => {
           meta: {},
           options: { method: 'get', url: '/test' },
           response: { success: true },
-          name: 'get',
-          fullName: ['test', 'get']
+          name: 'test',
+          fullName: ['test']
         }
-        const fn = tree.test.get
+        const fn = tree.test
         return expect(fn()).resolves.toEqual(expectedCtx)
       })
       test('Test', () => {
@@ -430,6 +429,30 @@ describe('Create REST Api routing', () => {
         }
         const fn = tree.test.test2
         return expect(fn()).resolves.toEqual(expectedCtx)
+      })
+    })
+    describe('Basic without parent exec', () => {
+      const records = [{
+        name: 'test',
+        children: [
+          { name: 'test1', url: '/test/1', method: 'get' },
+          { name: 'test2', url: 'test/2', method: 'get' }
+        ]
+      }]
+      const tree = {}
+      const acc = { meta: [], options: [], hooks: [], axios: axiosMock, tree, records }
+      const path = [0]
+      const record = records[0]
+      addTreeBranch(tree, record, path, acc)
+      test('Tree properties', () => {
+        expect(tree).toHaveProperty('test')
+        expect(tree).toHaveProperty('test.test1')
+        expect(tree).toHaveProperty('test.test2')
+      })
+      test('The leaves of the tree are a function other than the root', () => {
+        expect(tree.test).not.toBeInstanceOf(Function)
+        expect(tree.test.test1).toBeInstanceOf(Function)
+        expect(tree.test.test2).toBeInstanceOf(Function)
       })
     })
     describe('Full path stacking', () => {
@@ -557,7 +580,6 @@ describe('Create REST Api routing', () => {
       const acc = { meta: [], options: [], hooks: [], axios: axiosMock, records }
       const tree = createTreeSkeleton(records, acc)
       expect(tree).toHaveProperty('test')
-      expect(tree).toHaveProperty('test.get')
       expect(tree).toHaveProperty('test.test1')
       expect(tree).toHaveProperty('test.test2')
     })
