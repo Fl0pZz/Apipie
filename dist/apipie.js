@@ -671,7 +671,7 @@ function stackUrl(parentOpts, options) {
   }
 }
 
-var checkRecordOnMethod = function checkRecordOnMethod(record) {
+var checkRecordOnHavingMethod = function checkRecordOnHavingMethod(record) {
   var httpMethod = arrayOfMethods.find(function (key) {
     return key in record;
   });
@@ -855,15 +855,15 @@ function createTreeSkeleton(records, baseOptions) {
 }
 
 function addTreeBranch(branch, record, indexPath, closurePack) {
-  var setTree = function setTree(record, indexPath, closurePack) {
-    if (checkRecordOnMethod(record)) {
+  var setBranch = function setBranch(record, indexPath, closurePack) {
+    if (checkRecordOnHavingMethod(record)) {
       return lazyCalcLeafNode(indexPath, closurePack);
     }
 
     return {};
   };
 
-  branch[record.name] = setTree(record, indexPath, closurePack);
+  branch[record.name] = setBranch(record, indexPath, closurePack);
   if (record.children && record.children.length) {
     record.children.forEach(function (childRecord, index) {
       addTreeBranch(branch[record.name], childRecord, indexPath.concat(index), closurePack);
