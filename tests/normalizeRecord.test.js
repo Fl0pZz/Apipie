@@ -89,4 +89,33 @@ describe('normalizeRecord', () => {
     }
     expect(normalizeRecord(record, props)).toEqual(expected)
   })
+  test('Sequence of hooks', () => {
+    const hook = async (ctx, next) => {
+      ctx.push('hook')
+      await next()
+    }
+    const record = {
+      name: 'test',
+      url: '/url',
+      method: 'get',
+      meta: { test: 'test' },
+      options: { test: 'test' },
+      hook: [hook, hook, hook]
+    }
+    const props = {
+      meta: { props: 'props', test: '123' },
+      options: { props: 'props' },
+      hooks: [hook, hook]
+    }
+    const expected = {
+      _normalized: true,
+      _require: { data: false, query: false },
+      name: 'test',
+      meta: { props: 'props', test: 'test' },
+      options: { props: 'props', test: 'test', url: '/url', method: 'get' },
+      hooks: [hook, hook, hook, hook, hook],
+      children: []
+    }
+    expect(normalizeRecord(record, props)).toEqual(expected)
+  })
 })
