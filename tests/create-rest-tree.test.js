@@ -550,7 +550,7 @@ describe('Create REST Api routing', () => {
         await expect(fn({ params: { test11: '' } })).resolves.toMatchObject({
           options: {
             method: 'patch',
-            url: '/test7/test11/'
+            url: '/test7/test11'
           }
         })
       })
