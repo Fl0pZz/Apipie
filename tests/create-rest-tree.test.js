@@ -524,7 +524,7 @@ describe('Create REST Api routing', () => {
         return expect(fn()).resolves.toMatchObject({
           options: {
             method: 'post',
-            url: '/tests7/'
+            url: '/test7/'
           }
         })
       })
@@ -539,7 +539,7 @@ describe('Create REST Api routing', () => {
         return expect(fn({ params: { id: 'bar' } })).resolves.toHaveProperty('options.url', '/test7/test/10/bar')
       })
 
-      test('Stack path with not requered params', async() => {
+      test('Stack path with not requered params', async () => {
         const fn = tree.root.test7.test11
         await expect(fn({ params: { test11: 'bar' } })).resolves.toMatchObject({
           options: {
@@ -547,7 +547,7 @@ describe('Create REST Api routing', () => {
             url: '/test7/test11/bar'
           }
         })
-        await expect(fn({ params: { test11: '' } })).resolves.toMatchObject({
+        await expect(fn()).resolves.toMatchObject({
           options: {
             method: 'patch',
             url: '/test7/test11'
