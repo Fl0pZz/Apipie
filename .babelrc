@@ -6,7 +6,8 @@
       ],
       "plugins": [
         "transform-async-to-generator"
-      ]
+      ],
+      "sourceMap" : "inline"
     },
     "development": {
       "presets": [

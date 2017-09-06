@@ -476,7 +476,7 @@ describe('Create REST Api routing', () => {
               { name: 'test8', post: '' },
               { name: 'test9', get: ':test/' },
               { name: 'test10', get: 'test/10/:id' },
-              { name: 'test11', patch: 'test11/:test11?' },
+              { name: 'test11', patch: 'test11/:id?' },
               {
                 name: 'test12',
                 get: ':test12/',
@@ -541,7 +541,7 @@ describe('Create REST Api routing', () => {
 
       test('Stack path with not requered params', async () => {
         const fn = tree.root.test7.test11
-        await expect(fn({ params: { test11: 'bar' } })).resolves.toMatchObject({
+        await expect(fn({ params: { id: 'bar' } })).resolves.toMatchObject({
           options: {
             method: 'patch',
             url: '/test7/test11/bar'
@@ -554,7 +554,37 @@ describe('Create REST Api routing', () => {
           }
         })
       })
+
+      test('Execute func 2 times', async() => {
+        const fn = tree.root.test1
+        await expect(fn()).resolves.toHaveProperty('options.url', '/test/1')
+        await expect(fn()).resolves.toHaveProperty('options.url', '/test/1')
+
+        const fn2 = tree.root.test7.test9
+        await expect(fn2({ params: { test: 'foo' } })).resolves.toHaveProperty('options.url', '/test7/foo/')
+        await expect(fn2({ params: { test: 'foo' } })).resolves.toHaveProperty('options.url', '/test7/foo/')
+      })
+
+      test('Execute all func in time', async() => {
+        const result = [
+          tree.root.test1(),
+          tree.root.test2(),
+          tree.root.test3.test4(),
+          tree.root.test3.test5({ params: { id: 't' } }),
+          tree.root.test3.test6({ params: { id: 't' } }),
+          tree.root.test7(),
+          tree.root.test7.test8(),
+          tree.root.test7.test9({ params: { test: 'foo' } }),
+          tree.root.test7.test10({ params: { id: 'bar' } }),
+          tree.root.test7.test11({ params: { id: 'bar' } }),
+          tree.root.test7.test12({ params: { test12: 'bar' } }),
+          tree.root.test7.test12.test13()
+        ]
+
+        await Promise.all(result)
+      })
     })
+
     describe('New exec', () => {
       const records = [{
         name: 'test',
