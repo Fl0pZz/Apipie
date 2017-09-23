@@ -2,7 +2,12 @@
   "env": {
     "test": {
       "presets": [
-        "es2015"
+        ["env", {
+          "targets": {
+            "node": "current"
+          }
+        }],
+        "stage-2"
       ],
       "plugins": [
         "transform-async-to-generator"
@@ -10,14 +15,13 @@
     },
     "development": {
       "presets": [
-        [
-          "latest",
-          {
-            "es2015": {
-              "modules": false
-            }
-          }
-        ]
+        ["env", {
+          "targets": {
+            "browsers": ["> 1%", "last 2 versions", "not ie <= 8"]
+          },
+          "modules": false
+        }],
+        "stage-2"
       ],
       "plugins": [
         "external-helpers",
