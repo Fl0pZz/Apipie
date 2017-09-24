@@ -29,7 +29,7 @@ describe('parseExecArgs - testing urlToParse', () => {
 
   test('test - 1, put all args', () => {
     const props = {
-      urlToParse: 'http://test-site.com/api/v1/foo/1/bar/test?page=1&limit=10'
+      url: 'http://test-site.com/api/v1/foo/1/bar/test?page=1&limit=10'
     }
 
     const expectResult = {
@@ -46,7 +46,7 @@ describe('parseExecArgs - testing urlToParse', () => {
 
   test('test - 2, put without query', () => {
     const props = {
-      urlToParse: 'http://test-site.com/api/v1/foo/1/bar/foobar'
+      url: 'http://test-site.com/api/v1/foo/1/bar/foobar'
     }
 
     const expectResult = {
@@ -60,7 +60,7 @@ describe('parseExecArgs - testing urlToParse', () => {
 
   test('test - 3, put not enogth params', () => {
     const props = {
-      urlToParse: 'http://test-site.com/api/v1/foo/1/bar'
+      url: 'http://test-site.com/api/v1/foo/1/bar'
     }
 
     const result = () => {
@@ -72,7 +72,7 @@ describe('parseExecArgs - testing urlToParse', () => {
 
   test('test - 4, mismatch path', () => {
     const props = {
-      urlToParse: 'http://test-site.com/api/v1/users/'
+      url: 'http://test-site.com/api/v1/users/'
     }
 
     const result = () => {

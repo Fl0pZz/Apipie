@@ -1840,8 +1840,8 @@ var url = {
 function parseExecArgs(url$$1, props, _ref) {
   var _require = _ref._require;
 
-  if (props && props.urlToParse) {
-    var _parseURL = parseURL(url$$1, props.urlToParse),
+  if (props && props.url) {
+    var _parseURL = parseURL(url$$1, props.url),
         _query = _parseURL.query,
         _params = _parseURL.params;
 
@@ -1919,7 +1919,7 @@ function parseURL(url$$1, receivedUrl) {
     // check on keys in path
     var parsedParams = path.exec(parsedUrl.pathname);
     if (!parsedParams) {
-      throw new Error('Mismatch the path or not enough params for this url: ' + url$$1 + '. Received this ' + parsedUrl.pathname);
+      throw new Error('Mismatch the path or not enough params for this url: ' + url$$1 + '.\n      Received this ' + parsedUrl.pathname);
     }
 
     parsedParams = parsedParams.slice(1);
