@@ -1,8 +1,8 @@
-import babel from 'rollup-plugin-babel';
-import cjs from 'rollup-plugin-commonjs';
-import resolve from 'rollup-plugin-node-resolve';
+import babel from 'rollup-plugin-babel'
+import cjs from 'rollup-plugin-commonjs'
+import resolve from 'rollup-plugin-node-resolve'
 
-let pkg = require('./package.json');
+let pkg = require('./package.json')
 
 export default {
   entry: 'lib/index.js',
@@ -11,7 +11,9 @@ export default {
       exclude: 'node_modules/**'
     }),
     cjs(),
-    resolve()
+    resolve({
+      preferBuiltins: false
+    })
   ],
   targets: [
     {
@@ -26,4 +28,4 @@ export default {
       sourceMap: true
     }
   ]
-};
+}
