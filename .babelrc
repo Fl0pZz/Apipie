@@ -11,7 +11,8 @@
       ],
       "plugins": [
         "transform-async-to-generator"
-      ]
+      ],
+      "sourceMap" : "inline"
     },
     "development": {
       "presets": [
@@ -24,8 +25,7 @@
         "stage-2"
       ],
       "plugins": [
-        "external-helpers",
-        "transform-async-to-generator"
+        "external-helpers"
       ]
     }
   }

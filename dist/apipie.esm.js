@@ -1876,6 +1876,8 @@ function parseExecArgs(url$$1, props, _ref) {
   }
 
   if (!props) {
+    var toPath = index.compile(url$$1);
+    result.url = toPath();
     return result;
   }
 
@@ -1891,8 +1893,8 @@ function parseExecArgs(url$$1, props, _ref) {
       }
     });
 
-    var toPath = index.compile(url$$1);
-    result.url = toPath(params);
+    var _toPath = index.compile(url$$1);
+    result.url = _toPath(params);
   }
 
   // query == params for axios
@@ -2064,16 +2066,16 @@ function transformSugarSyntax(record) {
 
   // { name, method: url } --> { name, option: { url, method } }
   var httpMethod = arrayOfMethods.find(function (key) {
-    return key in record;
+    return key in record && typeof record[key] === 'string';
   });
-  if (httpMethod && typeof record[httpMethod] === 'string') {
+
+  if (httpMethod) {
     record.options.url = record[httpMethod];
     record.options.method = httpMethod;
   }
 }
 
 function stackUrl(parentOpts, options) {
-  // console.warn({parentOpts, options})
   if (parentOpts.url == null && options.url == null) {
     return null;
   }
@@ -2082,7 +2084,8 @@ function stackUrl(parentOpts, options) {
   var parentUrl = parentOpts.url;
 
   if (url != null && url.startsWith('/')) {
-    return url;
+    options.url = url;
+    return;
   }
 
   if (parentUrl == null && !url.startsWith('/')) {
@@ -2090,7 +2093,8 @@ function stackUrl(parentOpts, options) {
   }
 
   if ((url == null || url === '') && parentUrl) {
-    return parentUrl;
+    options.url = parentUrl;
+    return;
   }
 
   if (parentUrl.endsWith('/')) {

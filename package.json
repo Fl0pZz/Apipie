@@ -6,7 +6,7 @@
   "module": "dist/apipie.esm.js",
   "unpkg": "dist/apipie.js",
   "scripts": {
-    "prebuild": "eslint lib test",
+    "prebuild": "eslint lib && jest",
     "build": "rollup -c",
     "watch": "rollup -c -w",
     "pretest": "npm run build",
