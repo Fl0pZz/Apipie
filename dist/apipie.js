@@ -1840,17 +1840,119 @@ var url = {
 	Url: Url_1
 };
 
+var asyncToGenerator = function (fn) {
+  return function () {
+    var gen = fn.apply(this, arguments);
+    return new Promise(function (resolve, reject) {
+      function step(key, arg) {
+        try {
+          var info = gen[key](arg);
+          var value = info.value;
+        } catch (error) {
+          reject(error);
+          return;
+        }
+
+        if (info.done) {
+          resolve(value);
+        } else {
+          return Promise.resolve(value).then(function (value) {
+            step("next", value);
+          }, function (err) {
+            step("throw", err);
+          });
+        }
+      }
+
+      return step("next");
+    });
+  };
+};
+
+
+
+
+
+
+
+
+
+
+
+var _extends = Object.assign || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+
+  return target;
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var slicedToArray = function () {
+  function sliceIterator(arr, i) {
+    var _arr = [];
+    var _n = true;
+    var _d = false;
+    var _e = undefined;
+
+    try {
+      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+        _arr.push(_s.value);
+
+        if (i && _arr.length === i) break;
+      }
+    } catch (err) {
+      _d = true;
+      _e = err;
+    } finally {
+      try {
+        if (!_n && _i["return"]) _i["return"]();
+      } finally {
+        if (_d) throw _e;
+      }
+    }
+
+    return _arr;
+  }
+
+  return function (arr, i) {
+    if (Array.isArray(arr)) {
+      return arr;
+    } else if (Symbol.iterator in Object(arr)) {
+      return sliceIterator(arr, i);
+    } else {
+      throw new TypeError("Invalid attempt to destructure non-iterable instance");
+    }
+  };
+}();
+
 function parseExecArgs(url$$1, props, _ref) {
   var _require = _ref._require;
-
-  if (props && props.url) {
-    var _parseURL = parseURL(url$$1, props.url),
-        _query = _parseURL.query,
-        _params = _parseURL.params;
-
-    props.query = _query;
-    props.params = _params;
-  }
 
   var result = { url: url$$1
 
@@ -1884,9 +1986,16 @@ function parseExecArgs(url$$1, props, _ref) {
     return result;
   }
 
-  var params = props.params,
-      query = props.query,
-      data = props.data;
+  if (props && props.url) {
+    var parsedProps = parseURL(url$$1, props.url);
+
+    props = _extends({}, props, parsedProps);
+  }
+
+  var _props = props,
+      params = _props.params,
+      query = _props.query,
+      data = _props.data;
 
 
   if (params) {
@@ -2163,94 +2272,6 @@ function compose (middleware) {
   }
 }
 
-var classCallCheck = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-};
-
-var createClass = function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-}();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-var slicedToArray = function () {
-  function sliceIterator(arr, i) {
-    var _arr = [];
-    var _n = true;
-    var _d = false;
-    var _e = undefined;
-
-    try {
-      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-        _arr.push(_s.value);
-
-        if (i && _arr.length === i) break;
-      }
-    } catch (err) {
-      _d = true;
-      _e = err;
-    } finally {
-      try {
-        if (!_n && _i["return"]) _i["return"]();
-      } finally {
-        if (_d) throw _e;
-      }
-    }
-
-    return _arr;
-  }
-
-  return function (arr, i) {
-    if (Array.isArray(arr)) {
-      return arr;
-    } else if (Symbol.iterator in Object(arr)) {
-      return sliceIterator(arr, i);
-    } else {
-      throw new TypeError("Invalid attempt to destructure non-iterable instance");
-    }
-  };
-}();
-
 function setVal(obj, propNamesPath, val) {
   propNamesPath.reduce(function (acc, propName, i) {
     if (i === propNamesPath.length - 1) {
@@ -2345,6 +2366,8 @@ function calculateBranchNodes(records, indexPath, propNamesPath, closurePack) {
 }
 
 function createExecFunc(record, fullName, axios) {
+  var _this = this;
+
   function createContext(meta, options) {
     return {
       meta: meta,
@@ -2355,14 +2378,34 @@ function createExecFunc(record, fullName, axios) {
     };
   }
 
-  function createRequestFunc() {
-    return function (ctx, next) {
-      return axios(ctx.options).then(function (response) {
-        ctx.response = response;
-        next();
-      });
+  var requestFunc = function () {
+    var _ref = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(ctx, next) {
+      var response;
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return axios(ctx.options);
+
+            case 2:
+              response = _context.sent;
+
+              ctx.response = response;
+              next();
+
+            case 5:
+            case 'end':
+              return _context.stop();
+          }
+        }
+      }, _callee, _this);
+    }));
+
+    return function requestFunc(_x, _x2) {
+      return _ref.apply(this, arguments);
     };
-  }
+  }();
 
   if (record.options instanceof Array) {
     record.options = index$5.all(record.options);
@@ -2372,7 +2415,7 @@ function createExecFunc(record, fullName, axios) {
     record.meta = index$5.all(record.meta);
   }
 
-  record.hooks.push(createRequestFunc());
+  record.hooks.push(requestFunc);
   var fn = index$6(record.hooks);
 
   return function (props) {
@@ -2384,32 +2427,24 @@ function createExecFunc(record, fullName, axios) {
   };
 }
 
-var Apipie = function () {
-  function Apipie(records, options) {
-    classCallCheck(this, Apipie);
+var defaultOptions = {
+  records: null,
+  hooks: [],
+  meta: {},
+  options: {},
+  axios: null
+};
 
-    this.records = records;
-    this.hooks = [];
-    this.meta = {};
-    this.options = {};
-    this.axios = options.axios;
-  }
+function createApi(records, axios, options) {
+  var _options = _extends({}, defaultOptions, options, {
+    records: records,
+    axios: axios
+  });
 
-  createClass(Apipie, [{
-    key: 'globalHook',
-    value: function globalHook(hook) {
-      this.hooks.push(hook);
-    }
-  }, {
-    key: 'create',
-    value: function create() {
-      return createTreeSkeleton(this.records, this);
-    }
-  }]);
-  return Apipie;
-}();
+  return createTreeSkeleton(records, _options);
+}
 
-return Apipie;
+return createApi;
 
 }());
 //# sourceMappingURL=apipie.js.map
