@@ -1,4 +1,4 @@
-import VueApify from '../lib/index'
+import createApi from '../lib/index'
 
 describe('Apipie', () => {
   describe('GlobalHook', () => {
@@ -9,9 +9,7 @@ describe('Apipie', () => {
         ctx.meta.hook = 'hook!'
         next()
       }
-      const apify = new VueApify(records, { axios: axiosMock })
-      apify.globalHook(hook)
-      const api = apify.create()
+      const api = createApi(records, axiosMock, { hooks: [hook] })
       return expect(api.test()).resolves.toMatchObject({ meta: { hook: 'hook!' } })
     })
     test('Async base', () => {
@@ -20,9 +18,7 @@ describe('Apipie', () => {
         ctx.meta.hook = 'hook!'
         await next()
       }
-      const apify = new VueApify(records, { axios: axiosMock })
-      apify.globalHook(hook)
-      const api = apify.create()
+      const api = createApi(records, axiosMock, { hooks: [hook] })
       return expect(api.test()).resolves.toMatchObject({ meta: { hook: 'hook!' } })
     })
     test('Composition', () => {
@@ -37,9 +33,7 @@ describe('Apipie', () => {
         ctx.meta.afterHook = 'afterHook'
       }
       const records = [{ name: 'test', url: '/url', method: 'get', hook }]
-      const apify = new VueApify(records, { axios: axiosMock })
-      apify.globalHook(globalHook)
-      const api = apify.create()
+      const api = createApi(records, axiosMock, { hooks: [globalHook] })
       const expectedMeta = {
         beforeGlobalHook: 'beforeGlobalHook',
         afterGlobalHook: 'afterGlobalHook',
@@ -79,8 +73,7 @@ describe('Full tests', () => {
     }
   ]
 
-  const apify = new VueApify(records, { axios: axiosMock })
-  const api = apify.create()
+  const api = createApi(records, axiosMock)
 
   test('Has all routes', () => {
     expect(api).toHaveProperty('user')
