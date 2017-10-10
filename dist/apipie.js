@@ -1,14 +1,14 @@
 var apipie = (function () {
 'use strict';
 
-var index$1 = Array.isArray || function (arr) {
+var isarray = Array.isArray || function (arr) {
   return Object.prototype.toString.call(arr) == '[object Array]';
 };
 
 /**
  * Expose `pathToRegexp`.
  */
-var index = pathToRegexp;
+var pathToRegexp_1 = pathToRegexp;
 var parse_1 = parse;
 var compile_1 = compile;
 var tokensToFunction_1 = tokensToFunction;
@@ -185,7 +185,7 @@ function tokensToFunction (tokens) {
         }
       }
 
-      if (index$1(value)) {
+      if (isarray(value)) {
         if (!token.repeat) {
           throw new TypeError('Expected "' + token.name + '" to not repeat, but received `' + JSON.stringify(value) + '`')
         }
@@ -336,7 +336,7 @@ function stringToRegexp (path, keys, options) {
  * @return {!RegExp}
  */
 function tokensToRegExp (tokens, keys, options) {
-  if (!index$1(keys)) {
+  if (!isarray(keys)) {
     options = /** @type {!Object} */ (keys || options);
     keys = [];
   }
@@ -412,7 +412,7 @@ function tokensToRegExp (tokens, keys, options) {
  * @return {!RegExp}
  */
 function pathToRegexp (path, keys, options) {
-  if (!index$1(keys)) {
+  if (!isarray(keys)) {
     options = /** @type {!Object} */ (keys || options);
     keys = [];
   }
@@ -423,17 +423,17 @@ function pathToRegexp (path, keys, options) {
     return regexpToRegexp(path, /** @type {!Array} */ (keys))
   }
 
-  if (index$1(path)) {
+  if (isarray(path)) {
     return arrayToRegexp(/** @type {!Array} */ (path), /** @type {!Array} */ (keys), options)
   }
 
   return stringToRegexp(/** @type {string} */ (path), /** @type {!Array} */ (keys), options)
 }
 
-index.parse = parse_1;
-index.compile = compile_1;
-index.tokensToFunction = tokensToFunction_1;
-index.tokensToRegExp = tokensToRegExp_1;
+pathToRegexp_1.parse = parse_1;
+pathToRegexp_1.compile = compile_1;
+pathToRegexp_1.tokensToFunction = tokensToFunction_1;
+pathToRegexp_1.tokensToRegExp = tokensToRegExp_1;
 
 var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -1135,7 +1135,7 @@ var encode = function(obj, sep, eq, name) {
          encodeURIComponent(stringifyPrimitive(obj));
 };
 
-var index$3 = createCommonjsModule(function (module, exports) {
+var querystring = createCommonjsModule(function (module, exports) {
 'use strict';
 
 exports.decode = exports.parse = decode;
@@ -1240,7 +1240,7 @@ Url.prototype.parse = function(url, parseQueryString, slashesDenoteHost) {
       if (simplePath[2]) {
         this.search = simplePath[2];
         if (parseQueryString) {
-          this.query = index$3.parse(this.search.substr(1));
+          this.query = querystring.parse(this.search.substr(1));
         } else {
           this.query = this.search.substr(1);
         }
@@ -1443,7 +1443,7 @@ Url.prototype.parse = function(url, parseQueryString, slashesDenoteHost) {
     this.search = rest.substr(qm);
     this.query = rest.substr(qm + 1);
     if (parseQueryString) {
-      this.query = index$3.parse(this.query);
+      this.query = querystring.parse(this.query);
     }
     rest = rest.slice(0, qm);
   } else if (parseQueryString) {
@@ -1508,7 +1508,7 @@ Url.prototype.format = function() {
   if (this.query &&
       util.isObject(this.query) &&
       Object.keys(this.query).length) {
-    query = index$3.stringify(this.query);
+    query = querystring.stringify(this.query);
   }
 
   var search = this.search || (query && ('?' + query)) || '';
@@ -1967,7 +1967,7 @@ function parseExecArgs(url$$1, props, _ref) {
   }
 
   // validate params
-  var requireParams = index.parse(url$$1).filter(function (token) {
+  var requireParams = pathToRegexp_1.parse(url$$1).filter(function (token) {
     return [typeof token !== 'string', !token.optional, // https://github.com/pillarjs/path-to-regexp#optional
     !token.asterisk // https://github.com/pillarjs/path-to-regexp#asterisk
     ].every(Boolean);
@@ -1981,7 +1981,7 @@ function parseExecArgs(url$$1, props, _ref) {
   }
 
   if (!props) {
-    var toPath = index.compile(url$$1);
+    var toPath = pathToRegexp_1.compile(url$$1);
     result.url = toPath();
     return result;
   }
@@ -2005,7 +2005,7 @@ function parseExecArgs(url$$1, props, _ref) {
       }
     });
 
-    var _toPath = index.compile(url$$1);
+    var _toPath = pathToRegexp_1.compile(url$$1);
     result.url = _toPath(params);
   }
 
@@ -2025,7 +2025,7 @@ function parseURL(url$$1, receivedUrl) {
   var parsedUrl = url.parse(receivedUrl, true);
 
   var keysInUrl = [];
-  var path = index(url$$1, keysInUrl);
+  var path = pathToRegexp_1(url$$1, keysInUrl);
 
   var params = void 0;
 
@@ -2037,8 +2037,8 @@ function parseURL(url$$1, receivedUrl) {
     }
 
     parsedParams = parsedParams.slice(1);
-    params = keysInUrl.reduce(function (acc, key, index$$1) {
-      acc[key.name] = parsedParams[index$$1];
+    params = keysInUrl.reduce(function (acc, key, index) {
+      acc[key.name] = parsedParams[index];
       return acc;
     }, {});
   }
@@ -2049,21 +2049,29 @@ function parseURL(url$$1, receivedUrl) {
   };
 }
 
-var index$5 = createCommonjsModule(function (module, exports) {
-(function (root, factory) {
-    if (typeof undefined === 'function' && undefined.amd) {
-        undefined(factory);
-    } else {
-        module.exports = factory();
-    }
-}(commonjsGlobal, function () {
+var isMergeableObject = function isMergeableObject(value) {
+	return isNonNullObject(value)
+		&& !isSpecial(value)
+};
 
-function isMergeableObject(val) {
-    var nonNullObject = val && typeof val === 'object';
+function isNonNullObject(value) {
+	return !!value && typeof value === 'object'
+}
 
-    return nonNullObject
-        && Object.prototype.toString.call(val) !== '[object RegExp]'
-        && Object.prototype.toString.call(val) !== '[object Date]'
+function isSpecial(value) {
+	var stringValue = Object.prototype.toString.call(value);
+
+	return stringValue === '[object RegExp]'
+		|| stringValue === '[object Date]'
+		|| isReactElement(value)
+}
+
+// see https://github.com/facebook/react/blob/b5ac963fb791d1298e7f396236383bc955f916c1/src/isomorphic/classic/element/ReactElement.js#L21-L25
+var canUseSymbol = typeof Symbol === 'function' && Symbol.for;
+var REACT_ELEMENT_TYPE = canUseSymbol ? Symbol.for('react.element') : 0xeac7;
+
+function isReactElement(value) {
+	return value.$$typeof === REACT_ELEMENT_TYPE
 }
 
 function emptyTarget(val) {
@@ -2092,11 +2100,11 @@ function defaultArrayMerge(target, source, optionsArgument) {
 function mergeObject(target, source, optionsArgument) {
     var destination = {};
     if (isMergeableObject(target)) {
-        Object.keys(target).forEach(function (key) {
+        Object.keys(target).forEach(function(key) {
             destination[key] = cloneIfNecessary(target[key], optionsArgument);
         });
     }
-    Object.keys(source).forEach(function (key) {
+    Object.keys(source).forEach(function(key) {
         if (!isMergeableObject(source[key]) || !target[key]) {
             destination[key] = cloneIfNecessary(source[key], optionsArgument);
         } else {
@@ -2107,12 +2115,16 @@ function mergeObject(target, source, optionsArgument) {
 }
 
 function deepmerge(target, source, optionsArgument) {
-    var array = Array.isArray(source);
+    var sourceIsArray = Array.isArray(source);
+    var targetIsArray = Array.isArray(target);
     var options = optionsArgument || { arrayMerge: defaultArrayMerge };
-    var arrayMerge = options.arrayMerge || defaultArrayMerge;
+    var sourceAndTargetTypesMatch = sourceIsArray === targetIsArray;
 
-    if (array) {
-        return Array.isArray(target) ? arrayMerge(target, source, optionsArgument) : cloneIfNecessary(source, optionsArgument)
+    if (!sourceAndTargetTypesMatch) {
+        return cloneIfNecessary(source, optionsArgument)
+    } else if (sourceIsArray) {
+        var arrayMerge = options.arrayMerge || defaultArrayMerge;
+        return arrayMerge(target, source, optionsArgument)
     } else {
         return mergeObject(target, source, optionsArgument)
     }
@@ -2129,10 +2141,7 @@ deepmerge.all = function deepmergeAll(array, optionsArgument) {
     })
 };
 
-return deepmerge
-
-}));
-});
+var deepmerge_1 = deepmerge;
 
 function normalizeRecord(record, _ref) {
   var _ref$options = _ref.options,
@@ -2153,8 +2162,8 @@ function normalizeRecord(record, _ref) {
       query: !!record.query
     },
     name: record.name,
-    meta: index$5(meta, record.meta || {}, { clone: true }),
-    options: index$5(options, record.options || {}, { clone: true }),
+    meta: deepmerge_1(meta, record.meta || {}, { clone: true }),
+    options: deepmerge_1(options, record.options || {}, { clone: true }),
     hooks: [].concat(hooks, record.hook || []),
     children: record.children || []
   };
@@ -2227,7 +2236,7 @@ var checkRecordOnHavingMethod = function checkRecordOnHavingMethod(record) {
  * Expose compositor.
  */
 
-var index$6 = compose;
+var koaCompose = compose;
 
 /**
  * Compose `middleware` returning
@@ -2408,18 +2417,18 @@ function createExecFunc(record, fullName, axios) {
   }();
 
   if (record.options instanceof Array) {
-    record.options = index$5.all(record.options);
+    record.options = deepmerge_1.all(record.options);
   }
 
   if (record.meta instanceof Array) {
-    record.meta = index$5.all(record.meta);
+    record.meta = deepmerge_1.all(record.meta);
   }
 
   record.hooks.push(requestFunc);
-  var fn = index$6(record.hooks);
+  var fn = koaCompose(record.hooks);
 
   return function (props) {
-    var tmpOptions = index$5(record.options, parseExecArgs(record.options.url, props, record), { clone: true });
+    var tmpOptions = deepmerge_1(record.options, parseExecArgs(record.options.url, props, record), { clone: true });
     var context = createContext(record.meta, tmpOptions);
     return fn(context).then(function () {
       return context;
@@ -2435,7 +2444,9 @@ var defaultOptions = {
   axios: null
 };
 
-function createApi(records, axios, options) {
+function createApi(records, axios) {
+  var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
   var _options = _extends({}, defaultOptions, options, {
     records: records,
     axios: axios
