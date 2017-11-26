@@ -20,6 +20,10 @@ npm install apipie
 ```html
 <script src="https://unpkg.com/apipie"></script>
 ```
+## Документация
+Для v0.15@beta - https://fl0pzz.gitbooks.io/apipie-docs/content/
+
+Для более старых версий - https://github.com/Fl0pZz/Apipie/tree/old_v0.14 (которую вы скорее всего используете!)
 
 ## Пример
 
